@@ -1,0 +1,18 @@
+{
+  "globalstrict": true,
+  "globals": {
+    "Anno2205Layouts": false,
+    "console": false,
+    "document": false,
+    "_": false,
+    "$": false,
+    "angular": false,
+    "describe": false,
+    "it": false,
+    "expect": false,
+    "beforeEach": false,
+    "afterEach": false,
+    "module": false,
+    "inject": false
+  }
+}

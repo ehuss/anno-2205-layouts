@@ -1,0 +1,16 @@
+{
+  "name": "anno-2205-layouts",
+  "description": "Create layouts for Anno 2205.",
+  "version": "0.0.0",
+  "homepage": "https://github.com/ehuss/anno-2205-layouts",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "angular": "~1.4.0",
+    "angular-route": "~1.4.0",
+    "angular-loader": "~1.4.0",
+    "angular-mocks": "~1.4.0",
+    "jquery": "~2.1.4",
+    "bootstrap": "~3.3.5"
+  }
+}

@@ -1,0 +1,39 @@
+TODO
+====
+
+- ng-cloak on the editor popup.  Doens't seem to work as expected, still see flicker on editor (in FF).
+- Cancel placing a new building (esc or click off-grid?).
+- Maintenance information in popup.
+- Click on module should show popup with information (maintenance and production).
+- Popup on hover of building icons.
+
+- Copy
+- Move
+- Roads
+- colors
+- Save Image
+- Export/Import
+- Placement markers.
+- hover on build building icons should have popup
+- Notes
+- Different grids.
+    - islands, with coastal and mountain sites.
+- total production/cost display.
+- prettify
+
+- Keyboard shortcuts:
+    S = street
+    H = small residence
+    Shift + H = large residence
+    D = Demolition
+    C = copy
+    m = move
+
+- Add new layout, then hit cancel, doesn't delete.
+
+
+- Check out Bootlint https://github.com/twbs/bootlint
+- Update the title on page change.  Not entirely clear how to properly do this.
+    http://stackoverflow.com/questions/12506329/how-to-dynamically-change-header-based-on-angularjs-partial-view
+- Figure out how to get html5Mode going.  Particularly, setting <base> in dev environment versus live?  What if you don't know what base is going to be?
+- Decide if ngStorage is good compared to https://github.com/adrianmay/rhaboo.

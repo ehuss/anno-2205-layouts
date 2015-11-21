@@ -1,0 +1,264 @@
+<style>
+    .construction-level-button {
+        display: inline-block;
+        width: 139px;
+        height: 36px;
+    }
+    .construction-building-button {
+        display: inline-block;
+        background: url('images/buttons/construction-button-base.png');
+        width: 87px;
+        height: 58px;
+    }
+    .construction-building-button:hover {
+        background: url('images/buttons/construction-button-hover.png');
+    }
+    .construction-building-button-icon {
+        width: 50px;
+        height: 50px;
+        left: 18px;
+        top: 4px;
+        position: relative;
+    }
+
+    #save-button {
+        display: inline-block;
+        background: url('images/buttons/save.png');
+        width: 88px;
+        height: 34px;
+    }
+    #save-button:hover {
+        background: url('images/buttons/save-hover.png');
+    }
+
+    #cancel-button {
+        display: inline-block;
+        background: url('images/buttons/cancel.png');
+        width: 100px;
+        height: 34px;
+    }
+    #cancel-button:hover {
+        background: url('images/buttons/cancel-hover.png');
+    }
+
+    #delete-button {
+        display: inline-block;
+        background: url('images/buttons/delete.png');
+        width: 62px;
+        height: 34px;
+    }
+    #delete-button:hover {
+        background: url('images/buttons/delete-hover.png');
+    }
+
+    #delete-button {
+        display: inline-block;
+        background: url('images/buttons/delete.png');
+        width: 62px;
+        height: 34px;
+    }
+    #delete-button:hover {
+        background: url('images/buttons/delete-hover.png');
+    }
+
+    .editor-mode-button {
+        display: inline-block;
+        background: url('images/buttons/editor-modes-button-base.png');
+        width: 89px;
+        height: 49px;
+    }
+    .editor-mode-button-icon {
+        width: 40px;
+        height: 40px;
+        left: 24px;
+        top: 4px;
+        position: relative;
+    }
+    #editor-mode-icon-move {
+        background: url('images/buttons/icon_move.png');
+    }
+    #editor-mode-icon-copy {
+        background: url('images/buttons/icon_eyedrop.png');
+    }
+    #editor-mode-icon-demo {
+        background: url('images/buttons/icon_demolish.png');
+    }
+
+</style>
+
+<form>
+<input type="text" name="layoutName" ng-model="layout.name">
+
+<div id="editor-top">
+    <div>
+        Layout Size:
+
+        <select>
+            <option>20 x 20</option>
+            <option>40 x 40</option>
+            <option>100 x 100</option>
+        </select>
+
+        <div id="save-button" ng-click="saveLayout()"></div>
+        <div id="cancel-button" data-toggle="modal" data-target="#cancel-layout-modal"></div>
+        <div id="delete-button" data-toggle="modal" data-target="#delete-layout-modal"></div>
+    </div>
+</div>
+
+<div id="construction-area" ng-click="constAreaClick($event)">
+    <canvas id="anno-canvas" width="401" height="401"></canvas>
+</div>
+<br>
+
+<div class="construction-level-button" ng-repeat="level in levels[layout.region]"
+     ng-click="setActiveLevel(level, $event)"
+     anno-hover="level.backgroundHover"
+     anno-hover-base="level.background"
+     anno-hover-enabled="activeLevel != level.id">
+</div>
+ <div>
+    <div ng-repeat="level in levels[layout.region]">
+        <div class="construction-building-button" ng-repeat="building in level.buildings"
+         ng-show="activeLevel == level.id"
+         ng-click="createNewBuilding(building)">
+            <div class="construction-building-button-icon" ng-style="building.icon.style"></div>
+        </div>
+    </div>
+</div>
+<div class="construction-building-button"
+     ng-repeat="building in commonBuildings[layout.region]"
+     ng-click="createNewBuilding(building)">
+    <div class="construction-building-button-icon" ng-style="building.icon.style"></div>
+</div>
+
+</form>
+
+<div class="editor-mode-button" id="move-button" ng-click="enterMoveMode()">
+    <div class="editor-mode-button-icon" id="editor-mode-icon-move"></div>
+</div>
+<div class="editor-mode-button" id="copy-button" ng-click="enterCopyMode()">
+    <div class="editor-mode-button-icon" id="editor-mode-icon-copy"></div>
+</div>
+<div class="editor-mode-button" id="demolition-button" ng-click="enterDemoMode()">
+    <div class="editor-mode-button-icon" id="editor-mode-icon-demo"></div>
+</div>
+
+<a ng-click="exportImage()">Export Image</a>
+
+<div id="delete-layout-modal" class="modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Delete this layout?</h4>
+            </div>
+            <div class="modal-body">
+                This cannot be undone.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                <button type="button" class="btn btn-danger"  data-dismiss="modal" ng-click="deleteLayout()">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="cancel-layout-modal" class="modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Discard any changes?</h4>
+            </div>
+            <div class="modal-body">
+                This cannot be undone.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                <button type="button" class="btn btn-danger"  data-dismiss="modal" ng-click="discardLayout()">Discard</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    #building-popup {
+        width: 350px;
+        height: 200px;
+        background-color: #0c2937;
+        position: absolute;
+    }
+
+    .create-production-button {
+        background: url('images/buttons/module-button-base.png');
+        width: 61px;
+        height: 34px;
+        display: inline-block;
+    }
+    .create-production-button:hover {
+        background: url('images/buttons/module-button-hover.png');
+    }
+    .create-production-icon {
+        width: 50px;
+        height: 50px;
+        transform: scale(0.5, 0.5);
+        position: relative;
+        /* Positioning is before transform.*/
+        left: 5px;
+        top: -8px;
+    }
+    .building-popup-modules {
+        color: #667e88;
+        font-size: 140%;
+        margin-left: 10px;
+    }
+    .building-popup-name {
+        color: #ffffff;
+        background-color: #051218;
+        font-size: 175%;
+    }
+    .building-popup-top {
+        background-color: #d56d1c;
+        height: 4px;
+    }
+    .building-popup-icon {
+        display: inline-block;
+        transform: scale(0.8, 0.8);
+        width: 50px;
+        height: 50px;
+        vertical-align: middle;
+    }
+    .building-popup-close {
+        cursor: pointer;
+        float: right;
+        color: #ffffff;
+        opacity: 0.5;
+        background-color: transparent;
+        border: 0;
+    }
+    .building-popup-close:hover {
+        opacity: 0.9;
+    }
+</style>
+
+<div id="building-popup" ng-show="buildingPopup.show"
+     ng-style="{left: buildingPopup.left, top: buildingPopup.top}">
+    <div class="building-popup-top"></div>
+    <div class="building-popup-name">
+        <div class="building-popup-icon" ng-style="selectedBuilding.type.icon.style"></div>
+        {{ selectedBuilding.type.name }}
+        <button type="button" class="building-popup-close" ng-click="buildingPopup.show=false">&times;</button>
+    </div>
+    <div ng-show="selectedBuilding.type.productionUnit || selectedBuilding.type.maintenanceMoudles">
+        <div class="building-popup-modules">Modules</div>
+        <div ng-show="selectedBuilding.type.productionUnit" class="create-production-button" ng-click="createProductionModule()">
+            <div class="create-production-icon" ng-style="selectedBuilding.type.icon.style"></div>
+        </div>
+        <div ng-repeat="maintenance in selectedBuilding.type.maintenanceModules"
+             class="create-production-button"
+             ng-click="createMaintenanceModule(maintenance)">
+            <div class="create-production-icon" ng-style="maintenance.icon.style"></div>
+        </div>
+    </div>
+    <!-- TODO: Maintenance information. -->
+</div>
