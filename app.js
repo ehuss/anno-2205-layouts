@@ -1268,13 +1268,23 @@ var Anno2205Layouts = Anno2205Layouts || {};
     /** Determine the bounding box of the unit.  */
     EditorUnit.prototype.unitBBox = function() {
         var normal = this.orientation === 0 || this.orientation === 2;
-        var width = this.unitInfo.unitSize[+!normal]*Anno2205Layouts.gridSize + 1;
-        var height = this.unitInfo.unitSize[+normal]*Anno2205Layouts.gridSize + 1;
+        var gridWidth = this.unitInfo.unitSize[+!normal];
+        var gridHeight = this.unitInfo.unitSize[+normal];
+        var width = gridWidth*Anno2205Layouts.gridSize + 1;
+        var height = gridHeight*Anno2205Layouts.gridSize + 1;
         return {
+            gridWidth: gridWidth,
+            gridHeight: gridHeight,
             width: width,
             height: height,
             size: Math.max(width, height),
         };
+    };
+
+    EditorUnit.prototype.inGrid = function(grid) {
+        var bbox = this.unitBBox();
+        return ((this.position[0] + bbox.gridWidth < grid.gridWidth) &&
+                (this.position[1] + bbox.gridHeight < grid.gridHeight));
     };
 
     /** Create the <canvas> element and add it to the document. */
@@ -1301,7 +1311,9 @@ var Anno2205Layouts = Anno2205Layouts || {};
     };
 
     EditorUnit.prototype.demolish = function() {
-        this.buildingCanvas.remove();
+        if (this.buildingCanvas) {
+            this.buildingCanvas.remove();
+        }
     };
 
     EditorUnit.prototype.hitTest = function(pageX, pageY) {
@@ -1581,6 +1593,7 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
     var layout = $rootScope.layouts.layoutFromId($routeParams.layoutId);
     // Make a deep copy to edit locally.
     $scope.layout = layout.copy();
+    $scope.grids = Anno2205Layouts.grids;
 
     $scope.levels = Anno2205Layouts.buildingLevels;
     $scope.commonBuildings = Anno2205Layouts.commonBuildings;
@@ -1629,32 +1642,8 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
         });
     };
 
-    var drawGrid = function(canvas) {
-        var ctx = canvas.getContext('2d');
-        // create white background.
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(0, 0, 401, 401);
-
-        ctx.lineWidth = 1;
-        ctx.strokeStyle = '#000000';
-        for (var row=0; row<=20; row++) {
-            ctx.beginPath();
-            ctx.moveTo(0.5, row*Anno2205Layouts.gridSize + 0.5);
-            ctx.lineTo(20*Anno2205Layouts.gridSize + 0.5, row*Anno2205Layouts.gridSize + 0.5);
-            ctx.stroke();
-        }
-        for (var col=0; col<=20; col++) {
-            ctx.beginPath();
-            ctx.moveTo(col*Anno2205Layouts.gridSize + 0.5, 0.5);
-            ctx.lineTo(col*Anno2205Layouts.gridSize + 0.5, 20*Anno2205Layouts.gridSize + 0.5);
-            ctx.stroke();
-        }
-    };
-
     $scope.setActiveLevel(Anno2205Layouts.buildingLevels[$scope.layout.region][0]);
 
-    var canvas = $("#anno-canvas");
-    drawGrid(canvas[0]);
 
     // When you click on a building, it creates a popup, and marks the building
     // selected.
@@ -1854,7 +1843,80 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
             });
         }
     };
+})
+
+.directive('annoGridDraw', function() {
+    return {
+        link: function(scope, element, attrs) {
+            scope.$watch('layout.grid', function() {
+                var canvas = $("#anno-canvas");
+                scope.layout.grid.drawGrid(canvas[0].getContext('2d'));
+            });
+        }
+    };
 });
+;'use strict';
+
+var Anno2205Layouts = Anno2205Layouts || {};
+(function(Anno2205Layouts) {
+
+    function Grid() {
+
+    }
+
+    Grid.prototype.drawGrid = function(ctx) {
+    };
+
+    /************************************************************************/
+
+    function RectGrid(width, height) {
+        // Grid.call(this);
+        this.gridWidth = width;
+        this.gridHeight = height;
+        this.pixelWidth = width * Anno2205Layouts.gridSize + 1;
+        this.pixelHeight = height * Anno2205Layouts.gridSize + 1;
+        this.id = width+'x'+height;
+        this.name = width + ' x ' + height;
+    }
+    RectGrid.prototype  = Object.create(Grid.prototype);
+    RectGrid.prototype.constructor = RectGrid;
+
+    RectGrid.prototype.drawGrid = function(ctx) {
+        // create white background.
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, this.pixelWidth, this.pixelHeight);
+
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = '#000000';
+        var x, y;
+        for (var row=0; row<=this.gridHeight; row++) {
+            ctx.beginPath();
+            x = this.gridWidth*Anno2205Layouts.gridSize + 0.5;
+            y = row*Anno2205Layouts.gridSize + 0.5;
+            ctx.moveTo(0.5, y);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+        }
+        for (var col=0; col<=this.gridWidth; col++) {
+            ctx.beginPath();
+            x = col*Anno2205Layouts.gridSize + 0.5;
+            y = this.gridHeight*Anno2205Layouts.gridSize + 0.5;
+            ctx.moveTo(x, 0.5);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+        }
+    };
+
+
+    Anno2205Layouts.grids = [
+        new RectGrid(20, 20),
+        new RectGrid(40, 40),
+        new RectGrid(100, 100),
+    ];
+
+    Anno2205Layouts.gridMap = _.indexBy(Anno2205Layouts.grids, 'id');
+
+}(Anno2205Layouts));
 ;'use strict';
 
 var Anno2205Layouts = Anno2205Layouts || {};
@@ -1864,7 +1926,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
      * Represents all of the user's layouts.
      * @class
      */
-    var Layouts = function($storage) {
+    function Layouts($storage) {
         this.$storage = $storage;
         // $storage.version = null;
 
@@ -1879,16 +1941,20 @@ var Anno2205Layouts = Anno2205Layouts || {};
             this._load($storage);
         } else {
             console.log("first time here");
-            $storage.version = 1;
-            $storage.nextId = 1;
-            $storage.layouts = [];
+            this.initStorage();
             this.layouts = [];
             // this.createLayout("Test Layout", "earth");
             // this.createLayout("Earth Housing", "earth");
             // this.createLayout("Rice Fields", "earth");
             // this.createLayout("Large Production", "arctic");
-            this.export();
+            // this.export();
         }
+    }
+
+    Layouts.prototype.initStorage = function() {
+        this.$storage.version = 1;
+        this.$storage.nextId = 1;
+        this.$storage.layouts = [];
     };
 
     Layouts.prototype._load = function($storage) {
@@ -1993,6 +2059,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
         layout.createDate = now;
         layout.lastModifiedDate = now;
         layout.region = region;
+        layout.grid = Anno2205Layouts.grids[0];
         layout.buildings = [];
         return layout;
     };
@@ -2004,6 +2071,11 @@ var Anno2205Layouts = Anno2205Layouts || {};
         layout.createDate = new Date(layoutStorage.createDate);
         layout.lastModifiedDate = new Date(layoutStorage.lastModifiedDate);
         layout.region = layoutStorage.region;
+        if (layoutStorage.grid) {
+            layout.grid = Anno2205Layouts.gridMap[layoutStorage.grid];
+        } else {
+            layout.grid = Anno2205Layouts.gridMap['20x20'];
+        }
         layout.buildings = _.map(layoutStorage.buildings, function(buildingStorage) {
             return Anno2205Layouts.EditorBuilding.createFromStorage(buildingStorage);
         });
@@ -2017,11 +2089,42 @@ var Anno2205Layouts = Anno2205Layouts || {};
             createDate: this.createDate,
             lastModifiedDate: this.lastModifiedDate,
             region: this.region,
+            grid: this.grid.id,
         };
         result.buildings = _.map(this.buildings, function (building) {
             return building.export();
         });
         return result;
+    };
+
+    Layout.prototype.gridChange = function(grid) {
+        if (arguments.length) {
+            this.grid = grid;
+            // Remove any buildings that are outside the new grid.
+            this.buildings = _.filter(this.buildings, function(building) {
+                if (!building.buildingUnit.inGrid(grid)) {
+                    building.demolish();
+                    return false;
+                } else {
+                    return true;
+                }
+            });
+            // Remove any modules outside the new grid.
+            var filterUnit = function(unit) {
+                if (!unit.inGrid(grid)) {
+                    unit.demolish();
+                    return false;
+                } else {
+                    return true;
+                }
+            };
+            _.each(this.buildings, function(building) {
+                building.productionModules = _.filter(building.productionModules, filterUnit);
+                building.maintenanceModules = _.filter(building.maintenanceModules, filterUnit);
+            });
+        } else {
+            return this.grid;
+        }
     };
 
     Anno2205Layouts.Layout = Layout;
@@ -2287,10 +2390,9 @@ angular.module("editor/editor.html", []).run(["$templateCache", function($templa
     "    <div>\n" +
     "        Layout Size:\n" +
     "\n" +
-    "        <select>\n" +
-    "            <option>20 x 20</option>\n" +
-    "            <option>40 x 40</option>\n" +
-    "            <option>100 x 100</option>\n" +
+    "        <select ng-model=\"layout.gridChange\"\n" +
+    "                ng-model-options=\"{ getterSetter: true }\"\n" +
+    "                ng-options=\"grid as grid.name for grid in grids track by grid.id\">\n" +
     "        </select>\n" +
     "\n" +
     "        <div id=\"save-button\" ng-click=\"saveLayout()\"></div>\n" +
@@ -2300,7 +2402,10 @@ angular.module("editor/editor.html", []).run(["$templateCache", function($templa
     "</div>\n" +
     "\n" +
     "<div id=\"construction-area\" ng-click=\"constAreaClick($event)\">\n" +
-    "    <canvas id=\"anno-canvas\" width=\"401\" height=\"401\"></canvas>\n" +
+    "    <canvas id=\"anno-canvas\"\n" +
+    "            width=\"{{layout.grid.pixelWidth}}\"\n" +
+    "            height=\"{{layout.grid.pixelHeight}}\"\n" +
+    "            anno-grid-draw></canvas>\n" +
     "</div>\n" +
     "<br>\n" +
     "\n" +
