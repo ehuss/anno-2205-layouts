@@ -140,7 +140,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
         layout.createDate = now;
         layout.lastModifiedDate = now;
         layout.region = region;
-        layout.grid = Anno2205Layouts.grids[0];
+        layout.grid = Anno2205Layouts.gridMap['40x40'];
         layout.buildings = [];
         return layout;
     };

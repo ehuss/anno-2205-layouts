@@ -126,7 +126,10 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
     };
     $scope.createProductionModule = function() {
         $scope.buildingPopup.show = false;
-        var newProdMod = Anno2205Layouts.EditorUnit.createNew($scope.selectedBuilding.type.productionUnit);
+        var buildingType = $scope.selectedBuilding.type;
+        var newProdMod = Anno2205Layouts.EditorUnit.createNew(
+            buildingType.productionUnit,
+            buildingType.color, Anno2205Layouts.productionAlpha);
         newProdMod.drawUnit();
         newProdMod.createPositionHandlers(function(editorUnit) {
             $scope.selectedBuilding.productionModules.push(editorUnit);
@@ -134,7 +137,10 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
     };
     $scope.createMaintenanceModule = function(maintenance) {
         $scope.buildingPopup.show = false;
-        var newMaintMod = Anno2205Layouts.EditorUnit.createNew(maintenance);
+        var buildingType = $scope.selectedBuilding.type;
+        var newMaintMod = Anno2205Layouts.EditorUnit.createNew(
+            maintenance,
+            buildingType.color, Anno2205Layouts.maintenanceAlpha);
         newMaintMod.drawUnit();
         newMaintMod.createPositionHandlers(function(editorUnit) {
             $scope.selectedBuilding.maintenanceModules.push(editorUnit);
