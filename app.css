@@ -1,0 +1,11 @@
+/* app css stylesheet */
+
+#layout-list-container {
+  width: 300px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+}
