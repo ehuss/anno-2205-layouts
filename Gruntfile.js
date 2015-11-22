@@ -82,7 +82,7 @@ module.exports = function(grunt) {
 
     watch: {
       dev: {
-        files: [ 'Gruntfile.js', 'app/**/*.js', '*.html' ],
+        files: [ 'Gruntfile.js', 'app/**/*.js', 'app/**/*.html' ],
         tasks: [ 'jshint', /*'karma:unit',*/ 'dist'],
         options: {
           atBegin: true

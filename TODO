@@ -1,6 +1,7 @@
 TODO
 ====
 
+- make more spritesheets for buttons/hovers.
 - error while trying to open editor for unknown id.
 - ng-cloak on the editor popup.  Doens't seem to work as expected, still see flicker on editor (in FF).
 - Cancel placing a new building (esc or click off-grid?).
