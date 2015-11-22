@@ -4,7 +4,8 @@ angular.module('anno2205Layouts', [
     'ngRoute',
     'ngStorage',
     'anno2205Layouts.my-layouts',
-    'anno2205Layouts.editor'
+    'anno2205Layouts.editor',
+    'templates-dist'
 ])
 
 .config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
