@@ -36,7 +36,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
             ctx.beginPath();
             x = this.gridWidth*Anno2205Layouts.gridSize + 0.5;
             y = row*Anno2205Layouts.gridSize + 0.5;
-            ctx.moveTo(0, y);
+            ctx.moveTo(0.5, y);
             ctx.lineTo(x, y);
             ctx.stroke();
         }

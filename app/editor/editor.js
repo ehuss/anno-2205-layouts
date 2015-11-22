@@ -15,6 +15,7 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
     var layout = $rootScope.layouts.layoutFromId($routeParams.layoutId);
     // Make a deep copy to edit locally.
     $scope.layout = layout.copy();
+    $scope.grids = Anno2205Layouts.grids;
 
     $scope.levels = Anno2205Layouts.buildingLevels;
     $scope.commonBuildings = Anno2205Layouts.commonBuildings;
@@ -63,32 +64,8 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
         });
     };
 
-    var drawGrid = function(canvas) {
-        var ctx = canvas.getContext('2d');
-        // create white background.
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(0, 0, 401, 401);
-
-        ctx.lineWidth = 1;
-        ctx.strokeStyle = '#000000';
-        for (var row=0; row<=20; row++) {
-            ctx.beginPath();
-            ctx.moveTo(0.5, row*Anno2205Layouts.gridSize + 0.5);
-            ctx.lineTo(20*Anno2205Layouts.gridSize + 0.5, row*Anno2205Layouts.gridSize + 0.5);
-            ctx.stroke();
-        }
-        for (var col=0; col<=20; col++) {
-            ctx.beginPath();
-            ctx.moveTo(col*Anno2205Layouts.gridSize + 0.5, 0.5);
-            ctx.lineTo(col*Anno2205Layouts.gridSize + 0.5, 20*Anno2205Layouts.gridSize + 0.5);
-            ctx.stroke();
-        }
-    };
-
     $scope.setActiveLevel(Anno2205Layouts.buildingLevels[$scope.layout.region][0]);
 
-    var canvas = $("#anno-canvas");
-    drawGrid(canvas[0]);
 
     // When you click on a building, it creates a popup, and marks the building
     // selected.
@@ -285,6 +262,17 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
                 if (typeof enabled === 'undefined' || enabled) {
                     element.css('background', scope.hoverBase);
                 }
+            });
+        }
+    };
+})
+
+.directive('annoGridDraw', function() {
+    return {
+        link: function(scope, element, attrs) {
+            scope.$watch('layout.grid', function() {
+                var canvas = $("#anno-canvas");
+                scope.layout.grid.drawGrid(canvas[0].getContext('2d'));
             });
         }
     };

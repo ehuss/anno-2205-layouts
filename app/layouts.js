@@ -7,7 +7,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
      * Represents all of the user's layouts.
      * @class
      */
-    var Layouts = function($storage) {
+    function Layouts($storage) {
         this.$storage = $storage;
         // $storage.version = null;
 
@@ -22,16 +22,20 @@ var Anno2205Layouts = Anno2205Layouts || {};
             this._load($storage);
         } else {
             console.log("first time here");
-            $storage.version = 1;
-            $storage.nextId = 1;
-            $storage.layouts = [];
+            this.initStorage();
             this.layouts = [];
             // this.createLayout("Test Layout", "earth");
             // this.createLayout("Earth Housing", "earth");
             // this.createLayout("Rice Fields", "earth");
             // this.createLayout("Large Production", "arctic");
-            this.export();
+            // this.export();
         }
+    }
+
+    Layouts.prototype.initStorage = function() {
+        this.$storage.version = 1;
+        this.$storage.nextId = 1;
+        this.$storage.layouts = [];
     };
 
     Layouts.prototype._load = function($storage) {
@@ -136,6 +140,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
         layout.createDate = now;
         layout.lastModifiedDate = now;
         layout.region = region;
+        layout.grid = Anno2205Layouts.grids[0];
         layout.buildings = [];
         return layout;
     };
@@ -147,6 +152,11 @@ var Anno2205Layouts = Anno2205Layouts || {};
         layout.createDate = new Date(layoutStorage.createDate);
         layout.lastModifiedDate = new Date(layoutStorage.lastModifiedDate);
         layout.region = layoutStorage.region;
+        if (layoutStorage.grid) {
+            layout.grid = Anno2205Layouts.gridMap[layoutStorage.grid];
+        } else {
+            layout.grid = Anno2205Layouts.gridMap['20x20'];
+        }
         layout.buildings = _.map(layoutStorage.buildings, function(buildingStorage) {
             return Anno2205Layouts.EditorBuilding.createFromStorage(buildingStorage);
         });
@@ -160,11 +170,42 @@ var Anno2205Layouts = Anno2205Layouts || {};
             createDate: this.createDate,
             lastModifiedDate: this.lastModifiedDate,
             region: this.region,
+            grid: this.grid.id,
         };
         result.buildings = _.map(this.buildings, function (building) {
             return building.export();
         });
         return result;
+    };
+
+    Layout.prototype.gridChange = function(grid) {
+        if (arguments.length) {
+            this.grid = grid;
+            // Remove any buildings that are outside the new grid.
+            this.buildings = _.filter(this.buildings, function(building) {
+                if (!building.buildingUnit.inGrid(grid)) {
+                    building.demolish();
+                    return false;
+                } else {
+                    return true;
+                }
+            });
+            // Remove any modules outside the new grid.
+            var filterUnit = function(unit) {
+                if (!unit.inGrid(grid)) {
+                    unit.demolish();
+                    return false;
+                } else {
+                    return true;
+                }
+            };
+            _.each(this.buildings, function(building) {
+                building.productionModules = _.filter(building.productionModules, filterUnit);
+                building.maintenanceModules = _.filter(building.maintenanceModules, filterUnit);
+            });
+        } else {
+            return this.grid;
+        }
     };
 
     Anno2205Layouts.Layout = Layout;

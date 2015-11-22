@@ -51,13 +51,23 @@ var Anno2205Layouts = Anno2205Layouts || {};
     /** Determine the bounding box of the unit.  */
     EditorUnit.prototype.unitBBox = function() {
         var normal = this.orientation === 0 || this.orientation === 2;
-        var width = this.unitInfo.unitSize[+!normal]*Anno2205Layouts.gridSize + 1;
-        var height = this.unitInfo.unitSize[+normal]*Anno2205Layouts.gridSize + 1;
+        var gridWidth = this.unitInfo.unitSize[+!normal];
+        var gridHeight = this.unitInfo.unitSize[+normal];
+        var width = gridWidth*Anno2205Layouts.gridSize + 1;
+        var height = gridHeight*Anno2205Layouts.gridSize + 1;
         return {
+            gridWidth: gridWidth,
+            gridHeight: gridHeight,
             width: width,
             height: height,
             size: Math.max(width, height),
         };
+    };
+
+    EditorUnit.prototype.inGrid = function(grid) {
+        var bbox = this.unitBBox();
+        return ((this.position[0] + bbox.gridWidth < grid.gridWidth) &&
+                (this.position[1] + bbox.gridHeight < grid.gridHeight));
     };
 
     /** Create the <canvas> element and add it to the document. */
@@ -84,7 +94,9 @@ var Anno2205Layouts = Anno2205Layouts || {};
     };
 
     EditorUnit.prototype.demolish = function() {
-        this.buildingCanvas.remove();
+        if (this.buildingCanvas) {
+            this.buildingCanvas.remove();
+        }
     };
 
     EditorUnit.prototype.hitTest = function(pageX, pageY) {
