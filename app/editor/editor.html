@@ -83,6 +83,9 @@
     #editor-mode-icon-demo {
         background: url('images/buttons/icon_demolish.png');
     }
+    #construction-icons {
+        display: none;
+    }
 
 </style>
 
@@ -109,6 +112,9 @@
     <canvas id="anno-canvas" width="401" height="401"></canvas>
 </div>
 <br>
+
+<!-- Ensure that these are loaded and easily available. -->
+<img id="construction-icons" src="images/buttons/construction_icons.png">
 
 <div class="construction-level-button" ng-repeat="level in levels[layout.region]"
      ng-click="setActiveLevel(level)"

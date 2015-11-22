@@ -144,8 +144,8 @@ var Anno2205Layouts = Anno2205Layouts || {};
         var layout = new Layout();
         layout.id = layoutStorage.id;
         layout.name = layoutStorage.name;
-        layout.createDate = layoutStorage.createDate;
-        layout.lastModifiedDate = layoutStorage.lastModifiedDate;
+        layout.createDate = new Date(layoutStorage.createDate);
+        layout.lastModifiedDate = new Date(layoutStorage.lastModifiedDate);
         layout.region = layoutStorage.region;
         layout.buildings = _.map(layoutStorage.buildings, function(buildingStorage) {
             return Anno2205Layouts.EditorBuilding.createFromStorage(buildingStorage);

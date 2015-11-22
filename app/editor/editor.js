@@ -32,6 +32,7 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
 
     $scope.saveLayout = function() {
         $rootScope.layouts.updateLayout($scope.layout);
+        $rootScope.layouts.export();
         $location.path('/my-layouts');
     };
 
@@ -57,6 +58,7 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
 
     var drawBuildings = function() {
         _.each($scope.layout.buildings, function(building) {
+            building.createElements();
             building.draw();
         });
     };
@@ -87,7 +89,6 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
 
     var canvas = $("#anno-canvas");
     drawGrid(canvas[0]);
-    drawBuildings();
 
     // When you click on a building, it creates a popup, and marks the building
     // selected.
@@ -214,7 +215,6 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
         $(document).off('keydown', globalKeyboardShortcuts);
     });
 
-
     $scope.exportImage = function() {
         var gridCanvas = $('#anno-canvas');
         var canvas = gridCanvas.clone()[0];
@@ -254,6 +254,12 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
         link[0].click();
         link.remove();
     };
+
+    $('#construction-icons').on('load', function() {
+        // Ensure icons are available before drawing on the canvas.
+        drawBuildings();
+    });
+
 }])
 
 

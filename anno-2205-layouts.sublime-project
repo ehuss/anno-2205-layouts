@@ -3,7 +3,7 @@
 	[
 		{
 			"path": ".",
-            "folder_exclude_patterns": ["bower_components", "node_modules", "dist", "libs", "tmp"]
+            "folder_exclude_patterns": ["bower_components", "node_modules", "dist", "libs", "tmp", ".grunt"]
 		}
 	]
 }

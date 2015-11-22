@@ -28,7 +28,6 @@ var Anno2205Layouts = Anno2205Layouts || {};
         eu.unitInfo = Anno2205Layouts.unitIdMap[unitStorage.unitInfoId];
         eu.position = unitStorage.position.slice();
         eu.orientation = unitStorage.orientation;
-        eu.createElement();
         eu.state = 'onGrid';
         return eu;
     };
@@ -150,7 +149,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
             ctx.fill();
         }
         // Draw the icon in the middle.
-        var iconSheet = $('<img src="images/buttons/construction_icons.png">')[0];
+        var iconSheet = $('#construction-icons')[0];
         var icon = this.unitInfo.icon;
         var iconScale = this.unitInfo.iconScale || 1.0;
         if (icon.width * iconScale > bbox.width ||
@@ -322,20 +321,26 @@ var Anno2205Layouts = Anno2205Layouts || {};
         };
     };
 
-    EditorBuilding.prototype.draw = function() {
-        this.buildingUnit.drawUnit();
+    EditorBuilding.prototype.eachUnit = function(cb) {
+        cb(this.buildingUnit);
         _.each(this.productionModules, function(unit) {
-            unit.drawUnit();
+            cb(unit);
         });
         _.each(this.maintenanceModules, function(unit) {
-            unit.drawUnit();
+            cb(unit);
         });
     };
 
+    EditorBuilding.prototype.createElements = function(first_argument) {
+        this.eachUnit(function(unit) {unit.createElement();});
+    };
+
+    EditorBuilding.prototype.draw = function() {
+        this.eachUnit(function(unit) {unit.drawUnit();});
+    };
+
     EditorBuilding.prototype.demolish = function() {
-        this.buildingUnit.demolish();
-        _.each(this.productionModules, function(module) { module.demolish(); });
-        _.each(this.maintenanceModules, function(module) { module.demolish(); });
+        this.eachUnit(function(unit) {unit.demolish();});
     };
 
     Anno2205Layouts.EditorBuilding = EditorBuilding;
