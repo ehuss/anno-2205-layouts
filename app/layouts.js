@@ -208,8 +208,30 @@ var Anno2205Layouts = Anno2205Layouts || {};
         }
     };
 
+    Layout.prototype.bbox = function() {
+        var minX = this.buildings.length ? 10000 : 0;
+        var minY = minX;
+        var maxX = 0;
+        var maxY = 0;
+        _.each(this.buildings, function(building) {
+            building.eachUnit(function(unit) {
+                var unitBBox = unit.bbox();
+                minX = Math.min(minX, unit.position[0]);
+                minY = Math.min(minY, unit.position[1]);
+                maxX = Math.max(maxX, unit.position[0]+unitBBox.gridWidth);
+                maxY = Math.max(maxY, unit.position[1]+unitBBox.gridHeight);
+            });
+        });
+        return {
+            minX: minX,
+            minY: minY,
+            maxX: maxX,
+            maxY: maxY,
+            width: maxX-minX,
+            height: maxY-minY,
+        };
+    };
+
     Anno2205Layouts.Layout = Layout;
 
-
 }(Anno2205Layouts));
-

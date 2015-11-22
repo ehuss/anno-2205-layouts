@@ -72,8 +72,8 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
     var buildingDefaultClickHandler = function(building) {
         $scope.selectedBuilding = building;
         $scope.buildingPopup.show = true;
-        var buildingOffset = building.buildingUnit.buildingCanvas.offset();
-        var buildingBBox = building.buildingUnit.unitBBox();
+        var buildingOffset = building.buildingUnit.unitCanvas.offset();
+        var buildingBBox = building.buildingUnit.bbox();
         $scope.buildingPopup.left = buildingOffset.left + buildingBBox.width/2 + 50;
         $scope.buildingPopup.top = buildingOffset.top + buildingBBox.height/2 - 100;
     };
@@ -193,20 +193,26 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
     });
 
     $scope.exportImage = function() {
-        var gridCanvas = $('#anno-canvas');
-        var canvas = gridCanvas.clone()[0];
+        var layoutBBox = $scope.layout.bbox();
+        var grid = new Anno2205Layouts.RectGrid(layoutBBox.width+2,
+                                                layoutBBox.height+2);
+        var offset = {
+            x: layoutBBox.minX-1,
+            y: layoutBBox.minY-1
+        };
+        var gridCanvas = $('<canvas></canvas>')
+            .prop('width', grid.pixelWidth)
+            .prop('height', grid.pixelHeight);
+        var canvas = gridCanvas[0];
         var ctx = canvas.getContext('2d');
 
-        // Canvas.
-        ctx.drawImage(gridCanvas[0], 0, 0);
+        // Grid.
+        grid.drawGrid(ctx);
         // Buildings.
-        var canvasOffset = gridCanvas.offset();
         var drawUnit = function(unit) {
-            var unitCanvas = unit.buildingCanvas;
-            var unitOffset = unitCanvas.offset();
-            ctx.drawImage(unitCanvas[0],
-                unitOffset.left - canvasOffset.left,
-                unitOffset.top - canvasOffset.top);
+            ctx.drawImage(unit.unitCanvas[0],
+                (unit.position[0] - offset.x) * Anno2205Layouts.gridSize,
+                (unit.position[1] - offset.y) * Anno2205Layouts.gridSize);
         };
         _.each($scope.layout.buildings, function(building) {
             drawUnit(building.buildingUnit);

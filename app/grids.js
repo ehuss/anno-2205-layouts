@@ -50,6 +50,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
         }
     };
 
+    Anno2205Layouts.RectGrid = RectGrid;
 
     Anno2205Layouts.grids = [
         new RectGrid(20, 20),

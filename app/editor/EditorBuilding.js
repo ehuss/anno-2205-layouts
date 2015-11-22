@@ -13,7 +13,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
      *     not placed.
      * @var {boolean} orientation - Number of clockwise rotations.
      * @var {CanvasRenderingContext2D} ctx - The context for rendering the unit.
-     * @var {jQuery} buildingCanvas - The <canvas> element for the unit.
+     * @var {jQuery} unitCanvas - The <canvas> element for the unit.
      */
     var EditorUnit = function() {
         this.unitInfo = undefined;
@@ -49,7 +49,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
     };
 
     /** Determine the bounding box of the unit.  */
-    EditorUnit.prototype.unitBBox = function() {
+    EditorUnit.prototype.bbox = function() {
         var normal = this.orientation === 0 || this.orientation === 2;
         var gridWidth = this.unitInfo.unitSize[+!normal];
         var gridHeight = this.unitInfo.unitSize[+normal];
@@ -65,14 +65,14 @@ var Anno2205Layouts = Anno2205Layouts || {};
     };
 
     EditorUnit.prototype.inGrid = function(grid) {
-        var bbox = this.unitBBox();
+        var bbox = this.bbox();
         return ((this.position[0] + bbox.gridWidth < grid.gridWidth) &&
                 (this.position[1] + bbox.gridHeight < grid.gridHeight));
     };
 
     /** Create the <canvas> element and add it to the document. */
     EditorUnit.prototype.createElement = function() {
-        var bbox = this.unitBBox();
+        var bbox = this.bbox();
         var gridCanvas = $("#anno-canvas");
         var canvasOffset = gridCanvas.offset();
         var left = 0;
@@ -81,7 +81,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
             left = this.position[0]*Anno2205Layouts.gridSize + canvasOffset.left;
             top = this.position[1]*Anno2205Layouts.gridSize + canvasOffset.top;
         }
-        this.buildingCanvas = $('<canvas></canvas>').css({
+        this.unitCanvas = $('<canvas></canvas>').css({
             position: 'absolute',
             left: left,
             top: top,
@@ -89,19 +89,19 @@ var Anno2205Layouts = Anno2205Layouts || {};
             width: bbox.size,
             height: bbox.size,
         });
-        this.ctx = this.buildingCanvas.get(0).getContext('2d');
-        $("#construction-area").append(this.buildingCanvas);
+        this.ctx = this.unitCanvas.get(0).getContext('2d');
+        $("#construction-area").append(this.unitCanvas);
     };
 
     EditorUnit.prototype.demolish = function() {
-        if (this.buildingCanvas) {
-            this.buildingCanvas.remove();
+        if (this.unitCanvas) {
+            this.unitCanvas.remove();
         }
     };
 
     EditorUnit.prototype.hitTest = function(pageX, pageY) {
-        var offset = this.buildingCanvas.offset();
-        var bbox = this.unitBBox();
+        var offset = this.unitCanvas.offset();
+        var bbox = this.bbox();
         var relativeX = pageX - offset.left;
         var relativeY = pageY - offset.top;
         if (relativeX > 0 && relativeY > 0 &&
@@ -114,7 +114,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
 
     /** Draw the unit on its canvas. */
     EditorUnit.prototype.drawUnit = function() {
-        var bbox = this.unitBBox();
+        var bbox = this.bbox();
         var ctx = this.ctx;
         ctx.clearRect(0, 0, bbox.size, bbox.size);
         ctx.lineWidth = 1;
@@ -211,12 +211,12 @@ var Anno2205Layouts = Anno2205Layouts || {};
             var gridPos  = gridFromMouse(canvasOffset.left, canvasOffset.top,
                     canvasWidth, canvasHeight, event.pageX, event.pageY);
             if (gridPos === undefined) {
-                eu.buildingCanvas.css({
+                eu.unitCanvas.css({
                     left: event.pageX,
                     top: event.pageY,
                 });
             } else {
-                eu.buildingCanvas.css({
+                eu.unitCanvas.css({
                     left: gridPos[0]*Anno2205Layouts.gridSize + canvasOffset.left,
                     top: gridPos[1]*Anno2205Layouts.gridSize + canvasOffset.top,
                 });
@@ -356,6 +356,5 @@ var Anno2205Layouts = Anno2205Layouts || {};
     };
 
     Anno2205Layouts.EditorBuilding = EditorBuilding;
-
 
 }(Anno2205Layouts));
