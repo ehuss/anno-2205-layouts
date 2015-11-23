@@ -207,22 +207,24 @@ var Anno2205Layouts = Anno2205Layouts || {};
             ctx.fill();
         }
         // Draw the icon in the middle.
-        var iconSheet = $('#construction-icons')[0];
-        var icon = this.unitInfo.icon;
-        var iconScale = this.unitInfo.iconScale || 1.0;
-        if (icon.width * iconScale > bbox.width ||
-            icon.height * iconScale > bbox.height) {
-            // Icon is larger than the unit.
-            var widthScale = bbox.width/icon.width;
-            var heightScale = bbox.height/icon.height;
-            iconScale = Math.min(widthScale, heightScale) * 0.9;
+        if (this.unitInfo.showIcon === undefined || this.unitInfo.showIcon) {
+            var iconSheet = $('#construction-icons')[0];
+            var icon = this.unitInfo.icon;
+            var iconScale = this.unitInfo.iconScale || 1.0;
+            if (icon.width * iconScale > bbox.width ||
+                icon.height * iconScale > bbox.height) {
+                // Icon is larger than the unit.
+                var widthScale = bbox.width/icon.width;
+                var heightScale = bbox.height/icon.height;
+                iconScale = Math.min(widthScale, heightScale) * 0.9;
+            }
+            var targetIconWidth = icon.width * iconScale;
+            var targetIconHeight = icon.height * iconScale;
+            ctx.drawImage(iconSheet, icon.x, icon.y,
+                icon.width, icon.height,
+                bbox.width/2 - targetIconWidth/2, bbox.height/2 - targetIconHeight/2,
+                targetIconWidth, targetIconHeight);
         }
-        var targetIconWidth = icon.width * iconScale;
-        var targetIconHeight = icon.height * iconScale;
-        ctx.drawImage(iconSheet, icon.x, icon.y,
-            icon.width, icon.height,
-            bbox.width/2 - targetIconWidth/2, bbox.height/2 - targetIconHeight/2,
-            targetIconWidth, targetIconHeight);
     };
 
     Anno2205Layouts.EditorUnit = EditorUnit;
