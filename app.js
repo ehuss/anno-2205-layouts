@@ -128,6 +128,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'sunflower-farm',
                         name: 'Sunflower Farm',
                         icon: 'bioresigns',
+                        color: 'efc42f',
                         placementType: 'ground',
                         unitSize: [4, 8],
                         // effect
@@ -151,6 +152,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'biopolymer-factory',
                         name: 'Biopolymer Factory',
                         icon: 'biocomposites',
+                        color: '9ca38a',
                         placementType: 'ground',
                         unitSize: [5, 7],
                         productionUnit: {
@@ -165,6 +167,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'rice-farm',
                         name: 'Rice Farm',
                         icon: 'rice_dish',
+                        color: 'f9e493',
                         placementType: 'ground',
                         unitSize: [5, 7],
                         productionUnit: {
@@ -179,6 +182,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'desalinization-plant',
                         name: 'Desalinization Plant',
                         icon: 'water',
+                        color: '2aa2c5',
                         placementType: 'coast',
                         maintenanceModules: ['workforce', 'energy', 'logistics'],
                     },
@@ -186,6 +190,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'infodrome',
                         name: 'Infodrome',
                         icon: 'information',
+                        color: '127083',
                         placementType: 'ground',
                         unitSize: [7, 7],
                     },
@@ -201,6 +206,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'feldspar-quarry',
                         name: 'Feldspar Quarry',
                         icon: 'ceramics',
+                        color: '89b8db',
                         placementType: 'mountain',
                         maintenanceModules: ['workforce', 'energy', 'logistics'],
                     },
@@ -208,6 +214,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'cobalt-mine',
                         name: 'Cobalt Mine',
                         icon: 'cobalt',
+                        color: '6dbcd7',
                         placementType: 'mountain',
                         maintenanceModules: ['workforce', 'energy', 'logistics'],
                     },
@@ -215,6 +222,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'robot-assembly-hall',
                         name: 'Robot Assembly Hall',
                         icon: 'robots',
+                        color: 'ca6408',
                         placementType: 'ground',
                         unitSize: [4, 13],
                         productionUnit: {
@@ -230,6 +238,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'fruit-plantation',
                         name: 'Fruit Plantation',
                         icon: 'fruit',
+                        color: 'efab17',
                         placementType: 'ground',
                         unitSize: [4, 7],
                         productionUnit: {
@@ -244,6 +253,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'vitamin-condenser',
                         name: 'Vitamin Condenser',
                         icon: 'fruit_drink',
+                        color: 'fff2a3',
                         placementType: 'ground',
                         unitSize: [3, 4],
                         productionUnit: {
@@ -258,6 +268,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'algae-farm',
                         name: 'Algae Farm',
                         icon: 'algae',
+                        color: '6ed330',
                         placementType: 'coast',
                         maintenanceModules: ['workforce', 'energy', 'logistics'],
                     },
@@ -265,6 +276,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'synthcell-incubator',
                         name: 'Synthcell Incubator',
                         icon: 'synth_cells',
+                        color: 'b0fb57',
                         placementType: 'ground',
                         unitSize: [5, 5],
                         productionUnit: {
@@ -279,6 +291,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'biomedical-laboratory',
                         name: 'Biomedical Laboratory',
                         icon: 'rejuvenators',
+                        color: 'b2de89',
                         placementType: 'ground',
                         unitSize: [6, 9],
                         unitShape: [
@@ -304,6 +317,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'security-department',
                         name: 'Security Department',
                         icon: 'security',
+                        color: '898e89',
                         placementType: 'ground',
                         unitSize: [8, 9],
                         maintenanceModules: ['workforce', 'energy', 'logistics'],
@@ -320,6 +334,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'soy-farm',
                         name: 'Soy Farm',
                         icon: 'soy_beans',
+                        color: '408a34',
                         placementType: 'ground',
                         unitSize: [4, 7],
                         productionUnit: {
@@ -334,6 +349,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'cattle-ranch',
                         name: 'Cattle Ranch',
                         icon: 'beef',
+                        color: 'c77365',
                         placementType: 'ground',
                         unitSize: [7, 9],
                         unitShape: [
@@ -359,6 +375,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'vineyard',
                         name: 'Vineyard',
                         icon: 'wine',
+                        color: '821303',
                         placementType: 'ground',
                         unitSize: [7, 8],
                         productionUnit: {
@@ -373,6 +390,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'food-design-workshop',
                         name: 'Food Design Workshop',
                         icon: 'luxury_food',
+                        color: 'c73f20',
                         placementType: 'ground',
                         unitSize: [4, 9],
                         productionUnit: {
@@ -387,6 +405,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'flax-plantation',
                         name: 'Flax Plantation',
                         icon: 'plant_fibres',
+                        color: 'a0ad64',
                         placementType: 'ground',
                         unitSize: [3, 7],
                         productionUnit: {
@@ -401,6 +420,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'silicon-mine',
                         name: 'Silicon Mine',
                         icon: 'silica',
+                        color: 'd5d7d5',
                         placementType: 'mountain',
                         maintenanceModules: ['workforce', 'energy', 'logistics'],
                     },
@@ -408,6 +428,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'microfabrication-hall',
                         name: 'Microfabrication Hall',
                         icon: 'microchips',
+                        color: 'c8cbcf',
                         placementType: 'ground',
                         unitSize: [3, 6],
                         productionUnit: {
@@ -422,6 +443,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'nano-textile-mill',
                         name: 'Nano Textile Mill',
                         icon: 'intelli_clothes',
+                        color: 'cbe9ec',
                         placementType: 'ground',
                         unitSize: [4, 11],
                         productionUnit: {
@@ -436,6 +458,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'metro-station',
                         name: 'Metro Station',
                         icon: 'mobility',
+                        color: 'c38076',
                         placementType: 'ground',
                         unitSize: [10, 19],
                         maintenanceModules: ['workforce', 'energy', 'logistics'],
@@ -452,6 +475,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'diamond-mine',
                         name: 'Diamond Mine',
                         icon: 'diamant',
+                        color: '889bb2',
                         placementType: 'mountain',
                         maintenanceModules: ['workforce', 'energy', 'logistics'],
                     },
@@ -459,6 +483,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'nano-cutting-unit',
                         name: 'Nano Cutting Unit',
                         icon: 'multispectral_prisms',
+                        color: '7996d4',
                         placementType: 'ground',
                         unitSize: [5, 8],
                         productionUnit: {
@@ -473,6 +498,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'neutronium-lab',
                         name: 'Neutronium Lab',
                         icon: 'replicators',
+                        color: 'ab484b',
                         placementType: 'ground',
                         unitSize: [5, 9],
                         unitShape: [
@@ -498,6 +524,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'ai-composition-plant',
                         name: 'AI Composition Plant',
                         icon: 'synaptic_circuits',
+                        color: 'b2a162',
                         placementType: 'ground',
                         unitSize: [6, 7],
                         productionUnit: {
@@ -512,6 +539,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'android-factory',
                         name: 'Android Factory',
                         icon: 'androids',
+                        color: 'afc8cd',
                         placementType: 'ground',
                         unitSize: [5, 11],
                         productionUnit: {
@@ -526,6 +554,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'stadium',
                         name: 'Stadium',
                         icon: 'recreation',
+                        color: '4787cd',
                         placementType: 'ground',
                         unitSize: [17, 17],
                     },
@@ -541,6 +570,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'small-park',
                         name: 'Small Park',
                         icon: 'ornamental_park_small',
+                        color: 'b4bc47',
                         placementType: 'ground',
                         unitSize: [1, 1],
                     },
@@ -548,6 +578,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'medium-park',
                         name: 'Medium Park',
                         icon: 'ornamental_park_medium',
+                        color: 'b4bc47',
                         placementType: 'ground',
                         unitSize: [2, 2],
                     },
@@ -555,6 +586,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'big-park',
                         name: 'Big Park',
                         icon: 'ornamental_park_large',
+                        color: 'b4bc47',
                         placementType: 'ground',
                         unitSize: [3, 3],
                     },
@@ -562,6 +594,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'small-parking-lot',
                         name: 'Small Parking Lot',
                         icon: 'ornamental_car_park_small',
+                        color: '676b7f',
                         placementType: 'ground',
                         unitSize: [1, 1],
                     },
@@ -569,6 +602,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'medium-parking-lot',
                         name: 'Medium Parking Lot',
                         icon: 'ornamental_car_park_medium',
+                        color: '676b7f',
                         placementType: 'ground',
                         unitSize: [2, 2],
                     },
@@ -576,6 +610,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'big-parking-lot',
                         name: 'Big Parking Lot',
                         icon: 'ornamental_car_park_large',
+                        color: '676b7f',
                         placementType: 'ground',
                         unitSize: [3, 3],
                     },
@@ -593,12 +628,14 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'aluminum-mine',
                         name: 'Aluminum Mine',
                         icon: 'aluminium',
+                        color: 'bebfc2',
                         maintenanceModules: ['workforce', 'energy', 'logistics'],
                     },
                     {
                         id: 'compression-chamber',
                         name: 'Compression Chamber',
                         icon: 'metal_foam',
+                        color: '4c4b50',
                         placementType: 'ground',
                         unitSize: [4, 7],
                         productionUnit: {
@@ -613,6 +650,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'fishing-harbor',
                         name: 'Fishing Harbor',
                         icon: 'fish',
+                        color: '9ca5ae',
                         placementType: 'coast',
                         maintenanceModules: ['workforce', 'energy', 'logistics'],
                     },
@@ -620,6 +658,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'cannery',
                         name: 'Cannery',
                         icon: 'canned_food',
+                        color: '4f80ff',
                         placementType: 'ground',
                         unitSize: [4, 7],
                         productionUnit: {
@@ -634,6 +673,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'molybdenum-mine',
                         name: 'Molybdenum Mine',
                         icon: 'molybdenum',
+                        color: '97999b',
                         placementType: 'mountain',
                         maintenanceModules: ['workforce', 'energy', 'logistics'],
                     },
@@ -641,6 +681,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'neuro-module-factory',
                         name: 'Neuro-Module Factory',
                         icon: 'neuro_implants_2',
+                        color: '85c0cd',
                         placementType: 'ground',
                         unitSize: [5, 7],
                         productionUnit: {
@@ -655,6 +696,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'community-center',
                         name: 'Community Center',
                         icon: 'community_center',
+                        color: 'cd610b',
                         placementType: 'ground',
                         unitSize: [5, 7],
                     },
@@ -670,6 +712,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'plasma-smelter',
                         name: 'Plasma Smelter',
                         icon: 'super_alloys',
+                        color: '667483',
                         placementType: 'ground',
                         unitSize: [5, 9],
                         productionUnit: {
@@ -685,6 +728,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'coral-farm',
                         name: 'Coral Farm',
                         icon: 'deep_water_corals',
+                        color: '81202e',
                         placementType: 'coast',
                         maintenanceModules: ['workforce', 'energy', 'logistics'],
                     },
@@ -692,6 +736,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'pharma-lab',
                         name: 'Pharma Lab',
                         icon: 'stimulants',
+                        color: '77373c',
                         placementType: 'ground',
                         unitSize: [3, 6],
                         productionUnit: {
@@ -706,6 +751,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'methane-extractor',
                         name: 'Methane Extractor',
                         icon: 'methan_clathrate',
+                        color: 'ce6e14',
                         placementType: 'coast',
                         maintenanceModules: ['workforce', 'energy', 'logistics'],
                     },
@@ -713,6 +759,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'deuterium-strainer',
                         name: 'Deuterium Strainer',
                         icon: 'deuterium',
+                        color: '995aee',
                         placementType: 'coast',
                         maintenanceModules: ['workforce', 'energy', 'logistics'],
                     },
@@ -720,6 +767,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'cryogenics-lab',
                         name: 'Cryogenics Lab',
                         icon: 'super_coolants',
+                        color: '65a2ca',
                         placementType: 'ground',
                         unitSize: [4, 8],
                         productionUnit: {
@@ -734,6 +782,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'subzero-cleanroom',
                         name: 'Subzero Cleanroom',
                         icon: 'qubit_processors',
+                        color: 'e6d9a2',
                         placementType: 'ground',
                         unitSize: [3, 8],
                         productionUnit: {
@@ -748,6 +797,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'hardware-fabrication-plant',
                         name: 'Hardware Fabrication Plant',
                         icon: 'quantum_computers',
+                        color: 'bff0ff',
                         placementType: 'ground',
                         unitSize: [7, 7],
                         productionUnit: {
@@ -762,6 +812,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'high-security-laboratory',
                         name: 'High Security Laboratory',
                         icon: 'forbidden_science',
+                        color: 'c79b3b',
                         placementType: 'ground',
                         //TODO: What is the size?
                         unitSize: [1, 1],
@@ -780,6 +831,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'titanium-mine',
                         name: 'Titanium Mine',
                         icon: 'titanium',
+                        color: 'd2d3d7',
                         placementType: 'mountain',
                         maintenanceModules: ['workforce', 'energy', 'logistics'],
                     },
@@ -787,6 +839,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'ion-welder',
                         name: 'Ion Welder',
                         icon: 'titan_plating',
+                        color: '9698af',
                         placementType: 'ground',
                         unitSize: [6, 9],
                         unitShape: [
@@ -812,6 +865,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'core-ice-driller',
                         name: 'Core Ice Driller',
                         icon: 'moon_ice',
+                        color: '409adf',
                         placementType: 'mountain',
                         maintenanceModules: ['workforce', 'energy', 'logistics'],
                     },
@@ -819,6 +873,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'oxygen-separator',
                         name: 'Oxygen Separator',
                         icon: 'oxygen',
+                        color: '47c1e0',
                         placementType: 'ground',
                         unitSize: [3, 6],
                         productionUnit: {
@@ -833,6 +888,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'kreep-gatherer',
                         name: 'Kreep Gatherer',
                         icon: 'rare_earth_elements',
+                        color: '988775',
                         placementType: 'mountain',
                         maintenanceModules: ['workforce', 'energy', 'logistics'],
                     },
@@ -840,6 +896,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'cybernetics-factory',
                         name: 'Cybernetics Factory',
                         icon: 'bio_enhancers',
+                        color: 'b69f6a',
                         placementType: 'ground',
                         unitSize: [6, 8],
                         productionUnit: {
@@ -854,6 +911,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'maintenance-station',
                         name: 'Maintenance Station',
                         icon: 'colony_safety',
+                        color: '37434d',
                         placementType: 'ground',
                         unitSize: [7, 7],
                     },
@@ -869,6 +927,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'aeroponic-farm',
                         name: 'Aeroponic Farm',
                         icon: 'moon_crops',
+                        color: 'e7aa35',
                         placementType: 'ground',
                         unitSize: [4, 9],
                         productionUnit: {
@@ -883,6 +942,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'space-galley',
                         name: 'Space Galley',
                         icon: 'natural_space_food',
+                        color: 'a85b2c',
                         placementType: 'ground',
                         unitSize: [5, 12],
                         productionUnit: {
@@ -897,6 +957,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'regolith-collector',
                         name: 'Regolith Collector',
                         icon: 'helium_3',
+                        color: 'f5c419',
                         placementType: 'mountain',
                         maintenanceModules: ['workforce', 'energy', 'logistics'],
                     },
@@ -904,6 +965,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'fusion-preparation-plant',
                         name: 'Fusion Preparation Plant',
                         icon: 'fusion_accumulators',
+                        color: 'e5b8fd',
                         placementType: 'ground',
                         unitSize: [3, 10],
                         productionUnit: {
@@ -918,6 +980,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'anti-g-workshop',
                         name: 'Anti-G Workshop',
                         icon: 'gravity_generators',
+                        color: '375fa7',
                         placementType: 'ground',
                         unitSize: [5, 10],
                         productionUnit: {
@@ -932,6 +995,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         id: 'health-center',
                         name: 'Health Center',
                         icon: 'health_care',
+                        color: 'b8851f',
                         placementType: 'ground',
                         // TODO: Size?
                         unitSize: [1, 1],
@@ -947,6 +1011,8 @@ var Anno2205Layouts = Anno2205Layouts || {};
                 id: 'street',
                 name: 'Street',
                 icon: 'earth_road',
+                color: '7a828b',
+                showIcon: false,
                 placementType: 'ground',
                 unitSize: [1, 1],
             },
@@ -954,6 +1020,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                 id: 'residence',
                 name: 'Residence',
                 icon: 'residence_earth',
+                color: 'd29073',
                 placementType: 'ground',
                 unitSize: [3, 3],
             },
@@ -961,6 +1028,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                 id: 'residential-complex',
                 name: 'Residential Complex',
                 icon: 'residence_estate',
+                color: 'b66e4c',
                 placementType: 'ground',
                 unitSize: [6, 6],
             },
@@ -968,6 +1036,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                 id: 'earth-transportation-center',
                 name: 'Transportation Center',
                 icon: 'transportation_center_earth',
+                color: '175a87',
                 placementType: 'ground',
                 unitSize: [4, 6],
             },
@@ -975,6 +1044,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                 id: 'windpark',
                 name: 'Windpark',
                 icon: 'windpark',
+                color: '447290',
                 placementType: 'ground',
                 unitSize: [4, 8],
                 productionUnit: {
@@ -989,6 +1059,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                 id: 'tidal-power-station',
                 name: 'Tidal Power Station',
                 icon: 'tidal_power_station',
+                color: '3d5fe5',
                 placementType: 'coast',
                 maintenanceModules: ['credits', 'workforce'],
             },
@@ -996,6 +1067,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                 id: 'corporation-hq',
                 name: 'Corporation HQ',
                 icon: 'headquarter_base',
+                color: '3a7dbd',
                 placementType: 'ground',
                 unitSize: [6, 12],
                 // productionUnit: {
@@ -1011,6 +1083,8 @@ var Anno2205Layouts = Anno2205Layouts || {};
                 id: 'polar-road',
                 name: 'Polar Road',
                 icon: 'arctic_road',
+                showIcon: false,
+                color: 'b8becc',
                 placementType: 'ground',
                 unitSize: [1, 1],
             },
@@ -1018,6 +1092,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                 id: 'arctic-dwelling',
                 name: 'Arctic Dwelling',
                 icon: 'residence_arctic',
+                color: 'c3e7ef',
                 placementType: 'ground',
                 unitSize: [5, 5],
             },
@@ -1025,6 +1100,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                 id: 'arctic-transportation-center',
                 name: 'Transportation Center',
                 icon: 'transportation_center_arctic',
+                color: '303e5d',
                 placementType: 'ground',
                 unitSize: [4, 6],
             },
@@ -1032,6 +1108,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                 id: 'geothermal-turbines',
                 name: 'Geothermal Turbines',
                 icon: 'geothermal_turbinnes',
+                color: '68afdd',
                 placementType: 'coast',
                 maintenanceModules: ['credits', 'workforce'],
             },
@@ -1039,6 +1116,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                 id: 'gas-power-station',
                 name: 'Gas Power Station',
                 icon: 'gas_power_plant',
+                color: '40a1d1',
                 placementType: 'ground',
                 unitSize: [8, 11],
                 productionUnit: {
@@ -1056,6 +1134,8 @@ var Anno2205Layouts = Anno2205Layouts || {};
                 id: 'moon-tracks',
                 name: 'Moon Tracks',
                 icon: 'moon_road',
+                showIcon: false,
+                color: '5e6160',
                 placementType: 'ground',
                 unitSize: [1, 1],
             },
@@ -1063,6 +1143,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                 id: 'living-unit',
                 name: 'Living Unit',
                 icon: 'residence_moon',
+                color: 'c67e5e',
                 placementType: 'ground',
                 unitSize: [5, 5],
             },
@@ -1070,6 +1151,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                 id: 'small-shield-generator',
                 name: 'Small Shield Generator',
                 icon: 'energy_shielding_small_2',
+                color: '4dbaae',
                 placementType: 'ground',
                 unitSize: [2, 2],
             },
@@ -1077,6 +1159,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                 id: 'large-shield-generator',
                 name: 'Large Shield Generator',
                 icon: 'energy_shielding_big_2',
+                color: '99c06b',
                 placementType: 'ground',
                 unitSize: [4, 4],
             },
@@ -1084,6 +1167,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                 id: 'lunar-transportation-center',
                 name: 'Lunar Transportation Center',
                 icon: 'transportation_center_moon',
+                color: '49bfdb',
                 placementType: 'ground',
                 unitSize: [4, 6],
             },
@@ -1091,6 +1175,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                 id: 'solar-array',
                 name: 'Solar Array',
                 icon: 'solar_array',
+                color: '8ecfec',
                 placementType: 'mountain',
                 maintenanceModules: ['credits', 'workforce'],
             },
@@ -1098,6 +1183,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                 id: 'fusion-reactor',
                 name: 'Fusion Reactor',
                 icon: 'fusion_power_plant',
+                color: 'a07dc8',
                 placementType: 'ground',
                 unitSize: [12, 12],
                 productionUnit: {
@@ -1138,6 +1224,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
             Anno2205Layouts.unitIdMap[module.id] = module;
         });
 
+        // Do some initialization for each unit.
         _.each(Anno2205Layouts.unitIdMap, function(unit) {
             // Place the maintenance module definitions directly into the
             // building definitions.
@@ -1150,6 +1237,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
             // convenience).
             if (unit.productionUnit !== undefined) {
                 unit.productionUnit.icon = unit.icon;
+                unit.productionUnit.color = unit.color;
                 unit.productionUnit.iconScale = 0.6;
             }
         });
@@ -1183,7 +1271,6 @@ var Anno2205Layouts = Anno2205Layouts || {};
     };
 
     Anno2205Layouts.rotateShape = function(shape, orientation) {
-        console.log('orientation='+orientation);
         var result = [];
         if (orientation === 0) {
             return shape;
@@ -1220,6 +1307,10 @@ var Anno2205Layouts = Anno2205Layouts || {};
 var Anno2205Layouts = Anno2205Layouts || {};
 (function(Anno2205Layouts) {
 
+    Anno2205Layouts.buildingAlpha = 0.8;
+    Anno2205Layouts.productionAlpha = 0.6;
+    Anno2205Layouts.maintenanceAlpha = 0.7;
+
     /**
      * The EditorUnit represents a unit on the grid (a building, a production
      * module, or a maintenance module).
@@ -1230,7 +1321,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
      *     not placed.
      * @var {boolean} orientation - Number of clockwise rotations.
      * @var {CanvasRenderingContext2D} ctx - The context for rendering the unit.
-     * @var {jQuery} buildingCanvas - The <canvas> element for the unit.
+     * @var {jQuery} unitCanvas - The <canvas> element for the unit.
      */
     var EditorUnit = function() {
         this.unitInfo = undefined;
@@ -1238,23 +1329,35 @@ var Anno2205Layouts = Anno2205Layouts || {};
         this.orientation = 0;
         this.ctx = undefined;
         this.state = undefined;
+        this.color = undefined;
     };
 
-    EditorUnit.createFromStorage = function(unitStorage) {
+    EditorUnit.createFromStorage = function(unitStorage, color, colorAlpha) {
         var eu = new EditorUnit();
         eu.unitInfo = Anno2205Layouts.unitIdMap[unitStorage.unitInfoId];
         eu.position = unitStorage.position.slice();
         eu.orientation = unitStorage.orientation;
         eu.state = 'onGrid';
+        eu.setColor(color, colorAlpha);
         return eu;
     };
 
-    EditorUnit.createNew = function(unitInfo) {
+    EditorUnit.createNew = function(unitInfo, color, colorAlpha) {
         var eu = new EditorUnit();
         eu.unitInfo = unitInfo;
         eu.createElement();
         eu.state = 'positioning';
+        eu.setColor(color, colorAlpha);
         return eu;
+    };
+
+    EditorUnit.prototype.setColor = function(color, colorAlpha) {
+        this.color = [
+            parseInt(color.substr(0, 2), 16),
+            parseInt(color.substr(2, 2), 16),
+            parseInt(color.substr(4, 2), 16),
+            colorAlpha
+        ];
     };
 
     EditorUnit.prototype.export = function() {
@@ -1265,8 +1368,18 @@ var Anno2205Layouts = Anno2205Layouts || {};
         };
     };
 
+    EditorUnit.prototype.clone = function() {
+        var eu = new EditorUnit();
+        eu.unitInfo = this.unitInfo;
+        eu.position = this.position.slice();
+        eu.state = this.state;
+        eu.color = this.color;
+        eu.createElement();
+        return eu;
+    };
+
     /** Determine the bounding box of the unit.  */
-    EditorUnit.prototype.unitBBox = function() {
+    EditorUnit.prototype.bbox = function() {
         var normal = this.orientation === 0 || this.orientation === 2;
         var gridWidth = this.unitInfo.unitSize[+!normal];
         var gridHeight = this.unitInfo.unitSize[+normal];
@@ -1282,14 +1395,14 @@ var Anno2205Layouts = Anno2205Layouts || {};
     };
 
     EditorUnit.prototype.inGrid = function(grid) {
-        var bbox = this.unitBBox();
-        return ((this.position[0] + bbox.gridWidth < grid.gridWidth) &&
-                (this.position[1] + bbox.gridHeight < grid.gridHeight));
+        var bbox = this.bbox();
+        return ((this.position[0] + bbox.gridWidth <= grid.gridWidth) &&
+                (this.position[1] + bbox.gridHeight <= grid.gridHeight));
     };
 
     /** Create the <canvas> element and add it to the document. */
     EditorUnit.prototype.createElement = function() {
-        var bbox = this.unitBBox();
+        var bbox = this.bbox();
         var gridCanvas = $("#anno-canvas");
         var canvasOffset = gridCanvas.offset();
         var left = 0;
@@ -1298,7 +1411,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
             left = this.position[0]*Anno2205Layouts.gridSize + canvasOffset.left;
             top = this.position[1]*Anno2205Layouts.gridSize + canvasOffset.top;
         }
-        this.buildingCanvas = $('<canvas></canvas>').css({
+        this.unitCanvas = $('<canvas></canvas>').css({
             position: 'absolute',
             left: left,
             top: top,
@@ -1306,19 +1419,19 @@ var Anno2205Layouts = Anno2205Layouts || {};
             width: bbox.size,
             height: bbox.size,
         });
-        this.ctx = this.buildingCanvas.get(0).getContext('2d');
-        $("#construction-area").append(this.buildingCanvas);
+        this.ctx = this.unitCanvas.get(0).getContext('2d');
+        $("#construction-area").append(this.unitCanvas);
     };
 
     EditorUnit.prototype.demolish = function() {
-        if (this.buildingCanvas) {
-            this.buildingCanvas.remove();
+        if (this.unitCanvas) {
+            this.unitCanvas.remove();
         }
     };
 
     EditorUnit.prototype.hitTest = function(pageX, pageY) {
-        var offset = this.buildingCanvas.offset();
-        var bbox = this.unitBBox();
+        var offset = this.unitCanvas.offset();
+        var bbox = this.bbox();
         var relativeX = pageX - offset.left;
         var relativeY = pageY - offset.top;
         if (relativeX > 0 && relativeY > 0 &&
@@ -1329,18 +1442,38 @@ var Anno2205Layouts = Anno2205Layouts || {};
         }
     };
 
+    EditorUnit.prototype.eachUnitGrid = function(cb) {
+        var bbox = this.bbox();
+        var shape = this.rotatedShape();
+        for (var x=0; x<bbox.gridWidth; x++) {
+            for (var y=0; y<bbox.gridHeight; y++) {
+                if (!shape || shape[x][y]) {
+                    cb(x+this.position[0], y+this.position[1]);
+                }
+            }
+        }
+    };
+
+    // TODO: Make this a property of the unit.
+    EditorUnit.prototype.rotatedShape = function() {
+        if (this.unitInfo.unitShape) {
+            return Anno2205Layouts.rotateShape(this.unitInfo.unitShape, this.orientation);
+        } else {
+            return undefined;
+        }
+    };
+
     /** Draw the unit on its canvas. */
-    EditorUnit.prototype.drawUnit = function() {
-        var bbox = this.unitBBox();
+    EditorUnit.prototype.draw = function() {
+        var bbox = this.bbox();
         var ctx = this.ctx;
         ctx.clearRect(0, 0, bbox.size, bbox.size);
         ctx.lineWidth = 1;
         ctx.strokeStyle = '#000000';
-        ctx.fillStyle = 'rgba(238, 0, 0, 0.8)';
+        ctx.fillStyle = 'rgba('+this.color.join(',')+')';
         ctx.beginPath();
         if (this.unitInfo.unitShape) {
-            var shape = Anno2205Layouts.rotateShape(
-                this.unitInfo.unitShape, this.orientation);
+            var shape = this.rotatedShape();
 
             var moves = [];
             _.each(shape, function(row) {
@@ -1378,126 +1511,24 @@ var Anno2205Layouts = Anno2205Layouts || {};
             ctx.fill();
         }
         // Draw the icon in the middle.
-        var iconSheet = $('#construction-icons')[0];
-        var icon = this.unitInfo.icon;
-        var iconScale = this.unitInfo.iconScale || 1.0;
-        if (icon.width * iconScale > bbox.width ||
-            icon.height * iconScale > bbox.height) {
-            // Icon is larger than the unit.
-            var widthScale = bbox.width/icon.width;
-            var heightScale = bbox.height/icon.height;
-            iconScale = Math.min(widthScale, heightScale) * 0.9;
+        if (this.unitInfo.showIcon === undefined || this.unitInfo.showIcon) {
+            var iconSheet = $('#construction-icons')[0];
+            var icon = this.unitInfo.icon;
+            var iconScale = this.unitInfo.iconScale || 1.0;
+            if (icon.width * iconScale > bbox.width ||
+                icon.height * iconScale > bbox.height) {
+                // Icon is larger than the unit.
+                var widthScale = bbox.width/icon.width;
+                var heightScale = bbox.height/icon.height;
+                iconScale = Math.min(widthScale, heightScale) * 0.9;
+            }
+            var targetIconWidth = icon.width * iconScale;
+            var targetIconHeight = icon.height * iconScale;
+            ctx.drawImage(iconSheet, icon.x, icon.y,
+                icon.width, icon.height,
+                bbox.width/2 - targetIconWidth/2, bbox.height/2 - targetIconHeight/2,
+                targetIconWidth, targetIconHeight);
         }
-        var targetIconWidth = icon.width * iconScale;
-        var targetIconHeight = icon.height * iconScale;
-        ctx.drawImage(iconSheet, icon.x, icon.y,
-            icon.width, icon.height,
-            bbox.width/2 - targetIconWidth/2, bbox.height/2 - targetIconHeight/2,
-            targetIconWidth, targetIconHeight);
-    };
-
-    // Determine the grid position from mouse coordinates.
-    // The `c` parameters are the position and size for the grid.
-    var gridFromMouse = function(cLeft, cTop, cWidth, cHeight, x, y) {
-        // Determine position of the grid.
-        if (x > cLeft && x < cLeft+cWidth &&
-            y > cTop && y < cTop+cHeight) {
-            var gridX = Math.floor((x - cLeft) / Anno2205Layouts.gridSize);
-            var gridY = Math.floor((y - cTop) / Anno2205Layouts.gridSize);
-            return [gridX, gridY];
-        } else {
-            return undefined;
-        }
-    };
-
-    /**
-     * Adds event handlers for positioning a unit.
-     * @param {function} placeCallback - Called once the unit is placed.
-     *     Arguments are (editorUnit).
-     */
-    EditorUnit.prototype.createPositionHandlers = function(placeCallback) {
-        var gridCanvas = $("#anno-canvas");
-        var canvasWidth = gridCanvas.width();
-        var canvasHeight = gridCanvas.height();
-        var eu = this;
-
-        // Drag the building with the mouse. Ensure it stays aligned to the
-        // construction grid when hovering over the grid.
-        var freeMoveFunction = function(event) {
-            var canvasOffset = gridCanvas.offset();
-            var gridPos  = gridFromMouse(canvasOffset.left, canvasOffset.top,
-                    canvasWidth, canvasHeight, event.pageX, event.pageY);
-            if (gridPos === undefined) {
-                eu.buildingCanvas.css({
-                    left: event.pageX,
-                    top: event.pageY,
-                });
-            } else {
-                eu.buildingCanvas.css({
-                    left: gridPos[0]*Anno2205Layouts.gridSize + canvasOffset.left,
-                    top: gridPos[1]*Anno2205Layouts.gridSize + canvasOffset.top,
-                });
-            }
-        };
-        $("html").mousemove(freeMoveFunction);
-
-        // Create a click handler to place the building.
-        var positionClick = function(event) {
-            var canvasOffset = gridCanvas.offset();
-            var gridPos  = gridFromMouse(canvasOffset.left, canvasOffset.top,
-                    canvasWidth, canvasHeight, event.pageX, event.pageY);
-            if (gridPos !== undefined) {
-                var gridX = Math.floor((event.pageX - canvasOffset.left) / Anno2205Layouts.gridSize);
-                var gridY = Math.floor((event.pageY - canvasOffset.top) / Anno2205Layouts.gridSize);
-                eu.position = [gridX, gridY];
-                eu.state = 'onGrid';
-                placeCallback(eu);
-                positionCleanup();
-            }
-        };
-        $("#construction-area").on('click', positionClick);
-
-        var rotateCounterClockwise = function() {
-            eu.orientation -= 1;
-            if (eu.orientation < 0) {
-                eu.orientation = 3;
-            }
-        };
-        var rotateClockwise = function() {
-            eu.orientation += 1;
-            if (eu.orientation > 3) {
-                eu.orientation = 0;
-            }
-        };
-
-        // MMB handler for rotating the unit.
-        var rotateClick = function(event) {
-            if (event.which == 2) {
-                // TODO: What does Anno do?
-                rotateCounterClockwise();
-                eu.drawUnit();
-            }
-        };
-        $("#construction-area").on('mousedown', rotateClick);
-
-        var positionUnitKey = function(event) {
-            if (event.which == 188) { // ,
-                rotateCounterClockwise();
-                eu.drawUnit();
-            } else if (event.which == 190) { // .
-                rotateClockwise();
-                eu.drawUnit();
-            }
-        };
-        $(document).on('keydown', positionUnitKey);
-
-        var positionCleanup = function() {
-            $(document).off('keydown', positionUnitKey);
-            $('html').off('mousemove', freeMoveFunction);
-            $("#construction-area")
-                .off('click', positionClick)
-                .off('mousedown', rotateClick);
-        };
     };
 
     Anno2205Layouts.EditorUnit = EditorUnit;
@@ -1519,21 +1550,31 @@ var Anno2205Layouts = Anno2205Layouts || {};
 
     EditorBuilding.createFromStorage = function(buildingStorage) {
         var eb = new EditorBuilding();
-        eb.buildingUnit = EditorUnit.createFromStorage(buildingStorage.building);
         eb.type = Anno2205Layouts.unitIdMap[buildingStorage.buildingId];
-        eb.productionModules = _.map(buildingStorage.productionModules, function(modInfo) {
-            return EditorUnit.createFromStorage(modInfo);
-        });
-        eb.maintenanceModules = _.map(buildingStorage.maintenanceModules, function(modInfo) {
-            return EditorUnit.createFromStorage(modInfo);
-        });
+        eb.buildingUnit = EditorUnit.createFromStorage(buildingStorage.building,
+            eb.type.color, Anno2205Layouts.buildingAlpha);
+        eb.productionModules = _.map(buildingStorage.productionModules,
+            function(modInfo) {
+                return EditorUnit.createFromStorage(modInfo,
+                    eb.type.color, Anno2205Layouts.productionAlpha);
+            });
+        eb.maintenanceModules = _.map(buildingStorage.maintenanceModules,
+            function(modInfo) {
+                return EditorUnit.createFromStorage(modInfo,
+                    eb.type.color, Anno2205Layouts.maintenanceAlpha);
+            });
         return eb;
     };
 
-    EditorBuilding.createNew = function(buildingType) {
+    EditorBuilding.createNew = function(buildingType, buildingUnit) {
         var eb = new EditorBuilding();
         eb.type = buildingType;
-        eb.buildingUnit = EditorUnit.createNew(buildingType);
+        if (buildingUnit) {
+            eb.buildingUnit = buildingUnit;
+        } else {
+            eb.buildingUnit = EditorUnit.createNew(buildingType,
+                buildingType.color, Anno2205Layouts.buildingAlpha);
+        }
         return eb;
     };
 
@@ -1565,7 +1606,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
     };
 
     EditorBuilding.prototype.draw = function() {
-        this.eachUnit(function(unit) {unit.drawUnit();});
+        this.eachUnit(function(unit) {unit.draw();});
     };
 
     EditorBuilding.prototype.demolish = function() {
@@ -1573,7 +1614,6 @@ var Anno2205Layouts = Anno2205Layouts || {};
     };
 
     Anno2205Layouts.EditorBuilding = EditorBuilding;
-
 
 }(Anno2205Layouts));
 ;'use strict';
@@ -1623,15 +1663,150 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
         level.background = level.backgroundActive;
     };
 
+    // Determine the grid position from mouse coordinates.
+    // The `c` parameters are the position and size for the grid.
+    var gridFromMouse = function(cLeft, cTop, cWidth, cHeight, x, y) {
+        // Determine position of the grid.
+        if (x > cLeft && x < cLeft+cWidth &&
+            y > cTop && y < cTop+cHeight) {
+            var gridX = Math.floor((x - cLeft) / Anno2205Layouts.gridSize);
+            var gridY = Math.floor((y - cTop) / Anno2205Layouts.gridSize);
+            return [gridX, gridY];
+        } else {
+            return undefined;
+        }
+    };
+
+    var createNewUnitHandlers = function(unit, placeCallback) {
+        var gridCanvas = $("#anno-canvas");
+        var canvasWidth = gridCanvas.width();
+        var canvasHeight = gridCanvas.height();
+        var canvasOffset = gridCanvas.offset();
+
+        // Disable while placing.
+        buildingClickHandler =
+            prodModuleClickHandler =
+            maintModuleClickHandler = undefined;
+
+        // While mouse is down, this is true.
+        var creating = false;
+
+        // Drag the unit with the mouse. Ensure it stays aligned to the
+        // construction grid when hovering over the grid.
+        var freeMoveFunction = function(event) {
+            var gridPos  = gridFromMouse(canvasOffset.left, canvasOffset.top,
+                    canvasWidth, canvasHeight, event.pageX, event.pageY);
+            if (gridPos === undefined) {
+                // Mouse is off the grid.
+                unit.unitCanvas.css({
+                    left: event.pageX,
+                    top: event.pageY,
+                });
+            } else {
+                unit.unitCanvas.css({
+                    left: gridPos[0]*Anno2205Layouts.gridSize + canvasOffset.left,
+                    top: gridPos[1]*Anno2205Layouts.gridSize + canvasOffset.top,
+                });
+                if (creating) {
+                    createUnit(event.pageX, event.pageY);
+                }
+            }
+        };
+        $("html").mousemove(freeMoveFunction);
+
+        // Creates a new unit.
+        var createUnit = function(pageX, pageY) {
+            var gridPos  = gridFromMouse(canvasOffset.left, canvasOffset.top,
+                    canvasWidth, canvasHeight, pageX, pageY);
+            if (gridPos !== undefined) {
+                var gridX = Math.floor((pageX - canvasOffset.left) / Anno2205Layouts.gridSize);
+                var gridY = Math.floor((pageY - canvasOffset.top) / Anno2205Layouts.gridSize);
+                unit.position = [gridX, gridY];
+                if ($scope.layout.checkValid(unit)) {
+                    creating = true;
+                    if (!placeCallback(unit)) {
+                        // Stop placing.
+                        creating = false;
+                        unit.demolish();
+                    }
+                }
+            }
+        };
+
+        var positionDown = function(event) {
+            if (event.which == 1) {  // Left mouse
+                createUnit(event.pageX, event.pageY);
+            } else if (event.which == 2) { // Middle mouse.
+                // TODO: What does Anno do?
+                rotateCounterClockwise();
+                unit.draw();
+            } else if (event.which == 3) { // Right Mouse.
+                // TODO, stop creating.
+            }
+        };
+
+        var positionUp = function(event) {
+            if (event.which == 1) {
+                if (creating) {
+                    creating = false;
+                    positionCleanup();
+                }
+            }
+        };
+        $("#construction-area").on('mousedown', positionDown);
+        $("#construction-area").on('mouseup', positionUp);
+
+        var rotateCounterClockwise = function() {
+            unit.orientation -= 1;
+            if (unit.orientation < 0) {
+                unit.orientation = 3;
+            }
+        };
+        var rotateClockwise = function() {
+            unit.orientation += 1;
+            if (unit.orientation > 3) {
+                unit.orientation = 0;
+            }
+        };
+
+
+        var positionUnitKey = function(event) {
+            if (event.which == 188) { // ,
+                rotateCounterClockwise();
+                unit.draw();
+            } else if (event.which == 190) { // .
+                rotateClockwise();
+                unit.draw();
+            }
+        };
+        $(document).on('keydown', positionUnitKey);
+
+        var positionCleanup = function() {
+            unit.demolish();
+            $(document).off('keydown', positionUnitKey);
+            $('html').off('mousemove', freeMoveFunction);
+            $("#construction-area")
+                .off('mousedown', positionDown)
+                .off('mousedown', positionUp);
+            buildingClickHandler = buildingDefaultClickHandler;
+        };
+    };
+
     $scope.createNewBuilding = function(buildingType) {
         if (buildingType.placementType != 'ground') {
             // TODO: Handle other types.
             return;
         }
-        var newBuilding = Anno2205Layouts.EditorBuilding.createNew(buildingType);
-        newBuilding.draw();
-        newBuilding.buildingUnit.createPositionHandlers(function(editorUnit) {
-            $scope.layout.buildings.push(newBuilding);
+        var buildingUnit = Anno2205Layouts.EditorUnit.createNew(buildingType,
+            buildingType.color, Anno2205Layouts.buildingAlpha);
+        buildingUnit.draw();
+        createNewUnitHandlers(buildingUnit, function(unit) {
+            var building = new Anno2205Layouts.EditorBuilding.createNew(
+                buildingType, buildingUnit.clone());
+            building.buildingUnit.state = 'onGrid';
+            building.buildingUnit.draw();
+            $scope.layout.addBuilding(building);
+            return true;
         });
     };
 
@@ -1650,8 +1825,8 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
     var buildingDefaultClickHandler = function(building) {
         $scope.selectedBuilding = building;
         $scope.buildingPopup.show = true;
-        var buildingOffset = building.buildingUnit.buildingCanvas.offset();
-        var buildingBBox = building.buildingUnit.unitBBox();
+        var buildingOffset = building.buildingUnit.unitCanvas.offset();
+        var buildingBBox = building.buildingUnit.bbox();
         $scope.buildingPopup.left = buildingOffset.left + buildingBBox.width/2 + 50;
         $scope.buildingPopup.top = buildingOffset.top + buildingBBox.height/2 - 100;
     };
@@ -1666,8 +1841,12 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
                 return false;
             }
             if (building.buildingUnit.hitTest(event.pageX, event.pageY)) {
-                buildingClickHandler(building);
-                return true;
+                if (buildingClickHandler) {
+                    buildingClickHandler(building);
+                    return true;
+                } else {
+                    return false;
+                }
             }
             if (prodModuleClickHandler) {
                 if (_.find(building.productionModules, function(module) {
@@ -1704,37 +1883,44 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
     };
     $scope.createProductionModule = function() {
         $scope.buildingPopup.show = false;
-        var newProdMod = Anno2205Layouts.EditorUnit.createNew($scope.selectedBuilding.type.productionUnit);
-        newProdMod.drawUnit();
-        newProdMod.createPositionHandlers(function(editorUnit) {
-            $scope.selectedBuilding.productionModules.push(editorUnit);
+        var buildingType = $scope.selectedBuilding.type;
+        var newProdMod = Anno2205Layouts.EditorUnit.createNew(
+            buildingType.productionUnit,
+            buildingType.color, Anno2205Layouts.productionAlpha);
+        newProdMod.draw();
+        createNewUnitHandlers(newProdMod, function(unit) {
+            var newUnit = unit.clone();
+            newUnit.state = 'onGrid';
+            newUnit.draw();
+            $scope.layout.addProdMod($scope.selectedBuilding, newUnit);
+            return true;
         });
     };
     $scope.createMaintenanceModule = function(maintenance) {
         $scope.buildingPopup.show = false;
-        var newMaintMod = Anno2205Layouts.EditorUnit.createNew(maintenance);
-        newMaintMod.drawUnit();
-        newMaintMod.createPositionHandlers(function(editorUnit) {
-            $scope.selectedBuilding.maintenanceModules.push(editorUnit);
+        var buildingType = $scope.selectedBuilding.type;
+        var newMaintMod = Anno2205Layouts.EditorUnit.createNew(
+            maintenance,
+            buildingType.color, Anno2205Layouts.maintenanceAlpha);
+        newMaintMod.draw();
+        createNewUnitHandlers(newMaintMod, function(unit) {
+            var newUnit = unit.clone();
+            newUnit.state = 'onGrid';
+            newUnit.draw();
+            $scope.layout.addMaintMod($scope.selectedBuilding, newUnit);
+            return true;
         });
     };
 
     // While in demolition mode, if you click on a building, delete it.
     var demolitionClickHandler = function(building) {
-        var i = $scope.layout.buildings.indexOf(building);
-        $scope.layout.buildings.splice(i, 1);
-        building.demolish();
-    };
-    var demoModule = function(modules, module) {
-        var i = modules.indexOf(module);
-        modules.splice(i, 1);
-        module.demolish();
+        $scope.layout.removeBuilding(building);
     };
     var demoProdClickHandler = function(building, module) {
-        demoModule(building.productionModules, module);
+        $scope.layout.removeProdMod(building, module);
     };
     var demoMaintClickHandler = function(building, module) {
-        demoModule(building.maintenanceModules, module);
+        $scope.layout.removeMaintMod(building, module);
     };
     var exitDemoHandler = function(event) {
         if (event.which == 3) { // Right click.
@@ -1771,28 +1957,34 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
     });
 
     $scope.exportImage = function() {
-        var gridCanvas = $('#anno-canvas');
-        var canvas = gridCanvas.clone()[0];
+        var layoutBBox = $scope.layout.bbox();
+        var grid = new Anno2205Layouts.RectGrid(layoutBBox.width+2,
+                                                layoutBBox.height+2);
+        var offset = {
+            x: layoutBBox.minX-1,
+            y: layoutBBox.minY-1
+        };
+        var gridCanvas = $('<canvas></canvas>')
+            .prop('width', grid.pixelWidth)
+            .prop('height', grid.pixelHeight);
+        var canvas = gridCanvas[0];
         var ctx = canvas.getContext('2d');
 
-        // Canvas.
-        ctx.drawImage(gridCanvas[0], 0, 0);
+        // Grid.
+        grid.drawGrid(ctx);
         // Buildings.
-        var canvasOffset = gridCanvas.offset();
-        var drawUnit = function(unit) {
-            var unitCanvas = unit.buildingCanvas;
-            var unitOffset = unitCanvas.offset();
-            ctx.drawImage(unitCanvas[0],
-                unitOffset.left - canvasOffset.left,
-                unitOffset.top - canvasOffset.top);
+        var draw = function(unit) {
+            ctx.drawImage(unit.unitCanvas[0],
+                (unit.position[0] - offset.x) * Anno2205Layouts.gridSize,
+                (unit.position[1] - offset.y) * Anno2205Layouts.gridSize);
         };
         _.each($scope.layout.buildings, function(building) {
-            drawUnit(building.buildingUnit);
+            draw(building.buildingUnit);
             _.each(building.productionModules, function(unit) {
-                drawUnit(unit);
+                draw(unit);
             });
             _.each(building.maintenanceModules, function(unit) {
-                drawUnit(unit);
+                draw(unit);
             });
         });
 
@@ -1881,6 +2073,17 @@ var Anno2205Layouts = Anno2205Layouts || {};
     RectGrid.prototype  = Object.create(Grid.prototype);
     RectGrid.prototype.constructor = RectGrid;
 
+    RectGrid.prototype.createBuildingMap = function() {
+        var buildingMap = new Array(this.gridHeight);
+        for (var rowi=0; rowi < this.gridHeight; rowi++) {
+            var len = this.gridWidth;
+            var row = new Array(len);
+            buildingMap[rowi] = row;
+            while (--len >= 0) { row[len] = {building: undefined, unit: undefined}; }
+        }
+        return buildingMap;
+    };
+
     RectGrid.prototype.drawGrid = function(ctx) {
         // create white background.
         ctx.fillStyle = '#ffffff';
@@ -1907,6 +2110,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
         }
     };
 
+    Anno2205Layouts.RectGrid = RectGrid;
 
     Anno2205Layouts.grids = [
         new RectGrid(20, 20),
@@ -2059,8 +2263,9 @@ var Anno2205Layouts = Anno2205Layouts || {};
         layout.createDate = now;
         layout.lastModifiedDate = now;
         layout.region = region;
-        layout.grid = Anno2205Layouts.grids[0];
+        layout.grid = Anno2205Layouts.gridMap['40x40'];
         layout.buildings = [];
+        layout.createBuildingMap();
         return layout;
     };
 
@@ -2079,7 +2284,21 @@ var Anno2205Layouts = Anno2205Layouts || {};
         layout.buildings = _.map(layoutStorage.buildings, function(buildingStorage) {
             return Anno2205Layouts.EditorBuilding.createFromStorage(buildingStorage);
         });
+        layout.createBuildingMap();
         return layout;
+    };
+
+    Layout.prototype.createBuildingMap = function() {
+        this.buildingMap = this.grid.createBuildingMap();
+        var layout = this;
+        _.each(this.buildings, function(building) {
+            building.eachUnit(function(unit) {
+                unit.eachUnitGrid(function(x, y) {
+                    layout.buildingMap[x][y].building = building;
+                    layout.buildingMap[x][y].unit = unit;
+                });
+            });
+        });
     };
 
     Layout.prototype.export = function() {
@@ -2122,16 +2341,113 @@ var Anno2205Layouts = Anno2205Layouts || {};
                 building.productionModules = _.filter(building.productionModules, filterUnit);
                 building.maintenanceModules = _.filter(building.maintenanceModules, filterUnit);
             });
+
+            // Update the map.
+            this.createBuildingMap();
         } else {
             return this.grid;
         }
     };
 
+    Layout.prototype.bbox = function() {
+        var minX = this.buildings.length ? 10000 : 0;
+        var minY = minX;
+        var maxX = 0;
+        var maxY = 0;
+        _.each(this.buildings, function(building) {
+            building.eachUnit(function(unit) {
+                var unitBBox = unit.bbox();
+                minX = Math.min(minX, unit.position[0]);
+                minY = Math.min(minY, unit.position[1]);
+                maxX = Math.max(maxX, unit.position[0]+unitBBox.gridWidth);
+                maxY = Math.max(maxY, unit.position[1]+unitBBox.gridHeight);
+            });
+        });
+        return {
+            minX: minX,
+            minY: minY,
+            maxX: maxX,
+            maxY: maxY,
+            width: maxX-minX,
+            height: maxY-minY,
+        };
+    };
+
+    // Checks if the unit can be placed at its current position
+    // (checks for overlapping with other units, etc.).
+    Layout.prototype.checkValid = function(unit) {
+        if (!unit.inGrid(this.grid)) {
+            return false;
+        }
+        var layout = this;
+        var valid = true;
+        unit.eachUnitGrid(function(x, y) {
+            if (layout.buildingMap[x][y].building) {
+                valid = false;
+            }
+        });
+        return valid;
+    };
+
+    Layout.prototype.addUnit = function(building, unit) {
+        var layout = this;
+        unit.eachUnitGrid(function (x, y) {
+            layout.buildingMap[x][y].building = building;
+            layout.buildingMap[x][y].unit = unit;
+        });
+    };
+
+    Layout.prototype.removeUnit = function(unit) {
+        var layout = this;
+        unit.eachUnitGrid(function (x, y) {
+            layout.buildingMap[x][y].building = undefined;
+            layout.buildingMap[x][y].unit = undefined;
+        });
+    };
+
+    Layout.prototype.addBuilding = function(building) {
+        this.buildings.push(building);
+        var layout = this;
+        building.eachUnit(function (unit) {
+            layout.addUnit(building, unit);
+        });
+    };
+
+    Layout.prototype.addProdMod = function(building, unit) {
+        building.productionModules.push(unit);
+        this.addUnit(building, unit);
+    };
+
+    Layout.prototype.addMaintMod = function(building, unit) {
+        building.maintenanceModules.push(unit);
+        this.addUnit(building, unit);
+    };
+
+    Layout.prototype.removeBuilding = function(building) {
+        var i = this.buildings.indexOf(building);
+        this.buildings.splice(i, 1);
+        building.demolish();
+        building.eachUnit(this.removeUnit.bind(this));
+    };
+
+    Layout.prototype._removeModule = function(modules, unit) {
+        var i = modules.indexOf(unit);
+        modules.splice(i, 1);
+        unit.demolish();
+        this.removeUnit(unit);
+    };
+
+    Layout.prototype.removeProdMod = function(building, unit) {
+        this._removeModule(building.productionModules, unit);
+    };
+
+    Layout.prototype.removeMaintMod = function(building, unit) {
+        this._removeModule(building.maintenanceModules, unit);
+    };
+
     Anno2205Layouts.Layout = Layout;
 
-
 }(Anno2205Layouts));
-
 ;'use strict';
 
 angular.module('anno2205Layouts.my-layouts', ['ngRoute', 'ngStorage'])
@@ -2150,7 +2466,6 @@ angular.module('anno2205Layouts.my-layouts', ['ngRoute', 'ngStorage'])
     $scope.$location = $location;
 
     $scope.createNewLayout = function(newLayoutName) {
-        console.log("Creating "+newLayoutName+" type:"+$scope.region);
         if (newLayoutName) {
             var newLayout = $scope.layouts.createLayout(newLayoutName, $scope.region);
             /* Handling a location change and dismissing the modal is
@@ -2172,9 +2487,7 @@ angular.module('anno2205Layouts.my-layouts', ['ngRoute', 'ngStorage'])
             /*
             $('#new-layout-modal').modal('hide').on('hidden.bs.modal', function() {
                 $scope.$apply(function() {
-                    console.log('hidden');
                     $location.path('/editor/'+newLayout.id);
-                    console.log($location.path());
                 });
             });
             */
