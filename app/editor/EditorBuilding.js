@@ -64,6 +64,16 @@ var Anno2205Layouts = Anno2205Layouts || {};
         };
     };
 
+    EditorUnit.prototype.clone = function() {
+        var eu = new EditorUnit();
+        eu.unitInfo = this.unitInfo;
+        eu.position = this.position.slice();
+        eu.state = this.state;
+        eu.color = this.color;
+        eu.createElement();
+        return eu;
+    };
+
     /** Determine the bounding box of the unit.  */
     EditorUnit.prototype.bbox = function() {
         var normal = this.orientation === 0 || this.orientation === 2;
@@ -82,8 +92,8 @@ var Anno2205Layouts = Anno2205Layouts || {};
 
     EditorUnit.prototype.inGrid = function(grid) {
         var bbox = this.bbox();
-        return ((this.position[0] + bbox.gridWidth < grid.gridWidth) &&
-                (this.position[1] + bbox.gridHeight < grid.gridHeight));
+        return ((this.position[0] + bbox.gridWidth <= grid.gridWidth) &&
+                (this.position[1] + bbox.gridHeight <= grid.gridHeight));
     };
 
     /** Create the <canvas> element and add it to the document. */
@@ -128,8 +138,29 @@ var Anno2205Layouts = Anno2205Layouts || {};
         }
     };
 
+    EditorUnit.prototype.eachUnitGrid = function(cb) {
+        var bbox = this.bbox();
+        var shape = this.rotatedShape();
+        for (var x=0; x<bbox.gridWidth; x++) {
+            for (var y=0; y<bbox.gridHeight; y++) {
+                if (!shape || shape[x][y]) {
+                    cb(x+this.position[0], y+this.position[1]);
+                }
+            }
+        }
+    };
+
+    // TODO: Make this a property of the unit.
+    EditorUnit.prototype.rotatedShape = function() {
+        if (this.unitInfo.unitShape) {
+            return Anno2205Layouts.rotateShape(this.unitInfo.unitShape, this.orientation);
+        } else {
+            return undefined;
+        }
+    };
+
     /** Draw the unit on its canvas. */
-    EditorUnit.prototype.drawUnit = function() {
+    EditorUnit.prototype.draw = function() {
         var bbox = this.bbox();
         var ctx = this.ctx;
         ctx.clearRect(0, 0, bbox.size, bbox.size);
@@ -138,8 +169,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
         ctx.fillStyle = 'rgba('+this.color.join(',')+')';
         ctx.beginPath();
         if (this.unitInfo.unitShape) {
-            var shape = Anno2205Layouts.rotateShape(
-                this.unitInfo.unitShape, this.orientation);
+            var shape = this.rotatedShape();
 
             var moves = [];
             _.each(shape, function(row) {
@@ -195,110 +225,6 @@ var Anno2205Layouts = Anno2205Layouts || {};
             targetIconWidth, targetIconHeight);
     };
 
-    // Determine the grid position from mouse coordinates.
-    // The `c` parameters are the position and size for the grid.
-    var gridFromMouse = function(cLeft, cTop, cWidth, cHeight, x, y) {
-        // Determine position of the grid.
-        if (x > cLeft && x < cLeft+cWidth &&
-            y > cTop && y < cTop+cHeight) {
-            var gridX = Math.floor((x - cLeft) / Anno2205Layouts.gridSize);
-            var gridY = Math.floor((y - cTop) / Anno2205Layouts.gridSize);
-            return [gridX, gridY];
-        } else {
-            return undefined;
-        }
-    };
-
-    /**
-     * Adds event handlers for positioning a unit.
-     * @param {function} placeCallback - Called once the unit is placed.
-     *     Arguments are (editorUnit).
-     */
-    EditorUnit.prototype.createPositionHandlers = function(placeCallback) {
-        var gridCanvas = $("#anno-canvas");
-        var canvasWidth = gridCanvas.width();
-        var canvasHeight = gridCanvas.height();
-        var eu = this;
-
-        // Drag the building with the mouse. Ensure it stays aligned to the
-        // construction grid when hovering over the grid.
-        var freeMoveFunction = function(event) {
-            var canvasOffset = gridCanvas.offset();
-            var gridPos  = gridFromMouse(canvasOffset.left, canvasOffset.top,
-                    canvasWidth, canvasHeight, event.pageX, event.pageY);
-            if (gridPos === undefined) {
-                eu.unitCanvas.css({
-                    left: event.pageX,
-                    top: event.pageY,
-                });
-            } else {
-                eu.unitCanvas.css({
-                    left: gridPos[0]*Anno2205Layouts.gridSize + canvasOffset.left,
-                    top: gridPos[1]*Anno2205Layouts.gridSize + canvasOffset.top,
-                });
-            }
-        };
-        $("html").mousemove(freeMoveFunction);
-
-        // Create a click handler to place the building.
-        var positionClick = function(event) {
-            var canvasOffset = gridCanvas.offset();
-            var gridPos  = gridFromMouse(canvasOffset.left, canvasOffset.top,
-                    canvasWidth, canvasHeight, event.pageX, event.pageY);
-            if (gridPos !== undefined) {
-                var gridX = Math.floor((event.pageX - canvasOffset.left) / Anno2205Layouts.gridSize);
-                var gridY = Math.floor((event.pageY - canvasOffset.top) / Anno2205Layouts.gridSize);
-                eu.position = [gridX, gridY];
-                eu.state = 'onGrid';
-                placeCallback(eu);
-                positionCleanup();
-            }
-        };
-        $("#construction-area").on('click', positionClick);
-
-        var rotateCounterClockwise = function() {
-            eu.orientation -= 1;
-            if (eu.orientation < 0) {
-                eu.orientation = 3;
-            }
-        };
-        var rotateClockwise = function() {
-            eu.orientation += 1;
-            if (eu.orientation > 3) {
-                eu.orientation = 0;
-            }
-        };
-
-        // MMB handler for rotating the unit.
-        var rotateClick = function(event) {
-            if (event.which == 2) {
-                // TODO: What does Anno do?
-                rotateCounterClockwise();
-                eu.drawUnit();
-            }
-        };
-        $("#construction-area").on('mousedown', rotateClick);
-
-        var positionUnitKey = function(event) {
-            if (event.which == 188) { // ,
-                rotateCounterClockwise();
-                eu.drawUnit();
-            } else if (event.which == 190) { // .
-                rotateClockwise();
-                eu.drawUnit();
-            }
-        };
-        $(document).on('keydown', positionUnitKey);
-
-        var positionCleanup = function() {
-            $(document).off('keydown', positionUnitKey);
-            $('html').off('mousemove', freeMoveFunction);
-            $("#construction-area")
-                .off('click', positionClick)
-                .off('mousedown', rotateClick);
-        };
-    };
-
     Anno2205Layouts.EditorUnit = EditorUnit;
 
     /***************************************************************************/
@@ -334,11 +260,15 @@ var Anno2205Layouts = Anno2205Layouts || {};
         return eb;
     };
 
-    EditorBuilding.createNew = function(buildingType) {
+    EditorBuilding.createNew = function(buildingType, buildingUnit) {
         var eb = new EditorBuilding();
         eb.type = buildingType;
-        eb.buildingUnit = EditorUnit.createNew(buildingType,
-            buildingType.color, Anno2205Layouts.buildingAlpha);
+        if (buildingUnit) {
+            eb.buildingUnit = buildingUnit;
+        } else {
+            eb.buildingUnit = EditorUnit.createNew(buildingType,
+                buildingType.color, Anno2205Layouts.buildingAlpha);
+        }
         return eb;
     };
 
@@ -370,7 +300,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
     };
 
     EditorBuilding.prototype.draw = function() {
-        this.eachUnit(function(unit) {unit.drawUnit();});
+        this.eachUnit(function(unit) {unit.draw();});
     };
 
     EditorBuilding.prototype.demolish = function() {

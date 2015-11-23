@@ -16,7 +16,6 @@ angular.module('anno2205Layouts.my-layouts', ['ngRoute', 'ngStorage'])
     $scope.$location = $location;
 
     $scope.createNewLayout = function(newLayoutName) {
-        console.log("Creating "+newLayoutName+" type:"+$scope.region);
         if (newLayoutName) {
             var newLayout = $scope.layouts.createLayout(newLayoutName, $scope.region);
             /* Handling a location change and dismissing the modal is
@@ -38,9 +37,7 @@ angular.module('anno2205Layouts.my-layouts', ['ngRoute', 'ngStorage'])
             /*
             $('#new-layout-modal').modal('hide').on('hidden.bs.modal', function() {
                 $scope.$apply(function() {
-                    console.log('hidden');
                     $location.path('/editor/'+newLayout.id);
-                    console.log($location.path());
                 });
             });
             */

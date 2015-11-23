@@ -1202,6 +1202,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
             Anno2205Layouts.unitIdMap[module.id] = module;
         });
 
+        // Do some initialization for each unit.
         _.each(Anno2205Layouts.unitIdMap, function(unit) {
             // Place the maintenance module definitions directly into the
             // building definitions.
@@ -1248,7 +1249,6 @@ var Anno2205Layouts = Anno2205Layouts || {};
     };
 
     Anno2205Layouts.rotateShape = function(shape, orientation) {
-        console.log('orientation='+orientation);
         var result = [];
         if (orientation === 0) {
             return shape;

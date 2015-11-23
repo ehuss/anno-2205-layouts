@@ -1,6 +1,10 @@
 TODO
 ====
 
+- Roads
+- Exit placement mode if you switch to another mode (like demolish).
+- Demo mode should support dragging.
+
 - make more spritesheets for buttons/hovers.
 - error while trying to open editor for unknown id.
 - ng-cloak on the editor popup.  Doens't seem to work as expected, still see flicker on editor (in FF).
@@ -11,9 +15,6 @@ TODO
 
 - Copy
 - Move
-- Roads
-- colors
-- Save Image
 - Export/Import
 - Placement markers.
 - hover on build building icons should have popup

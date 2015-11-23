@@ -142,6 +142,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
         layout.region = region;
         layout.grid = Anno2205Layouts.gridMap['40x40'];
         layout.buildings = [];
+        layout.createBuildingMap();
         return layout;
     };
 
@@ -160,7 +161,21 @@ var Anno2205Layouts = Anno2205Layouts || {};
         layout.buildings = _.map(layoutStorage.buildings, function(buildingStorage) {
             return Anno2205Layouts.EditorBuilding.createFromStorage(buildingStorage);
         });
+        layout.createBuildingMap();
         return layout;
+    };
+
+    Layout.prototype.createBuildingMap = function() {
+        this.buildingMap = this.grid.createBuildingMap();
+        var layout = this;
+        _.each(this.buildings, function(building) {
+            building.eachUnit(function(unit) {
+                unit.eachUnitGrid(function(x, y) {
+                    layout.buildingMap[x][y].building = building;
+                    layout.buildingMap[x][y].unit = unit;
+                });
+            });
+        });
     };
 
     Layout.prototype.export = function() {
@@ -203,6 +218,9 @@ var Anno2205Layouts = Anno2205Layouts || {};
                 building.productionModules = _.filter(building.productionModules, filterUnit);
                 building.maintenanceModules = _.filter(building.maintenanceModules, filterUnit);
             });
+
+            // Update the map.
+            this.createBuildingMap();
         } else {
             return this.grid;
         }
@@ -230,6 +248,78 @@ var Anno2205Layouts = Anno2205Layouts || {};
             width: maxX-minX,
             height: maxY-minY,
         };
+    };
+
+    // Checks if the unit can be placed at its current position
+    // (checks for overlapping with other units, etc.).
+    Layout.prototype.checkValid = function(unit) {
+        if (!unit.inGrid(this.grid)) {
+            return false;
+        }
+        var layout = this;
+        var valid = true;
+        unit.eachUnitGrid(function(x, y) {
+            if (layout.buildingMap[x][y].building) {
+                valid = false;
+            }
+        });
+        return valid;
+    };
+
+    Layout.prototype.addUnit = function(building, unit) {
+        var layout = this;
+        unit.eachUnitGrid(function (x, y) {
+            layout.buildingMap[x][y].building = building;
+            layout.buildingMap[x][y].unit = unit;
+        });
+    };
+
+    Layout.prototype.removeUnit = function(unit) {
+        var layout = this;
+        unit.eachUnitGrid(function (x, y) {
+            layout.buildingMap[x][y].building = undefined;
+            layout.buildingMap[x][y].unit = undefined;
+        });
+    };
+
+    Layout.prototype.addBuilding = function(building) {
+        this.buildings.push(building);
+        var layout = this;
+        building.eachUnit(function (unit) {
+            layout.addUnit(building, unit);
+        });
+    };
+
+    Layout.prototype.addProdMod = function(building, unit) {
+        building.productionModules.push(unit);
+        this.addUnit(building, unit);
+    };
+
+    Layout.prototype.addMaintMod = function(building, unit) {
+        building.maintenanceModules.push(unit);
+        this.addUnit(building, unit);
+    };
+
+    Layout.prototype.removeBuilding = function(building) {
+        var i = this.buildings.indexOf(building);
+        this.buildings.splice(i, 1);
+        building.demolish();
+        building.eachUnit(this.removeUnit.bind(this));
+    };
+
+    Layout.prototype._removeModule = function(modules, unit) {
+        var i = modules.indexOf(unit);
+        modules.splice(i, 1);
+        unit.demolish();
+        this.removeUnit(unit);
+    };
+
+    Layout.prototype.removeProdMod = function(building, unit) {
+        this._removeModule(building.productionModules, unit);
+    };
+
+    Layout.prototype.removeMaintMod = function(building, unit) {
+        this._removeModule(building.maintenanceModules, unit);
     };
 
     Anno2205Layouts.Layout = Layout;

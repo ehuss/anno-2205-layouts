@@ -24,6 +24,17 @@ var Anno2205Layouts = Anno2205Layouts || {};
     RectGrid.prototype  = Object.create(Grid.prototype);
     RectGrid.prototype.constructor = RectGrid;
 
+    RectGrid.prototype.createBuildingMap = function() {
+        var buildingMap = new Array(this.gridHeight);
+        for (var rowi=0; rowi < this.gridHeight; rowi++) {
+            var len = this.gridWidth;
+            var row = new Array(len);
+            buildingMap[rowi] = row;
+            while (--len >= 0) { row[len] = {building: undefined, unit: undefined}; }
+        }
+        return buildingMap;
+    };
+
     RectGrid.prototype.drawGrid = function(ctx) {
         // create white background.
         ctx.fillStyle = '#ffffff';
