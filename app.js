@@ -1197,15 +1197,16 @@ var Anno2205Layouts = Anno2205Layouts || {};
         ]
     };
 
-    // Add "id" attribute to maintenance modules.
-    _.each(Anno2205Layouts.maintenanceModules, function(module, key) {
-        module.id = key;
-    });
-
     // Maps building id to its description object.
     Anno2205Layouts.unitIdMap = {};
 
     Anno2205Layouts.initBuildings = function() {
+        // Add "id" attribute to maintenance modules.
+        _.each(Anno2205Layouts.maintenanceModules, function(module, key) {
+            module.id = key;
+        });
+
+
         // Build the unitIdMap.
         _.each(Anno2205Layouts.regions, function(region) {
             _.each(Anno2205Layouts.buildingLevels[region], function(level) {
@@ -1342,10 +1343,10 @@ var Anno2205Layouts = Anno2205Layouts || {};
         return eu;
     };
 
-    EditorUnit.createNew = function(unitInfo, color, colorAlpha) {
+    EditorUnit.createNew = function(unitInfo, color, colorAlpha, grid) {
         var eu = new EditorUnit();
         eu.unitInfo = unitInfo;
-        eu.createElement();
+        eu.createElement(grid);
         eu.state = 'positioning';
         eu.setColor(color, colorAlpha);
         return eu;
@@ -1368,14 +1369,20 @@ var Anno2205Layouts = Anno2205Layouts || {};
         };
     };
 
-    EditorUnit.prototype.clone = function() {
+    EditorUnit.prototype.clone = function(grid) {
         var eu = new EditorUnit();
         eu.unitInfo = this.unitInfo;
         eu.position = this.position.slice();
         eu.state = this.state;
         eu.color = this.color;
-        eu.createElement();
+        eu.createElement(grid);
         return eu;
+    };
+
+    EditorUnit.prototype.move = function(x, y) {
+        this.position[0] += x;
+        this.position[1] += y;
+        // TODO: Move canvas?
     };
 
     /** Determine the bounding box of the unit.  */
@@ -1401,15 +1408,15 @@ var Anno2205Layouts = Anno2205Layouts || {};
     };
 
     /** Create the <canvas> element and add it to the document. */
-    EditorUnit.prototype.createElement = function() {
+    EditorUnit.prototype.createElement = function(grid) {
         var bbox = this.bbox();
-        var gridCanvas = $("#anno-canvas");
-        var canvasOffset = gridCanvas.offset();
+        var canvasOffset = $("#anno-canvas").offset();
+
         var left = 0;
         var top = 0;
         if (this.position) {
-            left = this.position[0]*Anno2205Layouts.gridSize + canvasOffset.left;
-            top = this.position[1]*Anno2205Layouts.gridSize + canvasOffset.top;
+            left = this.position[0]*Anno2205Layouts.gridSize + canvasOffset.left + grid.gridOffsetX;
+            top = this.position[1]*Anno2205Layouts.gridSize + canvasOffset.top + grid.gridOffsetY;
         }
         this.unitCanvas = $('<canvas></canvas>').css({
             position: 'absolute',
@@ -1566,14 +1573,14 @@ var Anno2205Layouts = Anno2205Layouts || {};
         return eb;
     };
 
-    EditorBuilding.createNew = function(buildingType, buildingUnit) {
+    EditorBuilding.createNew = function(buildingType, buildingUnit, grid) {
         var eb = new EditorBuilding();
         eb.type = buildingType;
         if (buildingUnit) {
             eb.buildingUnit = buildingUnit;
         } else {
             eb.buildingUnit = EditorUnit.createNew(buildingType,
-                buildingType.color, Anno2205Layouts.buildingAlpha);
+                buildingType.color, Anno2205Layouts.buildingAlpha, grid);
         }
         return eb;
     };
@@ -1601,8 +1608,8 @@ var Anno2205Layouts = Anno2205Layouts || {};
         });
     };
 
-    EditorBuilding.prototype.createElements = function(first_argument) {
-        this.eachUnit(function(unit) {unit.createElement();});
+    EditorBuilding.prototype.createElements = function(grid) {
+        this.eachUnit(function(unit) {unit.createElement(grid);});
     };
 
     EditorBuilding.prototype.draw = function() {
@@ -1611,6 +1618,12 @@ var Anno2205Layouts = Anno2205Layouts || {};
 
     EditorBuilding.prototype.demolish = function() {
         this.eachUnit(function(unit) {unit.demolish();});
+    };
+
+    EditorBuilding.prototype.move = function(x, y) {
+        this.eachUnit(function(unit) {
+            unit.move(x, y);
+        });
     };
 
     Anno2205Layouts.EditorBuilding = EditorBuilding;
@@ -1627,8 +1640,8 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
   });
 }])
 
-.controller('EditorCtrl', ['$rootScope', '$scope', '$location', '$routeParams', '$localStorage',
-    function($rootScope, $scope, $location, $routeParams, $localStorage) {
+.controller('EditorCtrl', ['$rootScope', '$scope', '$location', '$routeParams', '$localStorage', 'ensureImgs',
+    function($rootScope, $scope, $location, $routeParams, $localStorage, ensureImgs) {
 
     var layout = $rootScope.layouts.layoutFromId($routeParams.layoutId);
     // Make a deep copy to edit locally.
@@ -1663,25 +1676,10 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
         level.background = level.backgroundActive;
     };
 
-    // Determine the grid position from mouse coordinates.
-    // The `c` parameters are the position and size for the grid.
-    var gridFromMouse = function(cLeft, cTop, cWidth, cHeight, x, y) {
-        // Determine position of the grid.
-        if (x > cLeft && x < cLeft+cWidth &&
-            y > cTop && y < cTop+cHeight) {
-            var gridX = Math.floor((x - cLeft) / Anno2205Layouts.gridSize);
-            var gridY = Math.floor((y - cTop) / Anno2205Layouts.gridSize);
-            return [gridX, gridY];
-        } else {
-            return undefined;
-        }
-    };
-
     var createNewUnitHandlers = function(unit, placeCallback) {
-        var gridCanvas = $("#anno-canvas");
-        var canvasWidth = gridCanvas.width();
-        var canvasHeight = gridCanvas.height();
-        var canvasOffset = gridCanvas.offset();
+        var grid = $scope.layout.grid;
+        var canvas = $('#anno-canvas');
+        var canvasOffset = canvas.offset();
 
         // Disable while placing.
         buildingClickHandler =
@@ -1694,8 +1692,7 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
         // Drag the unit with the mouse. Ensure it stays aligned to the
         // construction grid when hovering over the grid.
         var freeMoveFunction = function(event) {
-            var gridPos  = gridFromMouse(canvasOffset.left, canvasOffset.top,
-                    canvasWidth, canvasHeight, event.pageX, event.pageY);
+            var gridPos  = grid.gridFromMouse(canvasOffset, event.pageX, event.pageY);
             if (gridPos === undefined) {
                 // Mouse is off the grid.
                 unit.unitCanvas.css({
@@ -1704,8 +1701,8 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
                 });
             } else {
                 unit.unitCanvas.css({
-                    left: gridPos[0]*Anno2205Layouts.gridSize + canvasOffset.left,
-                    top: gridPos[1]*Anno2205Layouts.gridSize + canvasOffset.top,
+                    left: gridPos[0]*Anno2205Layouts.gridSize + canvasOffset.left + grid.gridOffsetX,
+                    top: gridPos[1]*Anno2205Layouts.gridSize + canvasOffset.top + grid.gridOffsetY,
                 });
                 if (creating) {
                     createUnit(event.pageX, event.pageY);
@@ -1716,12 +1713,9 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
 
         // Creates a new unit.
         var createUnit = function(pageX, pageY) {
-            var gridPos  = gridFromMouse(canvasOffset.left, canvasOffset.top,
-                    canvasWidth, canvasHeight, pageX, pageY);
+            var gridPos  = grid.gridFromMouse(canvasOffset, pageX, pageY);
             if (gridPos !== undefined) {
-                var gridX = Math.floor((pageX - canvasOffset.left) / Anno2205Layouts.gridSize);
-                var gridY = Math.floor((pageY - canvasOffset.top) / Anno2205Layouts.gridSize);
-                unit.position = [gridX, gridY];
+                unit.position = gridPos;
                 if ($scope.layout.checkValid(unit)) {
                     creating = true;
                     if (!placeCallback(unit)) {
@@ -1734,24 +1728,28 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
         };
 
         var positionDown = function(event) {
-            if (event.which == 1) {  // Left mouse
-                createUnit(event.pageX, event.pageY);
-            } else if (event.which == 2) { // Middle mouse.
-                // TODO: What does Anno do?
-                rotateCounterClockwise();
-                unit.draw();
-            } else if (event.which == 3) { // Right Mouse.
-                // TODO, stop creating.
-            }
+            $scope.$apply(function() {
+                if (event.which == 1) {  // Left mouse
+                    createUnit(event.pageX, event.pageY);
+                } else if (event.which == 2) { // Middle mouse.
+                    // TODO: What does Anno do?
+                    rotateCounterClockwise();
+                    unit.draw();
+                } else if (event.which == 3) { // Right Mouse.
+                    // TODO, stop creating.
+                }
+            });
         };
 
         var positionUp = function(event) {
-            if (event.which == 1) {
-                if (creating) {
-                    creating = false;
-                    positionCleanup();
+            $scope.$apply(function() {
+                if (event.which == 1) {
+                    if (creating) {
+                        creating = false;
+                        positionCleanup();
+                    }
                 }
-            }
+            });
         };
         $("#construction-area").on('mousedown', positionDown);
         $("#construction-area").on('mouseup', positionUp);
@@ -1771,13 +1769,15 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
 
 
         var positionUnitKey = function(event) {
-            if (event.which == 188) { // ,
-                rotateCounterClockwise();
-                unit.draw();
-            } else if (event.which == 190) { // .
-                rotateClockwise();
-                unit.draw();
-            }
+            $scope.$apply(function() {
+                if (event.which == 188) { // ,
+                    rotateCounterClockwise();
+                    unit.draw();
+                } else if (event.which == 190) { // .
+                    rotateClockwise();
+                    unit.draw();
+                }
+            });
         };
         $(document).on('keydown', positionUnitKey);
 
@@ -1798,22 +1798,16 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
             return;
         }
         var buildingUnit = Anno2205Layouts.EditorUnit.createNew(buildingType,
-            buildingType.color, Anno2205Layouts.buildingAlpha);
+            buildingType.color, Anno2205Layouts.buildingAlpha, $scope.layout.grid);
         buildingUnit.draw();
         createNewUnitHandlers(buildingUnit, function(unit) {
             var building = new Anno2205Layouts.EditorBuilding.createNew(
-                buildingType, buildingUnit.clone());
+                buildingType, buildingUnit.clone($scope.layout.grid),
+                $scope.layout.grid);
             building.buildingUnit.state = 'onGrid';
             building.buildingUnit.draw();
             $scope.layout.addBuilding(building);
             return true;
-        });
-    };
-
-    var drawBuildings = function() {
-        _.each($scope.layout.buildings, function(building) {
-            building.createElements();
-            building.draw();
         });
     };
 
@@ -1886,10 +1880,11 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
         var buildingType = $scope.selectedBuilding.type;
         var newProdMod = Anno2205Layouts.EditorUnit.createNew(
             buildingType.productionUnit,
-            buildingType.color, Anno2205Layouts.productionAlpha);
+            buildingType.color, Anno2205Layouts.productionAlpha,
+            $scope.layout.grid);
         newProdMod.draw();
         createNewUnitHandlers(newProdMod, function(unit) {
-            var newUnit = unit.clone();
+            var newUnit = unit.clone($scope.layout.grid);
             newUnit.state = 'onGrid';
             newUnit.draw();
             $scope.layout.addProdMod($scope.selectedBuilding, newUnit);
@@ -1901,10 +1896,11 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
         var buildingType = $scope.selectedBuilding.type;
         var newMaintMod = Anno2205Layouts.EditorUnit.createNew(
             maintenance,
-            buildingType.color, Anno2205Layouts.maintenanceAlpha);
+            buildingType.color, Anno2205Layouts.maintenanceAlpha,
+            $scope.layout.grid);
         newMaintMod.draw();
         createNewUnitHandlers(newMaintMod, function(unit) {
-            var newUnit = unit.clone();
+            var newUnit = unit.clone($scope.layout.grid);
             newUnit.state = 'onGrid';
             newUnit.draw();
             $scope.layout.addMaintMod($scope.selectedBuilding, newUnit);
@@ -1969,14 +1965,18 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
             .prop('height', grid.pixelHeight);
         var canvas = gridCanvas[0];
         var ctx = canvas.getContext('2d');
+        var layout = $scope.layout.copy();
+        layout.moveAllBuildings(layout.coverage.x === 0 ? 1 : -(layout.coverage.x-1),
+                                layout.coverage.y === 0 ? 1 : -(layout.coverage.y-1));
+        layout.grid = grid;
 
         // Grid.
-        grid.drawGrid(ctx);
+        grid.draw(ctx, layout);
         // Buildings.
         var draw = function(unit) {
             ctx.drawImage(unit.unitCanvas[0],
-                (unit.position[0] - offset.x) * Anno2205Layouts.gridSize,
-                (unit.position[1] - offset.y) * Anno2205Layouts.gridSize);
+                (unit.position[0] - offset.x) * Anno2205Layouts.gridSize + grid.gridOffsetX,
+                (unit.position[1] - offset.y) * Anno2205Layouts.gridSize + grid.gridOffsetY);
         };
         _.each($scope.layout.buildings, function(building) {
             draw(building.buildingUnit);
@@ -2002,11 +2002,13 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
         link.remove();
     };
 
-    $('#construction-icons').on('load', function() {
-        // Ensure icons are available before drawing on the canvas.
-        drawBuildings();
+    // Ensure icons are available before drawing on the canvas.
+    ensureImgs('#construction-icons', function() {
+        _.each($scope.layout.buildings, function(building) {
+            building.createElements($scope.layout.grid);
+            building.draw();
+        });
     });
-
 }])
 
 
@@ -2037,42 +2039,103 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
     };
 })
 
-.directive('annoGridDraw', function() {
+.directive('annoGridDraw', ['ensureImgs', function(ensureImgs) {
     return {
         link: function(scope, element, attrs) {
-            scope.$watch('layout.grid', function() {
-                var canvas = $("#anno-canvas");
-                scope.layout.grid.drawGrid(canvas[0].getContext('2d'));
+            ensureImgs('#contruction-icons,#grid-icons', function() {
+                var ctx = $("#anno-canvas")[0].getContext('2d');
+                scope.$watch('layout.grid', function() {
+                    scope.layout.grid.draw(ctx, scope.layout);
+                });
+                scope.$watchGroup(['layout.coverage.width',
+                                   'layout.coverage.height'], function() {
+                    console.log('layout coverage change');
+                    scope.layout.grid.drawBounds(ctx, scope.layout);
+                });
             });
         }
     };
-});
+}])
+
+.factory('ensureImgs', ['$rootScope', function ensureImgFactory($rootScope) {
+    return function(imgSel, cb) {
+        var imgs = $(imgSel);
+        var loadedImages = 0;
+        // TODO: Handle errors.
+        imgs = imgs.filter(function(i, el) {
+            console.log(this.complete);
+            return !this.complete;
+        });
+        if (imgs.length) {
+            imgs.one('load', function() {
+                loadedImages += 1;
+                if (loadedImages >= imgs.length) {
+                    $rootScope.$apply(cb);
+                }
+            });
+        } else {
+            cb();
+        }
+    };
+}]);
 ;'use strict';
 
 var Anno2205Layouts = Anno2205Layouts || {};
 (function(Anno2205Layouts) {
 
+    /**
+     * Base grid class.
+     * @class Grid
+     *
+     * @var {String} name - Human-readable name of the grid.
+     * @var {String} id - Unique id for the grid.
+     * @var {Number} pixelWidth - Total width of the canvas in pixels.
+     * @var {Number} pixelHeight - Total height of the canvas in pixels.
+     */
+
     function Grid() {
 
     }
 
-    Grid.prototype.drawGrid = function(ctx) {
+    /**
+     * Draws the grid.
+     */
+
+    Grid.prototype.drawGrid = function() {
     };
 
     /************************************************************************/
+
+    /**
+     * Rectangular grid.
+     * @class RectGrid
+     *
+     * @var {Number} gridWidth - Total width in grid units.
+     * @var {Number} gridHeight - Total height in grid units.
+     * @var {Number} gridOffsetX - Offset where the grid starts in pixels relative to canvas origin.
+     * @var {Number} gridOffsetY - Offset where the grid starts in pixels relative to canvas origin.
+     */
 
     function RectGrid(width, height) {
         // Grid.call(this);
         this.gridWidth = width;
         this.gridHeight = height;
-        this.pixelWidth = width * Anno2205Layouts.gridSize + 1;
-        this.pixelHeight = height * Anno2205Layouts.gridSize + 1;
+        this.gridOffsetX = 30;
+        this.gridOffsetY = 30;
+        this.gridPixelWidth = width * Anno2205Layouts.gridSize + 1;
+        this.gridPixelHeight = height * Anno2205Layouts.gridSize + 1;
+        this.pixelWidth = this.gridPixelWidth + this.gridOffsetX;
+        this.pixelHeight = this.gridPixelHeight + this.gridOffsetY;
         this.id = width+'x'+height;
         this.name = width + ' x ' + height;
     }
     RectGrid.prototype  = Object.create(Grid.prototype);
     RectGrid.prototype.constructor = RectGrid;
 
+    /**
+     * Creates a 2D array of objects, one for each cell of the grid, initialized
+     * empty.
+     */
     RectGrid.prototype.createBuildingMap = function() {
         var buildingMap = new Array(this.gridHeight);
         for (var rowi=0; rowi < this.gridHeight; rowi++) {
@@ -2084,6 +2147,11 @@ var Anno2205Layouts = Anno2205Layouts || {};
         return buildingMap;
     };
 
+    RectGrid.prototype.draw = function(ctx, layout) {
+        this.drawGrid(ctx);
+        this.drawBounds(ctx, layout);
+    };
+
     RectGrid.prototype.drawGrid = function(ctx) {
         // create white background.
         ctx.fillStyle = '#ffffff';
@@ -2092,21 +2160,104 @@ var Anno2205Layouts = Anno2205Layouts || {};
         ctx.lineWidth = 1;
         ctx.strokeStyle = '#000000';
         var x, y;
+        // Horizontal lines.
         for (var row=0; row<=this.gridHeight; row++) {
             ctx.beginPath();
-            x = this.gridWidth*Anno2205Layouts.gridSize + 0.5;
-            y = row*Anno2205Layouts.gridSize + 0.5;
-            ctx.moveTo(0.5, y);
+            x = this.gridWidth*Anno2205Layouts.gridSize + 0.5 + this.gridOffsetX;
+            y = row*Anno2205Layouts.gridSize + 0.5 + this.gridOffsetY;
+            ctx.moveTo(0.5+this.gridOffsetX, y);
             ctx.lineTo(x, y);
             ctx.stroke();
         }
+        // Vertical lines.
         for (var col=0; col<=this.gridWidth; col++) {
             ctx.beginPath();
-            x = col*Anno2205Layouts.gridSize + 0.5;
-            y = this.gridHeight*Anno2205Layouts.gridSize + 0.5;
-            ctx.moveTo(x, 0.5);
+            x = col*Anno2205Layouts.gridSize + 0.5 + this.gridOffsetX;
+            y = this.gridHeight*Anno2205Layouts.gridSize + 0.5 + this.gridOffsetY;
+            ctx.moveTo(x, 0.5 + this.gridOffsetY);
             ctx.lineTo(x, y);
             ctx.stroke();
+        }
+    };
+
+    RectGrid.prototype.drawBounds = function(ctx, layout) {
+        var icons = $("#grid-icons")[0];
+        var iconMap = Anno2205Layouts.gridSpriteMap;
+        var gridSize = Anno2205Layouts.gridSize;
+
+        var drawIcon = function(icon, x, y) {
+            ctx.drawImage(icons, icon.x, icon.y,
+                icon.width, icon.height,
+                x, y,
+                icon.width, icon.height);
+        };
+
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(this.gridOffsetX, 0,
+            this.pixelWidth-this.gridOffsetX, this.gridOffsetY);
+        ctx.fillRect(0, this.gridOffsetY,
+            this.gridOffsetX, this.pixelHeight-this.gridOffsetY);
+        if (layout.coverage.width) {
+            var arrowLeft = iconMap['arrow-left'];
+            var arrowRight = iconMap['arrow-right'];
+            var arrowBarLeft = iconMap['arrow-bar-left'];
+            var arrowBarRight = iconMap['arrow-bar-right'];
+            // Numbers indicating the width.
+            ctx.font = '25px Roboto';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillStyle = '#000000';
+            var x = layout.coverage.x * gridSize +
+                (layout.coverage.width * gridSize)/2 + this.gridOffsetX;
+            var text = '' + layout.coverage.width;
+            ctx.fillText(text, x, this.gridOffsetY/2);
+
+            // Left/Right arrows at the extents.
+            if (layout.coverage.width > 3) {
+                x = layout.coverage.x * gridSize + this.gridOffsetX;
+                drawIcon(arrowBarRight, x, (this.gridOffsetY-arrowBarRight.height)/2);
+
+                x = ((layout.coverage.x + layout.coverage.width) * gridSize -
+                    arrowBarLeft.width + this.gridOffsetX);
+                drawIcon(arrowBarLeft, x, (this.gridOffsetY-arrowBarLeft.height)/2);
+            }
+
+            // Height.
+            ctx.save();
+            ctx.translate(this.gridOffsetX, 0);
+            ctx.rotate(Math.PI/2);
+            x = layout.coverage.y * gridSize +
+                (layout.coverage.height * gridSize)/2 + this.gridOffsetY;
+            text = '' + layout.coverage.height;
+            ctx.fillText(text, x, this.gridOffsetX/2);
+
+            //Left/Right arrows at the extents.
+            if (layout.coverage.height > 3) {
+                x = layout.coverage.y * gridSize + this.gridOffsetY;
+                drawIcon(arrowBarRight, x, (this.gridOffsetX-arrowBarRight.height)/2);
+
+                x = ((layout.coverage.y + layout.coverage.height) * gridSize -
+                    arrowBarLeft.width + this.gridOffsetY);
+                drawIcon(arrowBarLeft, x, (this.gridOffsetX-arrowBarLeft.height)/2);
+            }
+            ctx.restore();
+        }
+    };
+
+    /**
+     * Return the grid coordinates from the given mouse coordinates.
+     */
+    RectGrid.prototype.gridFromMouse = function(canvasOffset, x, y) {
+        // Determine position of the grid.
+        var gridOffsetX = canvasOffset.left + this.gridOffsetX;
+        var gridOffsetY = canvasOffset.top + this.gridOffsetY;
+        if (x > gridOffsetX && x < gridOffsetX + this.gridPixelWidth &&
+            y > gridOffsetY && y < gridOffsetY + this.gridPixelHeight) {
+            var gridX = Math.floor((x - gridOffsetX) / Anno2205Layouts.gridSize);
+            var gridY = Math.floor((y - gridOffsetY) / Anno2205Layouts.gridSize);
+            return [gridX, gridY];
+        } else {
+            return undefined;
         }
     };
 
@@ -2299,6 +2450,29 @@ var Anno2205Layouts = Anno2205Layouts || {};
                 });
             });
         });
+        this.setCoverage();
+    };
+
+    Layout.prototype.setCoverage = function() {
+        console.log('setCoverage');
+        this.coverage = {};
+        var layout = this;
+        this.coverage.x = this.buildings.length ? 10000 : 0;
+        this.coverage.y = this.coverage.x;
+        var maxX = -1;
+        var maxY = -1;
+        _.each(layout.buildingMap, function(row, x) {
+            _.each(row, function(square, y) {
+                if (square.building) {
+                    layout.coverage.x = Math.min(layout.coverage.x, x);
+                    layout.coverage.y = Math.min(layout.coverage.y, y);
+                    maxX = Math.max(maxX, x);
+                    maxY = Math.max(maxY, y);
+                }
+            });
+        });
+        this.coverage.width = maxX - this.coverage.x + 1;
+        this.coverage.height = maxY - this.coverage.y + 1;
     };
 
     Layout.prototype.export = function() {
@@ -2395,6 +2569,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
             layout.buildingMap[x][y].building = building;
             layout.buildingMap[x][y].unit = unit;
         });
+        this.setCoverage();
     };
 
     Layout.prototype.removeUnit = function(unit) {
@@ -2403,6 +2578,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
             layout.buildingMap[x][y].building = undefined;
             layout.buildingMap[x][y].unit = undefined;
         });
+        this.setCoverage();
     };
 
     Layout.prototype.addBuilding = function(building) {
@@ -2443,6 +2619,13 @@ var Anno2205Layouts = Anno2205Layouts || {};
 
     Layout.prototype.removeMaintMod = function(building, unit) {
         this._removeModule(building.maintenanceModules, unit);
+    };
+
+    Layout.prototype.moveAllBuildings = function(x, y) {
+        _.each(this.buildings, function(building) {
+            building.move(x, y);
+        });
+        this.createBuildingMap();
     };
 
     Anno2205Layouts.Layout = Layout;
@@ -2601,6 +2784,16 @@ Anno2205Layouts.iconSpriteMap = {
     "logistics_module": {"x":0,"y":450,"width":50,"height":50},
     "workforce_module": {"x":50,"y":450,"width":50,"height":50},
 };
+Anno2205Layouts.gridSpriteMap = {
+    "arrow-bar-up": {"x":46,"y":0,"width":10,"height":23},
+    "arrow-bar-down": {"x":0,"y":24,"width":10,"height":23},
+    "arrow-bar-right": {"x":0,"y":0,"width":23,"height":24},
+    "arrow-bar-left": {"x":23,"y":0,"width":23,"height":24},
+    "arrow-up": {"x":10,"y":24,"width":10,"height":23},
+    "arrow-down": {"x":20,"y":24,"width":10,"height":23},
+    "arrow-right": {"x":30,"y":24,"width":23,"height":10},
+    "arrow-left": {"x":30,"y":34,"width":23,"height":10},
+};
 ;angular.module('templates-dist', ['editor/editor.html', 'index.html', 'my-layouts/my-layouts.html']);
 
 angular.module("editor/editor.html", []).run(["$templateCache", function($templateCache) {
@@ -2693,7 +2886,9 @@ angular.module("editor/editor.html", []).run(["$templateCache", function($templa
     "    #construction-icons {\n" +
     "        display: none;\n" +
     "    }\n" +
-    "\n" +
+    "    #grid-icons {\n" +
+    "        display: none;\n" +
+    "    }\n" +
     "</style>\n" +
     "\n" +
     "<form>\n" +
@@ -2705,7 +2900,7 @@ angular.module("editor/editor.html", []).run(["$templateCache", function($templa
     "\n" +
     "        <select ng-model=\"layout.gridChange\"\n" +
     "                ng-model-options=\"{ getterSetter: true }\"\n" +
-    "                ng-options=\"grid as grid.name for grid in grids track by grid.id\">\n" +
+    "                ng-options=\"grid as grid.name for grid in grids\">\n" +
     "        </select>\n" +
     "\n" +
     "        <div id=\"save-button\" ng-click=\"saveLayout()\"></div>\n" +
@@ -2724,6 +2919,7 @@ angular.module("editor/editor.html", []).run(["$templateCache", function($templa
     "\n" +
     "<!-- Ensure that these are loaded and easily available. -->\n" +
     "<img id=\"construction-icons\" src=\"images/buttons/construction_icons.png\">\n" +
+    "<img id=\"grid-icons\" src=\"images/grid/grid-sheet.png\">\n" +
     "\n" +
     "<div class=\"construction-level-button\" ng-repeat=\"level in levels[layout.region]\"\n" +
     "     ng-click=\"setActiveLevel(level)\"\n" +
