@@ -250,6 +250,10 @@
     .building-popup-close:hover {
         opacity: 0.9;
     }
+
+    .color-button {
+        margin: 5px;
+    }
 </style>
 
 <div id="building-popup" ng-show="buildingPopup.show"
@@ -271,5 +275,8 @@
             <div class="create-production-icon" ng-style="maintenance.icon.style"></div>
         </div>
     </div>
+
+    <img class="color-button" src="images/buttons/color.png" colorpicker ng-model="selectedBuilding.color" ng-model-options='{getterSetter: true}'>
+
     <!-- TODO: Maintenance information. -->
 </div>

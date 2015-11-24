@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
+angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.module'])
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/editor/:layoutId', {
@@ -249,7 +249,7 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
         var buildingType = $scope.selectedBuilding.type;
         var newProdMod = Anno2205Layouts.EditorUnit.createNew(
             buildingType.productionUnit,
-            buildingType.color, Anno2205Layouts.productionAlpha,
+            $scope.selectedBuilding.color(), Anno2205Layouts.productionAlpha,
             $scope.layout.grid);
         newProdMod.draw();
         createNewUnitHandlers(newProdMod, function(unit) {
@@ -265,7 +265,7 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
         var buildingType = $scope.selectedBuilding.type;
         var newMaintMod = Anno2205Layouts.EditorUnit.createNew(
             maintenance,
-            buildingType.color, Anno2205Layouts.maintenanceAlpha,
+            $scope.selectedBuilding.color(), Anno2205Layouts.maintenanceAlpha,
             $scope.layout.grid);
         newMaintMod.draw();
         createNewUnitHandlers(newMaintMod, function(unit) {

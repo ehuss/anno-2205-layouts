@@ -26,6 +26,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
         this.ctx = undefined;
         this.state = undefined;
         this.color = undefined;
+        this.colorAlpha = undefined;
     };
 
     EditorUnit.createFromStorage = function(unitStorage, color, colorAlpha) {
@@ -48,10 +49,11 @@ var Anno2205Layouts = Anno2205Layouts || {};
     };
 
     EditorUnit.prototype.setColor = function(color, colorAlpha) {
+        this.colorAlpha = colorAlpha;
         this.color = [
-            parseInt(color.substr(0, 2), 16),
-            parseInt(color.substr(2, 2), 16),
-            parseInt(color.substr(4, 2), 16),
+            parseInt(color.substr(1, 2), 16),
+            parseInt(color.substr(3, 2), 16),
+            parseInt(color.substr(5, 2), 16),
             colorAlpha
         ];
     };
@@ -70,6 +72,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
         eu.position = this.position.slice();
         eu.state = this.state;
         eu.color = this.color;
+        eu.colorAlpha = this.colorAlpha;
         eu.createElement(grid);
         return eu;
     };
@@ -248,22 +251,36 @@ var Anno2205Layouts = Anno2205Layouts || {};
         this.buildingUnit = undefined;
         this.productionModules = [];
         this.maintenanceModules = [];
+        this._color = '#ff0000';
+    };
+
+    EditorBuilding.prototype.color = function(newColor) {
+        if (arguments.length) {
+            this._color = newColor;
+            this.eachUnit(function(unit) {
+                unit.setColor(newColor, unit.colorAlpha);
+                unit.draw();
+            });
+        } else {
+            return this._color;
+        }
     };
 
     EditorBuilding.createFromStorage = function(buildingStorage) {
         var eb = new EditorBuilding();
         eb.type = Anno2205Layouts.unitIdMap[buildingStorage.buildingId];
+        eb._color = buildingStorage.color ? buildingStorage.color : eb.type.color;
         eb.buildingUnit = EditorUnit.createFromStorage(buildingStorage.building,
-            eb.type.color, Anno2205Layouts.buildingAlpha);
+            eb._color, Anno2205Layouts.buildingAlpha);
         eb.productionModules = _.map(buildingStorage.productionModules,
             function(modInfo) {
                 return EditorUnit.createFromStorage(modInfo,
-                    eb.type.color, Anno2205Layouts.productionAlpha);
+                    eb._color, Anno2205Layouts.productionAlpha);
             });
         eb.maintenanceModules = _.map(buildingStorage.maintenanceModules,
             function(modInfo) {
                 return EditorUnit.createFromStorage(modInfo,
-                    eb.type.color, Anno2205Layouts.maintenanceAlpha);
+                    eb._color, Anno2205Layouts.maintenanceAlpha);
             });
         return eb;
     };
@@ -271,6 +288,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
     EditorBuilding.createNew = function(buildingType, buildingUnit, grid) {
         var eb = new EditorBuilding();
         eb.type = buildingType;
+        eb._color = buildingType.color;
         if (buildingUnit) {
             eb.buildingUnit = buildingUnit;
         } else {
@@ -284,6 +302,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
         return {
             buildingId: this.type.id,
             building: this.buildingUnit.export(),
+            color: this._color,
             productionModules: _.map(this.productionModules, function(module) {
                 return module.export();
             }),

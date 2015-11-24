@@ -1,6 +1,8 @@
 TODO
 ====
 
+- multiple copies of the same building should probably show a different color automatically.
+  Also consider letters on prod/maint modules to mark which building they are for?
 - Don't load all information for every layout (buildingMap, etc.).
 - cleanup when leaving editor (grid objects on layout)
 - Notes
