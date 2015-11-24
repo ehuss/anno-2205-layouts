@@ -176,6 +176,29 @@ var Anno2205Layouts = Anno2205Layouts || {};
                 });
             });
         });
+        this.setCoverage();
+    };
+
+    Layout.prototype.setCoverage = function() {
+        console.log('setCoverage');
+        this.coverage = {};
+        var layout = this;
+        this.coverage.x = this.buildings.length ? 10000 : 0;
+        this.coverage.y = this.coverage.x;
+        var maxX = -1;
+        var maxY = -1;
+        _.each(layout.buildingMap, function(row, x) {
+            _.each(row, function(square, y) {
+                if (square.building) {
+                    layout.coverage.x = Math.min(layout.coverage.x, x);
+                    layout.coverage.y = Math.min(layout.coverage.y, y);
+                    maxX = Math.max(maxX, x);
+                    maxY = Math.max(maxY, y);
+                }
+            });
+        });
+        this.coverage.width = maxX - this.coverage.x + 1;
+        this.coverage.height = maxY - this.coverage.y + 1;
     };
 
     Layout.prototype.export = function() {
@@ -272,6 +295,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
             layout.buildingMap[x][y].building = building;
             layout.buildingMap[x][y].unit = unit;
         });
+        this.setCoverage();
     };
 
     Layout.prototype.removeUnit = function(unit) {
@@ -280,6 +304,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
             layout.buildingMap[x][y].building = undefined;
             layout.buildingMap[x][y].unit = undefined;
         });
+        this.setCoverage();
     };
 
     Layout.prototype.addBuilding = function(building) {
@@ -320,6 +345,13 @@ var Anno2205Layouts = Anno2205Layouts || {};
 
     Layout.prototype.removeMaintMod = function(building, unit) {
         this._removeModule(building.maintenanceModules, unit);
+    };
+
+    Layout.prototype.moveAllBuildings = function(x, y) {
+        _.each(this.buildings, function(building) {
+            building.move(x, y);
+        });
+        this.createBuildingMap();
     };
 
     Anno2205Layouts.Layout = Layout;

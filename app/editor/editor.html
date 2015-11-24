@@ -86,7 +86,9 @@
     #construction-icons {
         display: none;
     }
-
+    #grid-icons {
+        display: none;
+    }
 </style>
 
 <form>
@@ -98,7 +100,7 @@
 
         <select ng-model="layout.gridChange"
                 ng-model-options="{ getterSetter: true }"
-                ng-options="grid as grid.name for grid in grids track by grid.id">
+                ng-options="grid as grid.name for grid in grids">
         </select>
 
         <div id="save-button" ng-click="saveLayout()"></div>
@@ -117,6 +119,7 @@
 
 <!-- Ensure that these are loaded and easily available. -->
 <img id="construction-icons" src="images/buttons/construction_icons.png">
+<img id="grid-icons" src="images/grid/grid-sheet.png">
 
 <div class="construction-level-button" ng-repeat="level in levels[layout.region]"
      ng-click="setActiveLevel(level)"

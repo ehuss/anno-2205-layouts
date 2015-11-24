@@ -38,10 +38,10 @@ var Anno2205Layouts = Anno2205Layouts || {};
         return eu;
     };
 
-    EditorUnit.createNew = function(unitInfo, color, colorAlpha) {
+    EditorUnit.createNew = function(unitInfo, color, colorAlpha, grid) {
         var eu = new EditorUnit();
         eu.unitInfo = unitInfo;
-        eu.createElement();
+        eu.createElement(grid);
         eu.state = 'positioning';
         eu.setColor(color, colorAlpha);
         return eu;
@@ -64,14 +64,20 @@ var Anno2205Layouts = Anno2205Layouts || {};
         };
     };
 
-    EditorUnit.prototype.clone = function() {
+    EditorUnit.prototype.clone = function(grid) {
         var eu = new EditorUnit();
         eu.unitInfo = this.unitInfo;
         eu.position = this.position.slice();
         eu.state = this.state;
         eu.color = this.color;
-        eu.createElement();
+        eu.createElement(grid);
         return eu;
+    };
+
+    EditorUnit.prototype.move = function(x, y) {
+        this.position[0] += x;
+        this.position[1] += y;
+        // TODO: Move canvas?
     };
 
     /** Determine the bounding box of the unit.  */
@@ -97,15 +103,15 @@ var Anno2205Layouts = Anno2205Layouts || {};
     };
 
     /** Create the <canvas> element and add it to the document. */
-    EditorUnit.prototype.createElement = function() {
+    EditorUnit.prototype.createElement = function(grid) {
         var bbox = this.bbox();
-        var gridCanvas = $("#anno-canvas");
-        var canvasOffset = gridCanvas.offset();
+        var canvasOffset = $("#anno-canvas").offset();
+
         var left = 0;
         var top = 0;
         if (this.position) {
-            left = this.position[0]*Anno2205Layouts.gridSize + canvasOffset.left;
-            top = this.position[1]*Anno2205Layouts.gridSize + canvasOffset.top;
+            left = this.position[0]*Anno2205Layouts.gridSize + canvasOffset.left + grid.gridOffsetX;
+            top = this.position[1]*Anno2205Layouts.gridSize + canvasOffset.top + grid.gridOffsetY;
         }
         this.unitCanvas = $('<canvas></canvas>').css({
             position: 'absolute',
@@ -262,14 +268,14 @@ var Anno2205Layouts = Anno2205Layouts || {};
         return eb;
     };
 
-    EditorBuilding.createNew = function(buildingType, buildingUnit) {
+    EditorBuilding.createNew = function(buildingType, buildingUnit, grid) {
         var eb = new EditorBuilding();
         eb.type = buildingType;
         if (buildingUnit) {
             eb.buildingUnit = buildingUnit;
         } else {
             eb.buildingUnit = EditorUnit.createNew(buildingType,
-                buildingType.color, Anno2205Layouts.buildingAlpha);
+                buildingType.color, Anno2205Layouts.buildingAlpha, grid);
         }
         return eb;
     };
@@ -297,8 +303,8 @@ var Anno2205Layouts = Anno2205Layouts || {};
         });
     };
 
-    EditorBuilding.prototype.createElements = function(first_argument) {
-        this.eachUnit(function(unit) {unit.createElement();});
+    EditorBuilding.prototype.createElements = function(grid) {
+        this.eachUnit(function(unit) {unit.createElement(grid);});
     };
 
     EditorBuilding.prototype.draw = function() {
@@ -307,6 +313,12 @@ var Anno2205Layouts = Anno2205Layouts || {};
 
     EditorBuilding.prototype.demolish = function() {
         this.eachUnit(function(unit) {unit.demolish();});
+    };
+
+    EditorBuilding.prototype.move = function(x, y) {
+        this.eachUnit(function(unit) {
+            unit.move(x, y);
+        });
     };
 
     Anno2205Layouts.EditorBuilding = EditorBuilding;

@@ -1,7 +1,12 @@
 TODO
 ====
 
+- Don't load all information for every layout (buildingMap, etc.).
+- cleanup when leaving editor (grid objects on layout)
+- Notes
+- total production/cost display.
 - Roads
+- Export/Import
 - Exit placement mode if you switch to another mode (like demolish).
 - Demo mode should support dragging.
 
@@ -15,13 +20,10 @@ TODO
 
 - Copy
 - Move
-- Export/Import
 - Placement markers.
 - hover on build building icons should have popup
-- Notes
 - Different grids.
     - islands, with coastal and mountain sites.
-- total production/cost display.
 - prettify
 
 - Keyboard shortcuts:

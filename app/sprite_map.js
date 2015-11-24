@@ -94,3 +94,13 @@ Anno2205Layouts.iconSpriteMap = {
     "logistics_module": {"x":0,"y":450,"width":50,"height":50},
     "workforce_module": {"x":50,"y":450,"width":50,"height":50},
 };
+Anno2205Layouts.gridSpriteMap = {
+    "arrow-bar-up": {"x":46,"y":0,"width":10,"height":23},
+    "arrow-bar-down": {"x":0,"y":24,"width":10,"height":23},
+    "arrow-bar-right": {"x":0,"y":0,"width":23,"height":24},
+    "arrow-bar-left": {"x":23,"y":0,"width":23,"height":24},
+    "arrow-up": {"x":10,"y":24,"width":10,"height":23},
+    "arrow-down": {"x":20,"y":24,"width":10,"height":23},
+    "arrow-right": {"x":30,"y":24,"width":23,"height":10},
+    "arrow-left": {"x":30,"y":34,"width":23,"height":10},
+};

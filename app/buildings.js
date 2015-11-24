@@ -1178,15 +1178,16 @@ var Anno2205Layouts = Anno2205Layouts || {};
         ]
     };
 
-    // Add "id" attribute to maintenance modules.
-    _.each(Anno2205Layouts.maintenanceModules, function(module, key) {
-        module.id = key;
-    });
-
     // Maps building id to its description object.
     Anno2205Layouts.unitIdMap = {};
 
     Anno2205Layouts.initBuildings = function() {
+        // Add "id" attribute to maintenance modules.
+        _.each(Anno2205Layouts.maintenanceModules, function(module, key) {
+            module.id = key;
+        });
+
+
         // Build the unitIdMap.
         _.each(Anno2205Layouts.regions, function(region) {
             _.each(Anno2205Layouts.buildingLevels[region], function(level) {

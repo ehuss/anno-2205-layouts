@@ -9,8 +9,8 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
   });
 }])
 
-.controller('EditorCtrl', ['$rootScope', '$scope', '$location', '$routeParams', '$localStorage',
-    function($rootScope, $scope, $location, $routeParams, $localStorage) {
+.controller('EditorCtrl', ['$rootScope', '$scope', '$location', '$routeParams', '$localStorage', 'ensureImgs',
+    function($rootScope, $scope, $location, $routeParams, $localStorage, ensureImgs) {
 
     var layout = $rootScope.layouts.layoutFromId($routeParams.layoutId);
     // Make a deep copy to edit locally.
@@ -45,25 +45,10 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
         level.background = level.backgroundActive;
     };
 
-    // Determine the grid position from mouse coordinates.
-    // The `c` parameters are the position and size for the grid.
-    var gridFromMouse = function(cLeft, cTop, cWidth, cHeight, x, y) {
-        // Determine position of the grid.
-        if (x > cLeft && x < cLeft+cWidth &&
-            y > cTop && y < cTop+cHeight) {
-            var gridX = Math.floor((x - cLeft) / Anno2205Layouts.gridSize);
-            var gridY = Math.floor((y - cTop) / Anno2205Layouts.gridSize);
-            return [gridX, gridY];
-        } else {
-            return undefined;
-        }
-    };
-
     var createNewUnitHandlers = function(unit, placeCallback) {
-        var gridCanvas = $("#anno-canvas");
-        var canvasWidth = gridCanvas.width();
-        var canvasHeight = gridCanvas.height();
-        var canvasOffset = gridCanvas.offset();
+        var grid = $scope.layout.grid;
+        var canvas = $('#anno-canvas');
+        var canvasOffset = canvas.offset();
 
         // Disable while placing.
         buildingClickHandler =
@@ -76,8 +61,7 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
         // Drag the unit with the mouse. Ensure it stays aligned to the
         // construction grid when hovering over the grid.
         var freeMoveFunction = function(event) {
-            var gridPos  = gridFromMouse(canvasOffset.left, canvasOffset.top,
-                    canvasWidth, canvasHeight, event.pageX, event.pageY);
+            var gridPos  = grid.gridFromMouse(canvasOffset, event.pageX, event.pageY);
             if (gridPos === undefined) {
                 // Mouse is off the grid.
                 unit.unitCanvas.css({
@@ -86,8 +70,8 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
                 });
             } else {
                 unit.unitCanvas.css({
-                    left: gridPos[0]*Anno2205Layouts.gridSize + canvasOffset.left,
-                    top: gridPos[1]*Anno2205Layouts.gridSize + canvasOffset.top,
+                    left: gridPos[0]*Anno2205Layouts.gridSize + canvasOffset.left + grid.gridOffsetX,
+                    top: gridPos[1]*Anno2205Layouts.gridSize + canvasOffset.top + grid.gridOffsetY,
                 });
                 if (creating) {
                     createUnit(event.pageX, event.pageY);
@@ -98,12 +82,9 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
 
         // Creates a new unit.
         var createUnit = function(pageX, pageY) {
-            var gridPos  = gridFromMouse(canvasOffset.left, canvasOffset.top,
-                    canvasWidth, canvasHeight, pageX, pageY);
+            var gridPos  = grid.gridFromMouse(canvasOffset, pageX, pageY);
             if (gridPos !== undefined) {
-                var gridX = Math.floor((pageX - canvasOffset.left) / Anno2205Layouts.gridSize);
-                var gridY = Math.floor((pageY - canvasOffset.top) / Anno2205Layouts.gridSize);
-                unit.position = [gridX, gridY];
+                unit.position = gridPos;
                 if ($scope.layout.checkValid(unit)) {
                     creating = true;
                     if (!placeCallback(unit)) {
@@ -116,24 +97,28 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
         };
 
         var positionDown = function(event) {
-            if (event.which == 1) {  // Left mouse
-                createUnit(event.pageX, event.pageY);
-            } else if (event.which == 2) { // Middle mouse.
-                // TODO: What does Anno do?
-                rotateCounterClockwise();
-                unit.draw();
-            } else if (event.which == 3) { // Right Mouse.
-                // TODO, stop creating.
-            }
+            $scope.$apply(function() {
+                if (event.which == 1) {  // Left mouse
+                    createUnit(event.pageX, event.pageY);
+                } else if (event.which == 2) { // Middle mouse.
+                    // TODO: What does Anno do?
+                    rotateCounterClockwise();
+                    unit.draw();
+                } else if (event.which == 3) { // Right Mouse.
+                    // TODO, stop creating.
+                }
+            });
         };
 
         var positionUp = function(event) {
-            if (event.which == 1) {
-                if (creating) {
-                    creating = false;
-                    positionCleanup();
+            $scope.$apply(function() {
+                if (event.which == 1) {
+                    if (creating) {
+                        creating = false;
+                        positionCleanup();
+                    }
                 }
-            }
+            });
         };
         $("#construction-area").on('mousedown', positionDown);
         $("#construction-area").on('mouseup', positionUp);
@@ -153,13 +138,15 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
 
 
         var positionUnitKey = function(event) {
-            if (event.which == 188) { // ,
-                rotateCounterClockwise();
-                unit.draw();
-            } else if (event.which == 190) { // .
-                rotateClockwise();
-                unit.draw();
-            }
+            $scope.$apply(function() {
+                if (event.which == 188) { // ,
+                    rotateCounterClockwise();
+                    unit.draw();
+                } else if (event.which == 190) { // .
+                    rotateClockwise();
+                    unit.draw();
+                }
+            });
         };
         $(document).on('keydown', positionUnitKey);
 
@@ -180,22 +167,16 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
             return;
         }
         var buildingUnit = Anno2205Layouts.EditorUnit.createNew(buildingType,
-            buildingType.color, Anno2205Layouts.buildingAlpha);
+            buildingType.color, Anno2205Layouts.buildingAlpha, $scope.layout.grid);
         buildingUnit.draw();
         createNewUnitHandlers(buildingUnit, function(unit) {
             var building = new Anno2205Layouts.EditorBuilding.createNew(
-                buildingType, buildingUnit.clone());
+                buildingType, buildingUnit.clone($scope.layout.grid),
+                $scope.layout.grid);
             building.buildingUnit.state = 'onGrid';
             building.buildingUnit.draw();
             $scope.layout.addBuilding(building);
             return true;
-        });
-    };
-
-    var drawBuildings = function() {
-        _.each($scope.layout.buildings, function(building) {
-            building.createElements();
-            building.draw();
         });
     };
 
@@ -268,10 +249,11 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
         var buildingType = $scope.selectedBuilding.type;
         var newProdMod = Anno2205Layouts.EditorUnit.createNew(
             buildingType.productionUnit,
-            buildingType.color, Anno2205Layouts.productionAlpha);
+            buildingType.color, Anno2205Layouts.productionAlpha,
+            $scope.layout.grid);
         newProdMod.draw();
         createNewUnitHandlers(newProdMod, function(unit) {
-            var newUnit = unit.clone();
+            var newUnit = unit.clone($scope.layout.grid);
             newUnit.state = 'onGrid';
             newUnit.draw();
             $scope.layout.addProdMod($scope.selectedBuilding, newUnit);
@@ -283,10 +265,11 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
         var buildingType = $scope.selectedBuilding.type;
         var newMaintMod = Anno2205Layouts.EditorUnit.createNew(
             maintenance,
-            buildingType.color, Anno2205Layouts.maintenanceAlpha);
+            buildingType.color, Anno2205Layouts.maintenanceAlpha,
+            $scope.layout.grid);
         newMaintMod.draw();
         createNewUnitHandlers(newMaintMod, function(unit) {
-            var newUnit = unit.clone();
+            var newUnit = unit.clone($scope.layout.grid);
             newUnit.state = 'onGrid';
             newUnit.draw();
             $scope.layout.addMaintMod($scope.selectedBuilding, newUnit);
@@ -351,14 +334,18 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
             .prop('height', grid.pixelHeight);
         var canvas = gridCanvas[0];
         var ctx = canvas.getContext('2d');
+        var layout = $scope.layout.copy();
+        layout.moveAllBuildings(layout.coverage.x === 0 ? 1 : -(layout.coverage.x-1),
+                                layout.coverage.y === 0 ? 1 : -(layout.coverage.y-1));
+        layout.grid = grid;
 
         // Grid.
-        grid.drawGrid(ctx);
+        grid.draw(ctx, layout);
         // Buildings.
         var draw = function(unit) {
             ctx.drawImage(unit.unitCanvas[0],
-                (unit.position[0] - offset.x) * Anno2205Layouts.gridSize,
-                (unit.position[1] - offset.y) * Anno2205Layouts.gridSize);
+                (unit.position[0] - offset.x) * Anno2205Layouts.gridSize + grid.gridOffsetX,
+                (unit.position[1] - offset.y) * Anno2205Layouts.gridSize + grid.gridOffsetY);
         };
         _.each($scope.layout.buildings, function(building) {
             draw(building.buildingUnit);
@@ -384,11 +371,13 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
         link.remove();
     };
 
-    $('#construction-icons').on('load', function() {
-        // Ensure icons are available before drawing on the canvas.
-        drawBuildings();
+    // Ensure icons are available before drawing on the canvas.
+    ensureImgs('#construction-icons', function() {
+        _.each($scope.layout.buildings, function(building) {
+            building.createElements($scope.layout.grid);
+            building.draw();
+        });
     });
-
 }])
 
 
@@ -419,13 +408,42 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage'])
     };
 })
 
-.directive('annoGridDraw', function() {
+.directive('annoGridDraw', ['ensureImgs', function(ensureImgs) {
     return {
         link: function(scope, element, attrs) {
-            scope.$watch('layout.grid', function() {
-                var canvas = $("#anno-canvas");
-                scope.layout.grid.drawGrid(canvas[0].getContext('2d'));
+            ensureImgs('#contruction-icons,#grid-icons', function() {
+                var ctx = $("#anno-canvas")[0].getContext('2d');
+                scope.$watch('layout.grid', function() {
+                    scope.layout.grid.draw(ctx, scope.layout);
+                });
+                scope.$watchGroup(['layout.coverage.width',
+                                   'layout.coverage.height'], function() {
+                    console.log('layout coverage change');
+                    scope.layout.grid.drawBounds(ctx, scope.layout);
+                });
             });
         }
     };
-});
+}])
+
+.factory('ensureImgs', ['$rootScope', function ensureImgFactory($rootScope) {
+    return function(imgSel, cb) {
+        var imgs = $(imgSel);
+        var loadedImages = 0;
+        // TODO: Handle errors.
+        imgs = imgs.filter(function(i, el) {
+            console.log(this.complete);
+            return !this.complete;
+        });
+        if (imgs.length) {
+            imgs.one('load', function() {
+                loadedImages += 1;
+                if (loadedImages >= imgs.length) {
+                    $rootScope.$apply(cb);
+                }
+            });
+        } else {
+            cb();
+        }
+    };
+}]);
