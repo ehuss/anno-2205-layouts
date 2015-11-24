@@ -143,6 +143,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
         layout.grid = Anno2205Layouts.gridMap['40x40'];
         layout.buildings = [];
         layout.createBuildingMap();
+        layout.notes = '';
         return layout;
     };
 
@@ -150,6 +151,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
         var layout = new Layout();
         layout.id = layoutStorage.id;
         layout.name = layoutStorage.name;
+        layout.notes = layoutStorage.notes;
         layout.createDate = new Date(layoutStorage.createDate);
         layout.lastModifiedDate = new Date(layoutStorage.lastModifiedDate);
         layout.region = layoutStorage.region;
@@ -163,6 +165,22 @@ var Anno2205Layouts = Anno2205Layouts || {};
         });
         layout.createBuildingMap();
         return layout;
+    };
+
+    Layout.prototype.export = function() {
+        var result = {
+            id: this.id,
+            name: this.name,
+            notes: this.notes,
+            createDate: this.createDate,
+            lastModifiedDate: this.lastModifiedDate,
+            region: this.region,
+            grid: this.grid.id,
+        };
+        result.buildings = _.map(this.buildings, function (building) {
+            return building.export();
+        });
+        return result;
     };
 
     Layout.prototype.createBuildingMap = function() {
@@ -199,21 +217,6 @@ var Anno2205Layouts = Anno2205Layouts || {};
         });
         this.coverage.width = maxX - this.coverage.x + 1;
         this.coverage.height = maxY - this.coverage.y + 1;
-    };
-
-    Layout.prototype.export = function() {
-        var result = {
-            id: this.id,
-            name: this.name,
-            createDate: this.createDate,
-            lastModifiedDate: this.lastModifiedDate,
-            region: this.region,
-            grid: this.grid.id,
-        };
-        result.buildings = _.map(this.buildings, function (building) {
-            return building.export();
-        });
-        return result;
     };
 
     Layout.prototype.gridChange = function(grid) {

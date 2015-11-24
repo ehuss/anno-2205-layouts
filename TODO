@@ -5,7 +5,6 @@ TODO
   Also consider letters on prod/maint modules to mark which building they are for?
 - Don't load all information for every layout (buildingMap, etc.).
 - cleanup when leaving editor (grid objects on layout)
-- Notes
 - total production/cost display.
 - Roads
 - Export/Import

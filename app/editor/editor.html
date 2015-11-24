@@ -89,9 +89,12 @@
     #grid-icons {
         display: none;
     }
+
+    .notes-label {
+        font-size: 140%;
+    }
 </style>
 
-<form>
 <input type="text" name="layoutName" ng-model="layout.name">
 
 <div id="editor-top">
@@ -142,8 +145,6 @@
     <div class="construction-building-button-icon" ng-style="building.icon.style"></div>
 </div>
 
-</form>
-
 <div class="editor-mode-button" id="move-button" ng-click="enterMoveMode()">
     <div class="editor-mode-button-icon" id="editor-mode-icon-move"></div>
 </div>
@@ -155,6 +156,14 @@
 </div>
 
 <a ng-click="exportImage()">Export Image</a>
+
+<div>
+    <label class="notes-label" for="notes">Notes:</label>
+    <div>
+        <textarea id="notes" cols="100" rows="12" ng-model="layout.notes"></textarea>
+    </div>
+</div>
+
 
 <div id="delete-layout-modal" class="modal" role="dialog">
     <div class="modal-dialog">
