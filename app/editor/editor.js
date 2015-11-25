@@ -83,7 +83,9 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
         // Creates a new unit.
         var createUnit = function(pageX, pageY) {
             var gridPos  = grid.gridFromMouse(canvasOffset, pageX, pageY);
-            if (gridPos !== undefined) {
+            if (gridPos === undefined) {
+                positionCleanup();
+            } else {
                 unit.position = gridPos;
                 if ($scope.layout.checkValid(unit)) {
                     creating = true;
@@ -120,8 +122,15 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
                 }
             });
         };
+        var exitCreate = function() {
+            creating = false;
+            positionCleanup();
+            return false;  // Prevent context menu.
+        };
+
         $("#construction-area").on('mousedown', positionDown);
         $("#construction-area").on('mouseup', positionUp);
+        $(document).on('contextmenu', exitCreate);
 
         var rotateCounterClockwise = function() {
             unit.orientation -= 1;
@@ -145,6 +154,8 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
                 } else if (event.which == 190) { // .
                     rotateClockwise();
                     unit.draw();
+                } else if (event.which == 27) {
+                    positionCleanup();
                 }
             });
         };
@@ -157,6 +168,7 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
             $("#construction-area")
                 .off('mousedown', positionDown)
                 .off('mousedown', positionUp);
+            $(document).off('contextmenu', exitCreate);
             buildingClickHandler = buildingDefaultClickHandler;
         };
     };
