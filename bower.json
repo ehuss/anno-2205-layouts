@@ -6,13 +6,6 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "angular": "~1.4.0",
-    "angular-route": "~1.4.0",
-    "angular-loader": "~1.4.0",
-    "angular-mocks": "~1.4.0",
-    "jquery": "~2.1.4",
-    "bootstrap": "~3.3.5",
-    "underscore": "~1.8.3",
     "angular-bootstrap-colorpicker": "~3.0.19"
   }
 }

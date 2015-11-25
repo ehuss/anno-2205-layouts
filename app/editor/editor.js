@@ -4,7 +4,7 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/editor/:layoutId', {
-    templateUrl: 'editor/editor.html',
+    templateUrl: 'app/editor/editor.html',
     controller: 'EditorCtrl'
   });
 }])

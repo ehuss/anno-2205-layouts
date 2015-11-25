@@ -1,22 +1,60 @@
 /*jslint node: true */
 'use strict';
 
+var _ = require('underscore');
+
 module.exports = function(grunt) {
+
+  // Used for generating <script> tags in index.html.
+  function scriptTags(files) {
+    return _.reduce(files, function(sum, file) {
+      return sum + '\n<script src="' + file + '"></script>';
+    }, '');
+  }
+
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
 
-    bower: {
-      install: {
+    // Generate index.html from a template.
+    // In a dev environment, there are separate <script> tags for each js file.
+    // In a dist environment, there is just one "app.js" file.
+    includereplace: {
+      dev: {
         options: {
-          install: true,
-          copy: false,
-          targetDir: './dist/libs',
+          globals: {
+            scriptTags: scriptTags(grunt.file.expand('app/**/*.js'))
+          }
+        },
+        src: 'index.html.tmpl',
+        dest: 'index.html'
+      },
+      dist: {
+        options: {
+          globals: {
+            scriptTags: scriptTags(['app.js'])
+          }
+        },
+        src: 'index.html.tmpl',
+        dest: 'dist/index.html'
+      }
+    },
+
+    bower: {
+      dev: {
+        options: {
+          targetDir: 'libs',
           cleanTargetDir: true
+        }
+      },
+      dist: {
+        options: {
+          targetDir: 'dist/libs',
         }
       }
     },
 
+/*
     uglify: {
       dist: {
         files: {
@@ -27,13 +65,16 @@ module.exports = function(grunt) {
         }
       }
     },
+*/
 
+    // For distribution, join all HTML templates together into one JS file.
     html2js: {
       dist: {
         options: {
-          base: 'app',
+          base: '.',
+          module: 'anno2205Layouts.templates'
         },
-        src: [ 'app/**/*.html' ],
+        src: [ 'app/**/*.html', '!app/templates-dev.js' ],
         dest: 'build/templates.js'
       }
     },
@@ -47,6 +88,7 @@ module.exports = function(grunt) {
       }
     },
 
+    // For distribution, join all JS files into one.
     concat: {
       options: {
         separator: ';'
@@ -57,11 +99,11 @@ module.exports = function(grunt) {
       }
     },
 
+    // Copy static files into the dist directory.
     copy: {
       dist: {
         files: [
-          {expand:true, cwd: 'app', src: ['index.html', 'app.css'], dest: 'dist'},
-          {expand:true, src: ['images/**/*.png'], dest: 'dist'}
+          {expand:true, src: ['app.css', 'images/**/*.png'], dest: 'dist'}
         ]
       }
     },
@@ -70,31 +112,22 @@ module.exports = function(grunt) {
      all: [ 'Gruntfile.js']//, 'app/*.js', 'app/**/*.js' ]
     },
 
+    // Development web server.
     connect: {
       server: {
         options: {
-          base: 'dist',
+          // base: 'dist',
           hostname: 'localhost',
           port: 8000
         }
       }
     },
 
+    // Watch event (see below) is used to conditionally run the includereplace task.
     watch: {
       dev: {
-        files: [ 'Gruntfile.js', 'app/**/*.js', 'app/**/*.html' ],
-        tasks: [ 'jshint', /*'karma:unit',*/ 'dist'],
-        options: {
-          atBegin: true
-        }
+        files: [ 'Gruntfile.js', 'index.html.tmpl', 'app/**/*.js' ],
       },
-      // min: {
-      //   files: [ 'Gruntfile.js', 'app/**/*.js', '*.html' ],
-      //   tasks: [ 'jshint', /*'karma:unit',*/ 'html2js:dist', 'concat:dist', 'clean:temp', 'uglify:dist' ],
-      //   options: {
-      //     atBegin: true
-      //   }
-      // }
     },
 
 
@@ -133,6 +166,15 @@ module.exports = function(grunt) {
     }
   });
 
+// When JS files are added/removed, re-run includereplace.
+grunt.event.on('watch', function(action, filepath, target) {
+  grunt.log.writeln(target + ': ' + filepath + ' has ' + action);
+  if (action == 'added' || action == 'deleted' ||
+      filepath == 'index.html.tmpl' || filepath == 'Gruntfile.js') {
+    grunt.task.run('includereplace:dev');
+  }
+});
+
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-connect');
@@ -145,15 +187,16 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-bower-task');
   grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-gh-pages');
+  grunt.loadNpmTasks('grunt-include-replace');
 
-  grunt.registerTask('dev', [ 'bower', 'connect:server', 'watch:dev' ]);
-  grunt.registerTask('test', [ 'bower', 'jshint', 'karma:continuous' ]);
+  grunt.registerTask('dev', [ 'bower:dev', 'includereplace:dev', 'connect:server', 'watch:dev' ]);
+  // grunt.registerTask('test', [ 'bower', 'jshint', 'karma:continuous' ]);
 //  grunt.registerTask('minified', [ 'bower', 'connect:server', 'watch:min' ]);
 //  grunt.registerTask('package', [ 'bower', 'jshint', /*'karma:unit',*/ 'html2js:dist', 'concat:dist', 'uglify:dist',
 //    'concat:dist', /*'uglify:dist',*/ 'clean:temp', 'compress:dist' ]);
 
   grunt.registerTask('dist', ['clean:dist',
-    'bower', 'html2js:dist', 'concat:dist', 'copy:dist', 'clean:temp']);
+    'bower:dist', 'html2js:dist', 'includereplace:dist', 'concat:dist', 'copy:dist', 'clean:temp']);
 
   grunt.registerTask('deploy', ['dist', 'gh-pages']);
 };

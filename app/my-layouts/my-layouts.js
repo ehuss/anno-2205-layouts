@@ -4,7 +4,7 @@ angular.module('anno2205Layouts.my-layouts', ['ngRoute', 'ngStorage'])
 
 .config(['$routeProvider', function($routeProvider) {
     $routeProvider.when('/my-layouts', {
-        templateUrl: 'my-layouts/my-layouts.html',
+        templateUrl: 'app/my-layouts/my-layouts.html',
         controller: 'MyLayoutsCtrl'
     });
 }])
