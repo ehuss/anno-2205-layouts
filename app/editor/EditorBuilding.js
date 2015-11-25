@@ -70,6 +70,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
         var eu = new EditorUnit();
         eu.unitInfo = this.unitInfo;
         eu.position = this.position.slice();
+        eu.orientation = this.orientation;
         eu.state = this.state;
         eu.color = this.color;
         eu.colorAlpha = this.colorAlpha;
@@ -152,7 +153,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
         var shape = this.rotatedShape();
         for (var x=0; x<bbox.gridWidth; x++) {
             for (var y=0; y<bbox.gridHeight; y++) {
-                if (!shape || shape[x][y]) {
+                if (!shape || shape[y][x]) {
                     cb(x+this.position[0], y+this.position[1]);
                 }
             }
