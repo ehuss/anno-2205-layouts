@@ -31,6 +31,16 @@
         background: url('images/buttons/save-hover.png');
     }
 
+    #export-button {
+        display: inline-block;
+        background: url('images/buttons/export.png');
+        width: 100px;
+        height: 34px;
+    }
+    #export-button:hover {
+        background: url('images/buttons/export-hover.png');
+    }
+
     #cancel-button {
         display: inline-block;
         background: url('images/buttons/cancel.png');
@@ -107,6 +117,7 @@
         </select>
 
         <div id="save-button" ng-click="saveLayout()"></div>
+        <div id="export-button" ng-click="exportImage()"></div>
         <div id="cancel-button" data-toggle="modal" data-target="#cancel-layout-modal"></div>
         <div id="delete-button" data-toggle="modal" data-target="#delete-layout-modal"></div>
     </div>
@@ -156,8 +167,6 @@
     <div class="editor-mode-button" id="demolition-button" ng-click="enterDemoMode()">
         <div class="editor-mode-button-icon" id="editor-mode-icon-demo"></div>
     </div>
-
-    <a ng-click="exportImage()">Export Image</a>
 </div>
 
 <div>
