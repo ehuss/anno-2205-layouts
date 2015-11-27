@@ -3474,6 +3474,12 @@ var Anno2205Layouts = Anno2205Layouts || {};
         this._color = '#ff0000';
     };
 
+    EditorBuilding.prototype._setStatus = function() {
+        this.productionEnabled = this.type.productionUnit && this.productionModules.length < this.type.productionLimit;
+        this.maintenanceEnabled = this.type.maintenanceModules && this.maintenanceModules.length < 5;
+        console.log(this.productionEnabled);
+    };
+
     EditorBuilding.prototype.color = function(newColor) {
         if (arguments.length) {
             this._color = newColor;
@@ -3503,6 +3509,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                     eb._color, Anno2205Layouts.maintenanceAlpha);
             });
         eb._computeMaintenance();
+        eb._setStatus();
         return eb;
     };
 
@@ -3517,6 +3524,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                 buildingType.color, Anno2205Layouts.buildingAlpha, grid);
         }
         eb._computeMaintenance();
+        eb._setStatus();
         return eb;
     };
 
@@ -3607,6 +3615,31 @@ var Anno2205Layouts = Anno2205Layouts || {};
         this.eachUnit(function(unit) {
             unit.move(x, y);
         });
+    };
+
+    EditorBuilding.prototype.addProdMod = function(unit) {
+        this.productionModules.push(unit);
+        this._setStatus();
+    };
+
+    EditorBuilding.prototype.addMaintMod = function(unit) {
+        this.maintenanceModules.push(unit);
+        this._setStatus();
+    };
+
+    EditorBuilding.prototype._removeModule = function(modules, unit) {
+        var i = modules.indexOf(unit);
+        modules.splice(i, 1);
+        unit.demolish();
+        this._setStatus();
+    };
+
+    EditorBuilding.prototype.removeProdMod = function(unit) {
+        this._removeModule(this.productionModules, unit);
+    };
+
+    EditorBuilding.prototype.removeMaintMod = function(unit) {
+        this._removeModule(this.maintenanceModules, unit);
     };
 
     Anno2205Layouts.EditorBuilding = EditorBuilding;
@@ -3723,8 +3756,7 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
                     creating = true;
                     if (!placeCallback(unit)) {
                         // Stop placing.
-                        creating = false;
-                        unit.demolish();
+                        positionCleanup();
                     }
                 }
             }
@@ -3738,8 +3770,6 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
                     // TODO: What does Anno do?
                     rotateCounterClockwise();
                     unit.draw();
-                } else if (event.which == 3) { // Right Mouse.
-                    // TODO, stop creating.
                 }
             });
         };
@@ -3890,34 +3920,36 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
     };
     $scope.createProductionModule = function() {
         $scope.buildingPopup.show = false;
-        var buildingType = $scope.selectedBuilding.type;
+        var building = $scope.selectedBuilding;
+        var buildingType = building.type;
         var newProdMod = Anno2205Layouts.EditorUnit.createNew(
             buildingType.productionUnit,
-            $scope.selectedBuilding.color(), Anno2205Layouts.productionAlpha,
+            building.color(), Anno2205Layouts.productionAlpha,
             $scope.layout.grid);
         newProdMod.draw();
         createNewUnitHandlers(newProdMod, function(unit) {
             var newUnit = unit.clone($scope.layout.grid);
             newUnit.state = 'onGrid';
             newUnit.draw();
-            $scope.layout.addProdMod($scope.selectedBuilding, newUnit);
-            return true;
+            $scope.layout.addProdMod(building, newUnit);
+            return building.productionEnabled;
         });
     };
     $scope.createMaintenanceModule = function(maintenance) {
         $scope.buildingPopup.show = false;
-        var buildingType = $scope.selectedBuilding.type;
+        var building = $scope.selectedBuilding;
+        var buildingType = building.type;
         var newMaintMod = Anno2205Layouts.EditorUnit.createNew(
             maintenance,
-            $scope.selectedBuilding.color(), Anno2205Layouts.maintenanceAlpha,
+            building.color(), Anno2205Layouts.maintenanceAlpha,
             $scope.layout.grid);
         newMaintMod.draw();
         createNewUnitHandlers(newMaintMod, function(unit) {
             var newUnit = unit.clone($scope.layout.grid);
             newUnit.state = 'onGrid';
             newUnit.draw();
-            $scope.layout.addMaintMod($scope.selectedBuilding, newUnit);
-            return true;
+            $scope.layout.addMaintMod(building, newUnit);
+            return building.maintenanceEnabled;
         });
     };
 
@@ -4639,7 +4671,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
         return valid;
     };
 
-    Layout.prototype.addUnit = function(building, unit) {
+    Layout.prototype._addUnit = function(building, unit) {
         var layout = this;
         unit.eachUnitGrid(function (x, y) {
             layout.buildingMap[x][y].building = building;
@@ -4661,18 +4693,18 @@ var Anno2205Layouts = Anno2205Layouts || {};
         this.buildings.push(building);
         var layout = this;
         building.eachUnit(function (unit) {
-            layout.addUnit(building, unit);
+            layout._addUnit(building, unit);
         });
     };
 
     Layout.prototype.addProdMod = function(building, unit) {
-        building.productionModules.push(unit);
-        this.addUnit(building, unit);
+        building.addProdMod(unit);
+        this._addUnit(building, unit);
     };
 
     Layout.prototype.addMaintMod = function(building, unit) {
-        building.maintenanceModules.push(unit);
-        this.addUnit(building, unit);
+        building.addMaintMod(unit);
+        this._addUnit(building, unit);
     };
 
     Layout.prototype.removeBuilding = function(building) {
@@ -4682,19 +4714,14 @@ var Anno2205Layouts = Anno2205Layouts || {};
         building.eachUnit(this._removeUnit.bind(this));
     };
 
-    Layout.prototype._removeModule = function(modules, unit) {
-        var i = modules.indexOf(unit);
-        modules.splice(i, 1);
-        unit.demolish();
+    Layout.prototype.removeProdMod = function(building, unit) {
+        building.removeProdMod(unit);
         this._removeUnit(unit);
     };
 
-    Layout.prototype.removeProdMod = function(building, unit) {
-        this._removeModule(building.productionModules, unit);
-    };
-
     Layout.prototype.removeMaintMod = function(building, unit) {
-        this._removeModule(building.maintenanceModules, unit);
+        building.removeMaintMod(unit);
+        this._removeUnit(unit);
     };
 
     Layout.prototype.moveAllBuildings = function(x, y) {
@@ -5254,13 +5281,18 @@ angular.module("app/editor/editor.html", []).run(["$templateCache", function($te
     "    }\n" +
     "\n" +
     "    .create-production-button {\n" +
-    "        background: url('images/buttons/module-button-base.png');\n" +
     "        width: 61px;\n" +
     "        height: 34px;\n" +
     "        display: inline-block;\n" +
     "    }\n" +
-    "    .create-production-button:hover {\n" +
+    "    .create-production-button-enabled {\n" +
+    "        background: url('images/buttons/module-button-base.png');\n" +
+    "    }\n" +
+    "    .create-production-button-enabled:hover {\n" +
     "        background: url('images/buttons/module-button-hover.png');\n" +
+    "    }\n" +
+    "    .create-production-button-disabled {\n" +
+    "        background: url('images/buttons/module-button-disabled.png');\n" +
     "    }\n" +
     "    .create-production-icon {\n" +
     "        width: 25px;\n" +
@@ -5338,15 +5370,21 @@ angular.module("app/editor/editor.html", []).run(["$templateCache", function($te
     "    </div>\n" +
     "    <div ng-show=\"selectedBuilding.type.productionUnit || selectedBuilding.type.maintenanceMoudles\">\n" +
     "        <div class=\"building-popup-section\">Modules</div>\n" +
-    "        <div ng-show=\"selectedBuilding.type.productionUnit\" class=\"create-production-button\" ng-click=\"createProductionModule()\">\n" +
+    "        <div ng-show=\"selectedBuilding.type.productionUnit\"\n" +
+    "               class=\"create-production-button\"\n" +
+    "            ng-class=\"{'create-production-button-enabled': selectedBuilding.productionEnabled,\n" +
+    "                       'create-production-button-disabled': !selectedBuilding.productionEnabled}\"\n" +
+    "            ng-click=\"selectedBuilding.productionEnabled && createProductionModule()\">\n" +
     "            <div class=\"create-production-icon\"\n" +
     "             anno-sprite=\"Anno2205Layouts.iconSpriteMap\"\n" +
     "             anno-sprite-name=\"selectedBuilding.type.icon\"\n" +
     "             anno-sprite-size=\"50%\"></div>\n" +
     "        </div>\n" +
     "        <div ng-repeat=\"maintenance in selectedBuilding.type.maintenanceModules\"\n" +
-    "             class=\"create-production-button\"\n" +
-    "             ng-click=\"createMaintenanceModule(maintenance)\">\n" +
+    "               class=\"create-production-button\"\n" +
+    "            ng-class=\"{'create-production-button-enabled': selectedBuilding.maintenanceEnabled,\n" +
+    "                       'create-production-button-disabled': !selectedBuilding.maintenanceEnabled}\"\n" +
+    "            ng-click=\"selectedBuilding.maintenanceEnabled && createMaintenanceModule(maintenance)\">\n" +
     "            <div class=\"create-production-icon\"\n" +
     "             anno-sprite=\"Anno2205Layouts.iconSpriteMap\"\n" +
     "             anno-sprite-name=\"maintenance.icon\"\n" +
@@ -5449,7 +5487,6 @@ angular.module("app/editor/editor.html", []).run(["$templateCache", function($te
     "    <div class=\"hover-info-content\">\n" +
     "\n" +
     "        <!-- TODO: \"Requires mountain/coastal building site\" -->\n" +
-    "        <!-- TODO: comma separate digits for credits -->\n" +
     "\n" +
     "        <div ng-show=\"!isEmpty(hoverInfo.info.production)\">\n" +
     "            <div class=\"hover-info-section\">Production Per Minute</div>\n" +
