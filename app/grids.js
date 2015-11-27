@@ -102,7 +102,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
 
     RectGrid.prototype.drawBounds = function(ctx, layout) {
         var icons = $("#grid-icons")[0];
-        var iconMap = Anno2205Layouts.gridSpriteMap;
+        var iconMap = Anno2205Layouts.gridSpriteMap.coordinates;
         var gridSize = Anno2205Layouts.gridSize;
 
         var drawIcon = function(icon, x, y) {

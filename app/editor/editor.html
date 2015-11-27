@@ -103,6 +103,45 @@
     .notes-label {
         font-size: 140%;
     }
+
+    #notes-container {
+        float: left;
+    }
+
+    .anno-summary {
+        background-color: #0c2937;
+        float: left;
+    }
+
+    .anno-summary-section {
+        color: #ffffff;
+        background-color: rgba(44, 85, 116, 0.9);
+        font-size: 150%;
+        clear: both;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    .anno-summary-item {
+    }
+    .anno-summary-item-icon {
+        width: 25px;
+        height: 25px;
+        float: left;
+        margin: 2px 4px 2px 10px;
+    }
+    .anno-summary-item-name {
+        color: #ffffff;
+        display: inline-block;
+        clear: both;
+        font-size: 150%;
+        margin-right: 15px;
+    }
+    .anno-summary-item-amount {
+        color: #ffffff;
+        float: right;
+        font-size: 150%;
+        padding-right: 10px;
+    }
 </style>
 
 <input type="text" name="layoutName" ng-model="layout.name">
@@ -145,15 +184,23 @@
     <div ng-repeat="level in levels[layout.region]">
         <div class="construction-building-button" ng-repeat="building in level.buildings"
          ng-show="activeLevel == level.id"
-         ng-click="createNewBuilding(building)">
-            <div class="construction-building-button-icon" ng-style="building.icon.style"></div>
+         ng-click="createNewBuilding(building)"
+         ng-mouseenter="buildingConstHoverEnter(building, $event)"
+         ng-mouseleave="buildingConstHoverLeave()">
+            <div class="construction-building-button-icon"
+            anno-sprite="Anno2205Layouts.iconSpriteMap"
+            anno-sprite-name="building.icon"></div>
         </div>
     </div>
 </div>
 <div class="construction-building-button"
      ng-repeat="building in commonBuildings[layout.region]"
-     ng-click="createNewBuilding(building)">
-    <div class="construction-building-button-icon" ng-style="building.icon.style"></div>
+     ng-click="createNewBuilding(building)"
+     ng-mouseenter="buildingConstHoverEnter(building, $event)"
+     ng-mouseleave="buildingConstHoverLeave()">
+    <div class="construction-building-button-icon"
+        anno-sprite="Anno2205Layouts.iconSpriteMap"
+        anno-sprite-name="building.icon"></div>
 </div>
 
 
@@ -169,11 +216,50 @@
     </div>
 </div>
 
+<label class="notes-label" for="notes">Notes:</label>
 <div>
-    <label class="notes-label" for="notes">Notes:</label>
-    <div>
-        <textarea id="notes" cols="100" rows="12" ng-model="layout.notes"></textarea>
+    <div id="notes-container">
+        <textarea id="notes" cols="80" rows="12" ng-model="layout.notes"></textarea>
     </div>
+    <div class="anno-summary">
+
+        <div class="anno-summary-section">Total Production</div>
+
+        <div class="anno-summary-item" ng-repeat="(itemId, amount) in layout.output">
+            <div class="anno-summary-item-icon"
+             anno-sprite="Anno2205Layouts.iconSpriteMap"
+             anno-sprite-name="Anno2205Layouts.items[itemId].icon"
+             anno-sprite-size="50%"></div>
+            <div class="anno-summary-item-name">{{Anno2205Layouts.items[itemId].name}}</div>
+            <div class="anno-summary-item-amount">{{amount | number}}</div>
+        </div>
+
+        <div class="anno-summary-section">Total Maintenance</div>
+        <div class="anno-summary-item" ng-repeat="(itemId, amount) in layout.maintenance">
+            <div class="anno-summary-item-icon"
+             anno-sprite="Anno2205Layouts.iconSpriteMap"
+             anno-sprite-name="Anno2205Layouts.items[itemId].icon"
+             anno-sprite-size="50%"></div>
+            <div class="anno-summary-item-name">{{Anno2205Layouts.items[itemId].name}}</div>
+            <div class="anno-summary-item-amount">{{amount | number}}</div>
+        </div>
+
+
+        <div class="anno-summary-section">Total Construction Cost</div>
+        <div class="anno-summary-item" ng-repeat="(itemId, amount) in layout.constructionCost">
+            <div class="anno-summary-item-icon"
+             anno-sprite="Anno2205Layouts.iconSpriteMap"
+             anno-sprite-name="Anno2205Layouts.items[itemId].icon"
+             anno-sprite-size="50%"></div>
+            <div class="anno-summary-item-name">{{Anno2205Layouts.items[itemId].name}}</div>
+            <div class="anno-summary-item-amount">{{amount | number}}</div>
+        </div>
+
+
+    </div>
+</div>
+
+<div>
 </div>
 
 
@@ -216,7 +302,6 @@
 <style>
     #building-popup {
         width: 350px;
-        height: 200px;
         background-color: #0c2937;
         position: absolute;
     }
@@ -231,15 +316,13 @@
         background: url('images/buttons/module-button-hover.png');
     }
     .create-production-icon {
-        width: 50px;
-        height: 50px;
-        transform: scale(0.5, 0.5);
+        width: 25px;
+        height: 25px;
         position: relative;
-        /* Positioning is before transform.*/
-        left: 5px;
-        top: -8px;
+        left: 18px;
+        top: 5px;
     }
-    .building-popup-modules {
+    .building-popup-section {
         color: #667e88;
         font-size: 140%;
         margin-left: 10px;
@@ -255,9 +338,9 @@
     }
     .building-popup-icon {
         display: inline-block;
-        transform: scale(0.8, 0.8);
-        width: 50px;
-        height: 50px;
+        width: 35px;
+        height: 35px;
+        margin: 5px;
         vertical-align: middle;
     }
     .building-popup-close {
@@ -275,29 +358,185 @@
     .color-button {
         margin: 5px;
     }
+
+    .building-popup-detail {
+        display: inline-block;
+    }
+
+    .building-popup-detail-icon {
+        width: 25px;
+        height: 25px;
+        float: left;
+        margin: 2px 2px 2px 10px;
+    }
+    .building-popup-detail-amount {
+        color: #ffffff;
+        float: left;
+        font-size: 150%;
+        padding-right: 10px;
+    }
+
 </style>
 
 <div id="building-popup" ng-show="buildingPopup.show"
      ng-style="{left: buildingPopup.left, top: buildingPopup.top}">
     <div class="building-popup-top"></div>
     <div class="building-popup-name">
-        <div class="building-popup-icon" ng-style="selectedBuilding.type.icon.style"></div>
+        <div class="building-popup-icon"
+        anno-sprite="Anno2205Layouts.iconSpriteMap"
+        anno-sprite-name="selectedBuilding.type.icon"
+        anno-sprite-size="70%"></div>
         {{ selectedBuilding.type.name }}
         <button type="button" class="building-popup-close" ng-click="buildingPopup.show=false">&times;</button>
     </div>
     <div ng-show="selectedBuilding.type.productionUnit || selectedBuilding.type.maintenanceMoudles">
-        <div class="building-popup-modules">Modules</div>
+        <div class="building-popup-section">Modules</div>
         <div ng-show="selectedBuilding.type.productionUnit" class="create-production-button" ng-click="createProductionModule()">
-            <div class="create-production-icon" ng-style="selectedBuilding.type.icon.style"></div>
+            <div class="create-production-icon"
+             anno-sprite="Anno2205Layouts.iconSpriteMap"
+             anno-sprite-name="selectedBuilding.type.icon"
+             anno-sprite-size="50%"></div>
         </div>
         <div ng-repeat="maintenance in selectedBuilding.type.maintenanceModules"
              class="create-production-button"
              ng-click="createMaintenanceModule(maintenance)">
-            <div class="create-production-icon" ng-style="maintenance.icon.style"></div>
+            <div class="create-production-icon"
+             anno-sprite="Anno2205Layouts.iconSpriteMap"
+             anno-sprite-name="maintenance.icon"
+             anno-sprite-size="50%"></div>
         </div>
     </div>
 
-    <img class="color-button" src="images/buttons/color.png" colorpicker ng-model="selectedBuilding.color" ng-model-options='{getterSetter: true}'>
+    <div class="building-popup-section">Production</div>
+    <div>
+        <div class="building-popup-detail"
+             ng-repeat="(itemId, amount) in selectedBuilding.output">
+            <div class="building-popup-detail-icon"
+                 anno-sprite="Anno2205Layouts.iconSpriteMap"
+                 anno-sprite-name="Anno2205Layouts.items[itemId].icon"
+                 anno-sprite-size="50%"></div>
+            <div class="building-popup-detail-amount">{{amount | number}}</div>
+        </div>
+    </div>
 
-    <!-- TODO: Maintenance information. -->
+    <div class="building-popup-section">Maintenance</div>
+    <div>
+        <div class="building-popup-detail"
+             ng-repeat="(itemId, amount) in selectedBuilding.maintenance">
+            <div class="building-popup-detail-icon"
+                 anno-sprite="Anno2205Layouts.iconSpriteMap"
+                 anno-sprite-name="Anno2205Layouts.items[itemId].icon"
+                 anno-sprite-size="50%"></div>
+            <div class="building-popup-detail-amount">{{amount | number}}</div>
+        </div>
+    </div>
+
+    <div class="building-popup-section">Construction Cost</div>
+    <div>
+        <div class="building-popup-detail"
+             ng-repeat="(itemId, amount) in selectedBuilding.constructionCost">
+            <div class="building-popup-detail-icon"
+                 anno-sprite="Anno2205Layouts.iconSpriteMap"
+                 anno-sprite-name="Anno2205Layouts.items[itemId].icon"
+                 anno-sprite-size="50%"></div>
+            <div class="building-popup-detail-amount">{{amount | number}}</div>
+        </div>
+    </div>
+
+    <img class="color-button"
+         src="images/buttons/color.png"
+         colorpicker
+         ng-model="selectedBuilding.color"
+         ng-model-options='{getterSetter: true}'>
+</div>
+
+<style>
+    .hover-info {
+        min-width: 350px;
+        position: absolute;
+    }
+    .hover-info-name {
+        text-transform: uppercase;
+        color: #ffffff;
+        background-color: rgba(44, 85, 116, 0.9);
+        font-size: 150%;
+        padding-left: 10px;
+        padding-top: 4px;
+    }
+    .hover-info-content {
+        background-color: rgba(0, 0, 0, 0.9);
+    }
+    .hover-info-section {
+        text-transform: uppercase;
+        color: #727b80;
+        font-size: 150%;
+        clear: both;
+        padding-left: 10px;
+    }
+    .hover-info-item {
+
+    }
+    .hover-info-item-icon {
+        width: 25px;
+        height: 25px;
+        float: left;
+        margin: 2px 2px 2px 10px;
+    }
+    .hover-info-item-name {
+        color: #ffffff;
+        display: inline-block;
+        clear: both;
+        font-size: 150%;
+    }
+    .hover-info-item-amount {
+        color: #ffffff;
+        float: right;
+        font-size: 150%;
+        padding-right: 10px;
+    }
+</style>
+
+<div class="hover-info" ng-show="hoverInfo.show"
+     ng-style="{left: hoverInfo.left, top: hoverInfo.top}">
+    <div class="hover-info-name">{{hoverInfo.info.name}}</div>
+    <div class="hover-info-content">
+
+        <!-- TODO: "Requires mountain/coastal building site" -->
+        <!-- TODO: comma separate digits for credits -->
+
+        <div ng-show="!isEmpty(hoverInfo.info.production)">
+            <div class="hover-info-section">Production Per Minute</div>
+            <div class="hover-info-item" ng-repeat="(itemId, amount) in hoverInfo.info.production">
+                <div class="hover-info-item-icon"
+                 anno-sprite="Anno2205Layouts.iconSpriteMap"
+                 anno-sprite-name="Anno2205Layouts.items[itemId].icon"
+                 anno-sprite-size="50%"></div>
+                <div class="hover-info-item-name">{{Anno2205Layouts.items[itemId].name}}</div>
+                <div class="hover-info-item-amount">{{amount | number}}</div>
+            </div>
+        </div>
+
+        <div ng-show="!isEmpty(hoverInfo.info.consumption)">
+            <div class="hover-info-section">Consumption Per Minute</div>
+            <div class="hover-info-item" ng-repeat="(itemId, amount) in hoverInfo.info.consumption">
+                <div class="hover-info-item-icon"
+                 anno-sprite="Anno2205Layouts.iconSpriteMap"
+                 anno-sprite-name="Anno2205Layouts.items[itemId].icon"
+                 anno-sprite-size="50%"></div>
+                <div class="hover-info-item-name">{{Anno2205Layouts.items[itemId].name}}</div>
+                <div class="hover-info-item-amount">-{{amount | number}}</div>
+            </div>
+        </div>
+
+        <div class="hover-info-section">Construction Costs</div>
+        <div class="hover-info-item" ng-repeat="(itemId, amount) in hoverInfo.info.constructionCost">
+            <div class="hover-info-item-icon"
+             anno-sprite="Anno2205Layouts.iconSpriteMap"
+             anno-sprite-name="Anno2205Layouts.items[itemId].icon"
+             anno-sprite-size="50%"></div>
+            <div class="hover-info-item-name">{{Anno2205Layouts.items[itemId].name}}</div>
+            <div class="hover-info-item-amount">{{amount | number}}</div>
+        </div>
+
+    </div>
 </div>

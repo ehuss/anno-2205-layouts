@@ -142,7 +142,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
         layout.region = region;
         layout.grid = Anno2205Layouts.gridMap['40x40'];
         layout.buildings = [];
-        layout.createBuildingMap();
+        layout._createBuildingMap();
         layout.notes = '';
         return layout;
     };
@@ -163,7 +163,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
         layout.buildings = _.map(layoutStorage.buildings, function(buildingStorage) {
             return Anno2205Layouts.EditorBuilding.createFromStorage(buildingStorage);
         });
-        layout.createBuildingMap();
+        layout._createBuildingMap();
         return layout;
     };
 
@@ -183,7 +183,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
         return result;
     };
 
-    Layout.prototype.createBuildingMap = function() {
+    Layout.prototype._createBuildingMap = function() {
         this.buildingMap = this.grid.createBuildingMap();
         var layout = this;
         _.each(this.buildings, function(building) {
@@ -195,6 +195,25 @@ var Anno2205Layouts = Anno2205Layouts || {};
             });
         });
         this.setCoverage();
+    };
+
+    Layout.prototype._computeResources = function() {
+        this.constructionCost = {};
+        this.production = {};
+        this.consumption = {};
+        this.maintenance = {};
+        this.output = {};
+
+        var layout = this;
+        var R = Anno2205Layouts.Resource;
+        _.each(this.buildings, function(building) {
+            building._computeMaintenance();
+            R.addi(layout.constructionCost, building.constructionCost);
+            R.addi(layout.production, building.production);
+            R.addi(layout.consumption, building.consumption);
+            R.addi(layout.maintenance, building.maintenance);
+            R.addi(layout.output, building.output);
+        });
     };
 
     Layout.prototype.setCoverage = function() {
@@ -217,6 +236,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
         });
         this.coverage.width = maxX - this.coverage.x + 1;
         this.coverage.height = maxY - this.coverage.y + 1;
+        this._computeResources();
     };
 
     Layout.prototype.gridChange = function(grid) {
@@ -246,7 +266,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
             });
 
             // Update the map.
-            this.createBuildingMap();
+            this._createBuildingMap();
         } else {
             return this.grid;
         }
@@ -301,7 +321,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
         this.setCoverage();
     };
 
-    Layout.prototype.removeUnit = function(unit) {
+    Layout.prototype._removeUnit = function(unit) {
         var layout = this;
         unit.eachUnitGrid(function (x, y) {
             layout.buildingMap[x][y].building = undefined;
@@ -332,14 +352,14 @@ var Anno2205Layouts = Anno2205Layouts || {};
         var i = this.buildings.indexOf(building);
         this.buildings.splice(i, 1);
         building.demolish();
-        building.eachUnit(this.removeUnit.bind(this));
+        building.eachUnit(this._removeUnit.bind(this));
     };
 
     Layout.prototype._removeModule = function(modules, unit) {
         var i = modules.indexOf(unit);
         modules.splice(i, 1);
         unit.demolish();
-        this.removeUnit(unit);
+        this._removeUnit(unit);
     };
 
     Layout.prototype.removeProdMod = function(building, unit) {
@@ -354,7 +374,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
         _.each(this.buildings, function(building) {
             building.move(x, y);
         });
-        this.createBuildingMap();
+        this._createBuildingMap();
     };
 
     Anno2205Layouts.Layout = Layout;

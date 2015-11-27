@@ -16,6 +16,7 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
     // Make a deep copy to edit locally.
     $scope.layout = layout.copy();
     $scope.grids = Anno2205Layouts.grids;
+    $scope.Anno2205Layouts = Anno2205Layouts;
 
     $scope.levels = Anno2205Layouts.buildingLevels;
     $scope.commonBuildings = Anno2205Layouts.commonBuildings;
@@ -43,6 +44,23 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
         });
         $scope.activeLevel = level.id;
         level.background = level.backgroundActive;
+    };
+
+    $scope.isEmpty = _.isEmpty;
+
+    $scope.buildingConstHoverEnter = function(building, event) {
+        var target = $(event.currentTarget);
+        var offset = target.offset();
+        $scope.hoverInfo = {
+            show: true,
+            left: offset.left + target.width(),
+            top: offset.top,
+            info: building,
+        };
+    };
+
+    $scope.buildingConstHoverLeave = function() {
+        $scope.hoverInfo.show = false;
     };
 
     var createNewUnitHandlers = function(unit, placeCallback) {
@@ -430,7 +448,6 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
                 });
                 scope.$watchGroup(['layout.coverage.width',
                                    'layout.coverage.height'], function() {
-                    console.log('layout coverage change');
                     scope.layout.grid.drawBounds(ctx, scope.layout);
                 });
             });
@@ -444,7 +461,6 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
         var loadedImages = 0;
         // TODO: Handle errors.
         imgs = imgs.filter(function(i, el) {
-            console.log(this.complete);
             return !this.complete;
         });
         if (imgs.length) {
@@ -458,4 +474,46 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
             cb();
         }
     };
-}]);
+}])
+
+.directive('annoSprite', [function () {
+    return {
+        link: function(scope, element, attrs) {
+            var sprite = scope.$eval(attrs.annoSprite);
+            var spriteSize = attrs.annoSpriteSize;
+            scope.$watch(attrs.annoSpriteName, function(newName, oldName) {
+                if (!newName) {
+                    element.css({
+                        'background-image': '',
+                        'background-position': '',
+                        'background-size': '',
+                    });
+                    return;
+                }
+                var coords = sprite.coordinates[newName];
+                if (!coords) {
+                    console.log('Could not find sprite name '+newName);
+                    return;
+                }
+                var size = 'auto auto';
+                var factor = 1;
+                var x = coords.x;
+                var y = coords.y;
+                if (spriteSize) {
+                    var percent = parseInt(spriteSize.substr(0, spriteSize.length-1), 10);
+                    factor = percent/100;
+                    x = x * factor;
+                    y = y * factor;
+                    size = sprite.properties.width*factor + 'px ' + sprite.properties.height*factor + 'px';
+                }
+                element.css({
+                    'background-image': 'url('+sprite.properties.path+')',
+                    'background-position': '-'+x+'px -'+y+'px',
+                    'background-size': size,
+                    'background-repeat': 'no-repeat',
+                });
+            });
+        }
+    };
+}])
+;

@@ -219,7 +219,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
         // Draw the icon in the middle.
         if (this.unitInfo.showIcon === undefined || this.unitInfo.showIcon) {
             var iconSheet = $('#construction-icons')[0];
-            var icon = this.unitInfo.icon;
+            var icon = Anno2205Layouts.iconSpriteMap.coordinates[this.unitInfo.icon];
             var iconScale = this.unitInfo.iconScale || 1.0;
             if (icon.width * iconScale > bbox.width ||
                 icon.height * iconScale > bbox.height) {
@@ -252,6 +252,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
         this.buildingUnit = undefined;
         this.productionModules = [];
         this.maintenanceModules = [];
+        this.maintenance = {};
         this._color = '#ff0000';
     };
 
@@ -283,6 +284,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                 return EditorUnit.createFromStorage(modInfo,
                     eb._color, Anno2205Layouts.maintenanceAlpha);
             });
+        eb._computeMaintenance();
         return eb;
     };
 
@@ -296,6 +298,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
             eb.buildingUnit = EditorUnit.createNew(buildingType,
                 buildingType.color, Anno2205Layouts.buildingAlpha, grid);
         }
+        eb._computeMaintenance();
         return eb;
     };
 
@@ -311,6 +314,53 @@ var Anno2205Layouts = Anno2205Layouts || {};
                 return module.export();
             }),
         };
+    };
+
+    EditorBuilding.prototype._computeMaintenance = function() {
+        var R = Anno2205Layouts.Resource;
+        this.constructionCost = _.clone(this.type.constructionCost);
+        this.production = _.clone(this.type.production);
+        this.consumption = _.clone(this.type.consumption);
+        this.maintenance = _.clone(this.type.maintenance);
+        this.output = _.clone(this.type.production);
+        R.subi(this.output, this.type.consumption);
+
+        if (this.productionModules.length) {
+            var prod = R.mul(this.type.production,
+              this.type.productionUnit.effects.productivity * this.productionModules.length);
+            R.addi(this.production, prod);
+            R.addi(this.output, prod);
+            // TODO: assume consumption is the same??
+            var cons = R.mul(this.type.consumption,
+              this.type.productionUnit.effects.productivity * this.productionModules.length);
+            R.addi(this.consumption, cons);
+            R.subi(this.output, cons);
+            var maint = R.mul(this.type.maintenance,
+              this.type.productionUnit.effects.maintenance * this.productionModules.length);
+            R.addi(this.maintenance, maint);
+        }
+
+        var maintAdjust = {};
+        var self = this;
+        _.each(this.maintenanceModules, function(module) {
+            R.addi(self.constructionCost, module.unitInfo.constructionCost[self.type.region]);
+            _.each(module.unitInfo.effects, function(value, key) {
+                if (_.isString(value)) {
+                    // Percentage.
+                    var amount = parseInt(value, 10) / 100;
+                    R.addikey(maintAdjust, key, self.maintenance[key] * amount);
+                } else {
+                    // Logistics aren't computed, so value will be empty.
+                    R.addikey(maintAdjust, key, value);
+                }
+            });
+        });
+        R.addi(this.maintenance, maintAdjust);
+        R.roundi(this.constructionCost);
+        R.roundi(this.production);
+        R.roundi(this.consumption);
+        R.roundi(this.maintenance);
+        R.roundi(this.output);
     };
 
     EditorBuilding.prototype.eachUnit = function(cb) {

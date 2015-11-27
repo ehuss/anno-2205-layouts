@@ -21,31 +21,21 @@ _.each(annoFiles, function(filename) {
 
 var sprites = [];
 
-var iconNames = [];
-
 // Collect the sprite filenames and resize the files.
-_.each(Anno2205Layouts.regions, function(region) {
-    _.each(Anno2205Layouts.buildingLevels[region], function(level) {
-        _.each(level.buildings, function(building) {
-            iconNames.push(building.icon);
-        });
-    });
-    _.each(Anno2205Layouts.commonBuildings[region], function(building) {
-        iconNames.push(building.icon);
-    });
-});
-_.each(Anno2205Layouts.maintenanceModules, function(module) {
-    iconNames.push(module.icon);
+var globNames = glob.sync('images/buttons/icons/*.png', {ignore: '**/*_resized.png'});
+var iconNames = _.map(globNames, function(name) {
+    return {
+        fullName: name,
+        resizeName: name.slice(0, -4) + '_resized.png',
+        iconName: path.basename(name, '.png').slice(5),
+    };
 });
 
 _.each(iconNames, function(iconName) {
-    var baseName = 'images/buttons/icons/icon_'+iconName;
-    var inFilename = baseName + '.png';
-    var outFilename = baseName + '_resized.png';
-    gm(inFilename).resize(50, 50).write(outFilename, function(err) {
+    gm(iconName.fullName).resize(50, 50).write(iconName.resizeName, function(err) {
         if (err) { console.log(err); }
     });
-    sprites.push(outFilename);
+    sprites.push(iconName.resizeName);
 });
 
 var spriteMapFd = fs.openSync('app/sprite_map.js', 'w');
@@ -65,13 +55,16 @@ spritesmith({src: sprites}, function handleResult (err, result) {
     fs.writeFileSync(outputFilename, result.image);
 
     var count = 0;
-    fs.writeSync(spriteMapFd, 'Anno2205Layouts.iconSpriteMap = {\n');
+    result.properties.path = outputFilename;
+    fs.writeSync(spriteMapFd, 'Anno2205Layouts.iconSpriteMap = {\n\
+    properties: ' + JSON.stringify(result.properties) + ',\n\
+    coordinates: {\n');
     _.each(iconNames, function(iconName) {
-        var coordinates = result.coordinates['images/buttons/icons/icon_'+iconName+'_resized.png'];
-        fs.writeSync(spriteMapFd, '    "'+iconName+'": '+JSON.stringify(coordinates)+',\n');
+        var coordinates = result.coordinates[iconName.resizeName];
+        fs.writeSync(spriteMapFd, '    "'+iconName.iconName+'": '+JSON.stringify(coordinates)+',\n');
         count += 1;
     });
-    fs.writeSync(spriteMapFd, '};\n');
+    fs.writeSync(spriteMapFd, '}};\n');
     console.log("Processed "+count+" icon files.");
 
 
@@ -82,16 +75,19 @@ spritesmith({src: sprites}, function handleResult (err, result) {
             console.log(err);
             return;
         }
-        fs.writeFileSync('images/grid/grid-sheet.png', result.image);
+        var outputFilename = 'images/grid/grid-sheet.png';
+        fs.writeFileSync(outputFilename, result.image);
         var count = 0;
-
-        fs.writeSync(spriteMapFd, 'Anno2205Layouts.gridSpriteMap = {\n');
+        result.properties.path = outputFilename;
+        fs.writeSync(spriteMapFd, 'Anno2205Layouts.gridSpriteMap = {\n\
+    properties: ' + JSON.stringify(result.properties) + ',\n\
+    coordinates: {\n');
         _.each(result.coordinates, function(coordinates, key) {
             key = path.basename(key, '.png').replace(/grid-sheet_[0-9]+_/, '');
             fs.writeSync(spriteMapFd, '    "'+key+'": '+JSON.stringify(coordinates)+',\n');
             count += 1;
         });
-        fs.writeSync(spriteMapFd, '};\n');
+        fs.writeSync(spriteMapFd, '}};\n');
         console.log('Processed '+count+' grid files.');
 
         fs.close(spriteMapFd);

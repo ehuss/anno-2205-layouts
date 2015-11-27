@@ -1,6 +1,14 @@
 TODO
 ====
 
+- Display mountain/coastal requirements.
+- mouse over an icon (such as in the production display) should tell you what it is.
+- production/module limits.
+- production/module connected: perhaps just display a red outline?
+- Show maintenance/prod info on click popup.
+- fix duplicate recompute in layout.
+- Fix corp HQ modules.
+
 - multiple copies of the same building should probably show a different color automatically.
   Also consider letters on prod/maint modules to mark which building they are for?
 - Don't load all information for every layout (buildingMap, etc.).

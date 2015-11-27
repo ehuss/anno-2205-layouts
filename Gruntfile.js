@@ -167,13 +167,17 @@ module.exports = function(grunt) {
   });
 
 // When JS files are added/removed, re-run includereplace.
+
 grunt.event.on('watch', function(action, filepath, target) {
   grunt.log.writeln(target + ': ' + filepath + ' has ' + action);
   if (action == 'added' || action == 'deleted' ||
       filepath == 'index.html.tmpl' || filepath == 'Gruntfile.js') {
-    grunt.task.run('includereplace:dev');
+    console.log('running includereplace');
+    // For some reason, this doesn't seem to actually run the task all the time.
+    grunt.task.run('includereplace');
   }
 });
+
 
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-clean');
