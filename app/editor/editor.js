@@ -109,8 +109,7 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
                     creating = true;
                     if (!placeCallback(unit)) {
                         // Stop placing.
-                        creating = false;
-                        unit.demolish();
+                        positionCleanup();
                     }
                 }
             }
@@ -124,8 +123,6 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
                     // TODO: What does Anno do?
                     rotateCounterClockwise();
                     unit.draw();
-                } else if (event.which == 3) { // Right Mouse.
-                    // TODO, stop creating.
                 }
             });
         };
@@ -276,34 +273,36 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
     };
     $scope.createProductionModule = function() {
         $scope.buildingPopup.show = false;
-        var buildingType = $scope.selectedBuilding.type;
+        var building = $scope.selectedBuilding;
+        var buildingType = building.type;
         var newProdMod = Anno2205Layouts.EditorUnit.createNew(
             buildingType.productionUnit,
-            $scope.selectedBuilding.color(), Anno2205Layouts.productionAlpha,
+            building.color(), Anno2205Layouts.productionAlpha,
             $scope.layout.grid);
         newProdMod.draw();
         createNewUnitHandlers(newProdMod, function(unit) {
             var newUnit = unit.clone($scope.layout.grid);
             newUnit.state = 'onGrid';
             newUnit.draw();
-            $scope.layout.addProdMod($scope.selectedBuilding, newUnit);
-            return true;
+            $scope.layout.addProdMod(building, newUnit);
+            return building.productionEnabled;
         });
     };
     $scope.createMaintenanceModule = function(maintenance) {
         $scope.buildingPopup.show = false;
-        var buildingType = $scope.selectedBuilding.type;
+        var building = $scope.selectedBuilding;
+        var buildingType = building.type;
         var newMaintMod = Anno2205Layouts.EditorUnit.createNew(
             maintenance,
-            $scope.selectedBuilding.color(), Anno2205Layouts.maintenanceAlpha,
+            building.color(), Anno2205Layouts.maintenanceAlpha,
             $scope.layout.grid);
         newMaintMod.draw();
         createNewUnitHandlers(newMaintMod, function(unit) {
             var newUnit = unit.clone($scope.layout.grid);
             newUnit.state = 'onGrid';
             newUnit.draw();
-            $scope.layout.addMaintMod($scope.selectedBuilding, newUnit);
-            return true;
+            $scope.layout.addMaintMod(building, newUnit);
+            return building.maintenanceEnabled;
         });
     };
 

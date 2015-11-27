@@ -256,6 +256,12 @@ var Anno2205Layouts = Anno2205Layouts || {};
         this._color = '#ff0000';
     };
 
+    EditorBuilding.prototype._setStatus = function() {
+        this.productionEnabled = this.type.productionUnit && this.productionModules.length < this.type.productionLimit;
+        this.maintenanceEnabled = this.type.maintenanceModules && this.maintenanceModules.length < 5;
+        console.log(this.productionEnabled);
+    };
+
     EditorBuilding.prototype.color = function(newColor) {
         if (arguments.length) {
             this._color = newColor;
@@ -285,6 +291,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                     eb._color, Anno2205Layouts.maintenanceAlpha);
             });
         eb._computeMaintenance();
+        eb._setStatus();
         return eb;
     };
 
@@ -299,6 +306,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
                 buildingType.color, Anno2205Layouts.buildingAlpha, grid);
         }
         eb._computeMaintenance();
+        eb._setStatus();
         return eb;
     };
 
@@ -389,6 +397,31 @@ var Anno2205Layouts = Anno2205Layouts || {};
         this.eachUnit(function(unit) {
             unit.move(x, y);
         });
+    };
+
+    EditorBuilding.prototype.addProdMod = function(unit) {
+        this.productionModules.push(unit);
+        this._setStatus();
+    };
+
+    EditorBuilding.prototype.addMaintMod = function(unit) {
+        this.maintenanceModules.push(unit);
+        this._setStatus();
+    };
+
+    EditorBuilding.prototype._removeModule = function(modules, unit) {
+        var i = modules.indexOf(unit);
+        modules.splice(i, 1);
+        unit.demolish();
+        this._setStatus();
+    };
+
+    EditorBuilding.prototype.removeProdMod = function(unit) {
+        this._removeModule(this.productionModules, unit);
+    };
+
+    EditorBuilding.prototype.removeMaintMod = function(unit) {
+        this._removeModule(this.maintenanceModules, unit);
     };
 
     Anno2205Layouts.EditorBuilding = EditorBuilding;

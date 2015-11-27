@@ -307,13 +307,18 @@
     }
 
     .create-production-button {
-        background: url('images/buttons/module-button-base.png');
         width: 61px;
         height: 34px;
         display: inline-block;
     }
-    .create-production-button:hover {
+    .create-production-button-enabled {
+        background: url('images/buttons/module-button-base.png');
+    }
+    .create-production-button-enabled:hover {
         background: url('images/buttons/module-button-hover.png');
+    }
+    .create-production-button-disabled {
+        background: url('images/buttons/module-button-disabled.png');
     }
     .create-production-icon {
         width: 25px;
@@ -391,15 +396,21 @@
     </div>
     <div ng-show="selectedBuilding.type.productionUnit || selectedBuilding.type.maintenanceMoudles">
         <div class="building-popup-section">Modules</div>
-        <div ng-show="selectedBuilding.type.productionUnit" class="create-production-button" ng-click="createProductionModule()">
+        <div ng-show="selectedBuilding.type.productionUnit"
+               class="create-production-button"
+            ng-class="{'create-production-button-enabled': selectedBuilding.productionEnabled,
+                       'create-production-button-disabled': !selectedBuilding.productionEnabled}"
+            ng-click="selectedBuilding.productionEnabled && createProductionModule()">
             <div class="create-production-icon"
              anno-sprite="Anno2205Layouts.iconSpriteMap"
              anno-sprite-name="selectedBuilding.type.icon"
              anno-sprite-size="50%"></div>
         </div>
         <div ng-repeat="maintenance in selectedBuilding.type.maintenanceModules"
-             class="create-production-button"
-             ng-click="createMaintenanceModule(maintenance)">
+               class="create-production-button"
+            ng-class="{'create-production-button-enabled': selectedBuilding.maintenanceEnabled,
+                       'create-production-button-disabled': !selectedBuilding.maintenanceEnabled}"
+            ng-click="selectedBuilding.maintenanceEnabled && createMaintenanceModule(maintenance)">
             <div class="create-production-icon"
              anno-sprite="Anno2205Layouts.iconSpriteMap"
              anno-sprite-name="maintenance.icon"
@@ -502,7 +513,6 @@
     <div class="hover-info-content">
 
         <!-- TODO: "Requires mountain/coastal building site" -->
-        <!-- TODO: comma separate digits for credits -->
 
         <div ng-show="!isEmpty(hoverInfo.info.production)">
             <div class="hover-info-section">Production Per Minute</div>

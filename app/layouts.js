@@ -312,7 +312,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
         return valid;
     };
 
-    Layout.prototype.addUnit = function(building, unit) {
+    Layout.prototype._addUnit = function(building, unit) {
         var layout = this;
         unit.eachUnitGrid(function (x, y) {
             layout.buildingMap[x][y].building = building;
@@ -334,18 +334,18 @@ var Anno2205Layouts = Anno2205Layouts || {};
         this.buildings.push(building);
         var layout = this;
         building.eachUnit(function (unit) {
-            layout.addUnit(building, unit);
+            layout._addUnit(building, unit);
         });
     };
 
     Layout.prototype.addProdMod = function(building, unit) {
-        building.productionModules.push(unit);
-        this.addUnit(building, unit);
+        building.addProdMod(unit);
+        this._addUnit(building, unit);
     };
 
     Layout.prototype.addMaintMod = function(building, unit) {
-        building.maintenanceModules.push(unit);
-        this.addUnit(building, unit);
+        building.addMaintMod(unit);
+        this._addUnit(building, unit);
     };
 
     Layout.prototype.removeBuilding = function(building) {
@@ -355,19 +355,14 @@ var Anno2205Layouts = Anno2205Layouts || {};
         building.eachUnit(this._removeUnit.bind(this));
     };
 
-    Layout.prototype._removeModule = function(modules, unit) {
-        var i = modules.indexOf(unit);
-        modules.splice(i, 1);
-        unit.demolish();
+    Layout.prototype.removeProdMod = function(building, unit) {
+        building.removeProdMod(unit);
         this._removeUnit(unit);
     };
 
-    Layout.prototype.removeProdMod = function(building, unit) {
-        this._removeModule(building.productionModules, unit);
-    };
-
     Layout.prototype.removeMaintMod = function(building, unit) {
-        this._removeModule(building.maintenanceModules, unit);
+        building.removeMaintMod(unit);
+        this._removeUnit(unit);
     };
 
     Layout.prototype.moveAllBuildings = function(x, y) {
