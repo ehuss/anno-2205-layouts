@@ -119,9 +119,6 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
             $scope.$apply(function() {
                 if (event.which == 1) {  // Left mouse
                     createUnit(event.pageX, event.pageY);
-                } else if (event.which == 2) { // Middle mouse.
-                    unit.rotateClockwise();
-                    unit.draw();
                 }
             });
         };
@@ -133,6 +130,9 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
                         creating = false;
                         positionCleanup();
                     }
+                } else if (event.which == 2) { // Middle mouse.
+                    unit.rotateClockwise();
+                    unit.draw();
                 }
             });
         };
