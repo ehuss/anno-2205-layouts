@@ -1,6 +1,7 @@
 TODO
 ====
 
+- popup: don't show production/maintenance if it has none.
 - Display mountain/coastal requirements.
 - mouse over an icon (such as in the production display) should tell you what it is.
 - production/module limits.

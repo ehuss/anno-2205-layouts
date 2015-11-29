@@ -334,9 +334,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
         earth: [
             {
                 id: 'workers',
-                style: {
-                    background: 'url("images/buttons/button-construction-levels-sheet.png") 0 0'
-                },
+                levelButtonX: 0,
                 buildings: [
                     {
                         id: 'sunflower-farm',
@@ -510,9 +508,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
             },
             {
                 id: 'operators',
-                style: {
-                    background: 'url("images/buttons/button-construction-levels-sheet.png") -417px 0'
-                },
+                levelButtonX: 417,
                 buildings: [
                     {
                         id: 'feldspar-quarry',
@@ -853,9 +849,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
             },
             {
                 id: 'executives',
-                style: {
-                    background: 'url("images/buttons/button-construction-levels-sheet.png") -834px 0'
-                },
+                levelButtonX: 834,
                 buildings: [
                     {
                         id: 'soy-farm',
@@ -1211,9 +1205,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
             },
             {
                 id: 'investors',
-                style: {
-                    background: 'url("images/buttons/button-construction-levels-sheet.png") -1251px 0'
-                },
+                levelButtonX: 1251,
                 buildings: [
                     {
                         id: 'diamond-mine',
@@ -1454,9 +1446,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
             },
             {
                 id: 'ornaments',
-                style: {
-                    background: 'url("images/buttons/button-construction-levels-sheet.png") -1668px 0'
-                },
+                levelButtonX: 1668,
                 buildings: [
                     {
                         id: 'small-park',
@@ -1560,15 +1550,64 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         maintenance: {
                         },
                     },
+                    {
+                        id: 'regular-firework-fountain',
+                        name: 'Regular Firework Fountain',
+                        icon: 'single_firework_fountain',
+                        color: '#724e9c',
+                        placementType: 'ground',
+                        unitSize: [3, 2],
+                        constructionCost: {
+                            credits: 500,
+                        },
+                        production: {
+                        },
+                        consumption: {
+                        },
+                        maintenance: {
+                        },
+                    },
+                    {
+                        id: 'helix-firework-fountain',
+                        name: 'Helix Firework Fountain',
+                        icon: 'coupled_firework_fountain',
+                        color: '#eacba7',
+                        placementType: 'ground',
+                        unitSize: [3, 2],
+                        constructionCost: {
+                            credits: 1000,
+                        },
+                        production: {
+                        },
+                        consumption: {
+                        },
+                        maintenance: {
+                        },
+                    },
+                    {
+                        id: 'shape-firework-fountain',
+                        name: 'Shape Firework Fountain',
+                        icon: 'shaped_firework_fountain',
+                        color: '#323b72',
+                        placementType: 'ground',
+                        unitSize: [3, 2],
+                        constructionCost: {
+                            credits: 1500,
+                        },
+                        production: {
+                        },
+                        consumption: {
+                        },
+                        maintenance: {
+                        },
+                    },
                 ]
             }
         ],
         arctic: [
             {
                 id: 'protectors',
-                style: {
-                    background: 'url("images/buttons/button-construction-levels-sheet.png") -2085px 0'
-                },
+                levelButtonX: 2085,
                 buildings: [
                     {
                         id: 'aluminum-mine',
@@ -1812,9 +1851,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
             },
             {
                 id: 'scientists',
-                style: {
-                    background: 'url("images/buttons/button-construction-levels-sheet.png") -2502px 0'
-                },
+                levelButtonX: 2502,
                 buildings: [
                     {
                         id: 'plasma-smelter',
@@ -2148,9 +2185,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
         moon: [
             {
                 id: 'miners',
-                style: {
-                    background: 'url("images/buttons/button-construction-levels-sheet.png") -2919px 0'
-                },
+                levelButtonX: 2919,
                 buildings: [
                     {
                         id: 'titanium-mine',
@@ -2406,9 +2441,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
             },
             {
                 id: 'officers',
-                style: {
-                    background: 'url("images/buttons/button-construction-levels-sheet.png") -3336px 0'
-                },
+                levelButtonX: 3336,
                 buildings: [
                     {
                         id: 'aeroponic-farm',
@@ -2623,6 +2656,63 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         requirements: {
                             officers: 3000
                         }
+                    },
+                ]
+            },
+            {
+                id: 'ornaments',
+                levelButtonX: 1668,
+                buildings: [
+                    {
+                        id: 'observation-deck',
+                        name: 'Observation Deck',
+                        icon: 'moon_attraction_donut',
+                        color: '#a4531a',
+                        placementType: 'ground',
+                        unitSize: [4, 4],
+                        constructionCost: {
+                            credits: 500,
+                        },
+                        production: {
+                        },
+                        consumption: {
+                        },
+                        maintenance: {
+                        },
+                    },
+                    {
+                        id: 'combot-arena',
+                        name: 'Combot Arena',
+                        icon: 'moon_attraction_robot_fight',
+                        color: '#76d8dd',
+                        placementType: 'ground',
+                        unitSize: [4, 4],
+                        constructionCost: {
+                            credits: 500,
+                        },
+                        production: {
+                        },
+                        consumption: {
+                        },
+                        maintenance: {
+                        },
+                    },
+                    {
+                        id: 'bungie-launcher',
+                        name: 'Bungie Launcher',
+                        icon: 'moon_attraction_astronaut',
+                        color: '#467291',
+                        placementType: 'ground',
+                        unitSize: [4, 4],
+                        constructionCost: {
+                            credits: 500,
+                        },
+                        production: {
+                        },
+                        consumption: {
+                        },
+                        maintenance: {
+                        },
                     },
                 ]
             },
@@ -3156,9 +3246,9 @@ var Anno2205Layouts = Anno2205Layouts || {};
         var width = 139;
         _.each(Anno2205Layouts.regions, function(region) {
             _.each(Anno2205Layouts.buildingLevels[region], function(level) {
-                level.backgroundBase = 'url("images/buttons/button-construction-levels-sheet.png") -'+(width*3*index)+'px 0';
-                level.backgroundHover = 'url("images/buttons/button-construction-levels-sheet.png") -'+(width + width*3*index)+'px 0';
-                level.backgroundActive = 'url("images/buttons/button-construction-levels-sheet.png") -'+(width*2 + width*3*index)+'px 0';
+                level.backgroundBase = 'url("images/buttons/button-construction-levels-sheet.png") -'+level.levelButtonX+'px 0';
+                level.backgroundHover = 'url("images/buttons/button-construction-levels-sheet.png") -'+level.levelButtonX+width+'px 0';
+                level.backgroundActive = 'url("images/buttons/button-construction-levels-sheet.png") -'+level.levelButtonX+width*2+'px 0';
                 level.background = level.backgroundBase;
                 index += 1;
             });
