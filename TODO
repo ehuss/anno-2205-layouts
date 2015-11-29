@@ -1,20 +1,23 @@
 TODO
 ====
 
+- Move enhancements:
+    - move building + modules all at once.
+    - Move multiple buildings at once?
+- mode icons should highlight while in that mode.
+- esc should exit demolish mode.
 - popup: don't show production/maintenance if it has none.
 - Display mountain/coastal requirements.
 - mouse over an icon (such as in the production display) should tell you what it is.
-- production/module limits.
 - production/module connected: perhaps just display a red outline?
-- Show maintenance/prod info on click popup.
 - fix duplicate recompute in layout.
 - Fix corp HQ modules.
+- Fix construction costs for buildings that are currently reduced in price.
 
 - multiple copies of the same building should probably show a different color automatically.
   Also consider letters on prod/maint modules to mark which building they are for?
 - Don't load all information for every layout (buildingMap, etc.).
 - cleanup when leaving editor (grid objects on layout)
-- total production/cost display.
 - Roads
 - Export/Import
 - Exit placement mode if you switch to another mode (like demolish).
@@ -23,15 +26,9 @@ TODO
 - make more spritesheets for buttons/hovers.
 - error while trying to open editor for unknown id.
 - ng-cloak on the editor popup.  Doens't seem to work as expected, still see flicker on editor (in FF).
-- Cancel placing a new building (esc or click off-grid?).
-- Maintenance information in popup.
-- Click on module should show popup with information (maintenance and production).
-- Popup on hover of building icons.
 
 - Copy
-- Move
 - Placement markers.
-- hover on build building icons should have popup
 - Different grids.
     - islands, with coastal and mountain sites.
 - prettify

@@ -48,6 +48,8 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
 
     $scope.isEmpty = _.isEmpty;
 
+    // When hovering over a building construction icon, show a popup with
+    // information about that building type.
     $scope.buildingConstHoverEnter = function(building, event) {
         var target = $(event.currentTarget);
         var offset = target.offset();
@@ -69,9 +71,7 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
         var canvasOffset = canvas.offset();
 
         // Disable while placing.
-        buildingClickHandler =
-            prodModuleClickHandler =
-            maintModuleClickHandler = undefined;
+        disableMode();
 
         // While mouse is down, this is true.
         var creating = false;
@@ -120,8 +120,7 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
                 if (event.which == 1) {  // Left mouse
                     createUnit(event.pageX, event.pageY);
                 } else if (event.which == 2) { // Middle mouse.
-                    // TODO: What does Anno do?
-                    rotateCounterClockwise();
+                    unit.rotateClockwise();
                     unit.draw();
                 }
             });
@@ -129,7 +128,7 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
 
         var positionUp = function(event) {
             $scope.$apply(function() {
-                if (event.which == 1) {
+                if (event.which == 1) { // Left mouse
                     if (creating) {
                         creating = false;
                         positionCleanup();
@@ -143,33 +142,20 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
             return false;  // Prevent context menu.
         };
 
+        constAreaClickHandler = undefined;
         $("#construction-area").on('mousedown', positionDown);
         $("#construction-area").on('mouseup', positionUp);
         $(document).on('contextmenu', exitCreate);
 
-        var rotateCounterClockwise = function() {
-            unit.orientation -= 1;
-            if (unit.orientation < 0) {
-                unit.orientation = 3;
-            }
-        };
-        var rotateClockwise = function() {
-            unit.orientation += 1;
-            if (unit.orientation > 3) {
-                unit.orientation = 0;
-            }
-        };
-
-
         var positionUnitKey = function(event) {
             $scope.$apply(function() {
                 if (event.which == 188) { // ,
-                    rotateCounterClockwise();
+                    unit.rotateCounterClockwise();
                     unit.draw();
                 } else if (event.which == 190) { // .
-                    rotateClockwise();
+                    unit.rotateClockwise();
                     unit.draw();
-                } else if (event.which == 27) {
+                } else if (event.which == 27) { // Esc
                     positionCleanup();
                 }
             });
@@ -184,7 +170,7 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
                 .off('mousedown', positionDown)
                 .off('mousedown', positionUp);
             $(document).off('contextmenu', exitCreate);
-            buildingClickHandler = buildingDefaultClickHandler;
+            enterNormalMode();
         };
     };
 
@@ -209,22 +195,7 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
 
     $scope.setActiveLevel(Anno2205Layouts.buildingLevels[$scope.layout.region][0]);
 
-
-    // When you click on a building, it creates a popup, and marks the building
-    // selected.
-    var buildingDefaultClickHandler = function(building) {
-        $scope.selectedBuilding = building;
-        $scope.buildingPopup.show = true;
-        var buildingOffset = building.buildingUnit.unitCanvas.offset();
-        var buildingBBox = building.buildingUnit.bbox();
-        $scope.buildingPopup.left = buildingOffset.left + buildingBBox.width/2 + 50;
-        $scope.buildingPopup.top = buildingOffset.top + buildingBBox.height/2 - 100;
-    };
-
-    var buildingClickHandler = buildingDefaultClickHandler;
-    var prodModuleClickHandler, maintModuleClickHandler;
-
-    $scope.constAreaClick = function(event) {
+    var areaFindBuildingHandler = function(event) {
         // Determine which (if any) building was clicked on.
         var found = _.find($scope.layout.buildings, function(building) {
             if (building.buildingUnit.state != 'onGrid') {
@@ -232,7 +203,7 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
             }
             if (building.buildingUnit.hitTest(event.pageX, event.pageY)) {
                 if (buildingClickHandler) {
-                    buildingClickHandler(building);
+                    buildingClickHandler(building, building.buildingUnit, event);
                     return true;
                 } else {
                     return false;
@@ -241,7 +212,7 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
             if (prodModuleClickHandler) {
                 if (_.find(building.productionModules, function(module) {
                     if (module.hitTest(event.pageX, event.pageY)) {
-                        prodModuleClickHandler(building, module);
+                        prodModuleClickHandler(building, module, event);
                         return true;
                     }
                 })) {
@@ -251,7 +222,7 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
             if (maintModuleClickHandler) {
                 if (_.find(building.maintenanceModules, function(module) {
                     if (module.hitTest(event.pageX, event.pageY)) {
-                        maintModuleClickHandler(building, module);
+                        maintModuleClickHandler(building, module, event);
                         return true;
                     }
                 })) {
@@ -263,6 +234,28 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
         if (!found) {
             // TODO: Put this in a separate mis-click handler?
             $scope.buildingPopup.show = false;
+        }
+    };
+
+    // When you click on a building, it creates a popup, and marks the building
+    // selected.
+    var buildingSelectClickHandler = function(building) {
+        $scope.selectedBuilding = building;
+        $scope.buildingPopup.show = true;
+        var buildingOffset = building.buildingUnit.unitCanvas.offset();
+        var buildingBBox = building.buildingUnit.bbox();
+        $scope.buildingPopup.left = buildingOffset.left + buildingBBox.width/2 + 50;
+        $scope.buildingPopup.top = buildingOffset.top + buildingBBox.height/2 - 100;
+    };
+
+    var buildingClickHandler = buildingSelectClickHandler;
+    // Default module click handlers do nothing.
+    var prodModuleClickHandler, maintModuleClickHandler;
+    var constAreaClickHandler = areaFindBuildingHandler;
+
+    $scope.constAreaClick = function(event) {
+        if (constAreaClickHandler) {
+            constAreaClickHandler(event);
         }
     };
 
@@ -306,42 +299,14 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
         });
     };
 
-    // While in demolition mode, if you click on a building, delete it.
-    var demolitionClickHandler = function(building) {
-        $scope.layout.removeBuilding(building);
-    };
-    var demoProdClickHandler = function(building, module) {
-        $scope.layout.removeProdMod(building, module);
-    };
-    var demoMaintClickHandler = function(building, module) {
-        $scope.layout.removeMaintMod(building, module);
-    };
-    var exitDemoHandler = function(event) {
-        if (event.which == 3) { // Right click.
-            exitDemoMode();
-            return false;
-        }
-    };
-    $scope.enterDemoMode = function() {
-        buildingClickHandler = demolitionClickHandler;
-        prodModuleClickHandler = demoProdClickHandler;
-        maintModuleClickHandler = demoMaintClickHandler;
-        $(document).on('contextmenu', exitDemoHandler);
-
-        $('#construction-area').css('cursor',
-         'url("images/demolish-cursor.png") 5 35,crosshair');
-    };
-    var exitDemoMode = function() {
-        buildingClickHandler = buildingDefaultClickHandler;
-        prodModuleClickHandler = undefined;
-        maintModuleClickHandler = undefined;
-        $(document).off('contextmenu', exitDemoHandler);
-        $('#construction-area').css('cursor', 'auto');
-    };
-
+    /************************************************************************/
+    /* Global Handlers                                                      */
+    /************************************************************************/
     var globalKeyboardShortcuts = function(event) {
         if (event.which == 68) { //d
             $scope.enterDemoMode();
+        } else if (event.which == 77) { //m
+            $scope.enterMoveMode();
         }
     };
 
@@ -349,6 +314,165 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
     $scope.$on('$destroy', function() {
         $(document).off('keydown', globalKeyboardShortcuts);
     });
+
+    /************************************************************************/
+    /* Modes                                                                */
+    /************************************************************************/
+    var enterNormalMode = function() {
+        constAreaClickHandler = areaFindBuildingHandler;
+        buildingClickHandler = buildingSelectClickHandler;
+        prodModuleClickHandler = undefined;
+        maintModuleClickHandler = undefined;
+        $(document).off('contextmenu', exitModeHandler);
+        $('#construction-area').css('cursor', 'auto');
+    };
+    var exitModeHandler = function(event) {
+        // TODO: Remove this??
+        if (event.which == 3) { // Right click.
+            enterNormalMode();
+            return false;
+        }
+    };
+    var disableMode = function() {
+        buildingClickHandler =
+            prodModuleClickHandler =
+            maintModuleClickHandler = undefined;
+    };
+
+    /************************************************************************/
+    /* Demolition Mode                                                      */
+    /************************************************************************/
+    // While in demolition mode, if you click on a building, delete it.
+    var demolitionClickHandler = function(building) {
+        $scope.layout.removeBuilding(building);
+        building.demolish();
+    };
+    var demoProdClickHandler = function(building, module) {
+        $scope.layout.removeProdMod(building, module);
+    };
+    var demoMaintClickHandler = function(building, module) {
+        $scope.layout.removeMaintMod(building, module);
+    };
+    $scope.enterDemoMode = function() {
+        buildingClickHandler = demolitionClickHandler;
+        prodModuleClickHandler = demoProdClickHandler;
+        maintModuleClickHandler = demoMaintClickHandler;
+        $(document).on('contextmenu', exitModeHandler);
+
+        $('#construction-area').css('cursor',
+         'url("images/cursors/cursor-demolish.png") 5 35,crosshair');
+    };
+
+    /************************************************************************/
+    /* Move Mode                                                            */
+    /************************************************************************/
+    var moveUnitHandler = function(building, unit, event) {
+        var grid = $scope.layout.grid;
+        var canvas = $('#anno-canvas');
+        var canvasOffset = canvas.offset();
+
+        var unitOffset = unit.unitCanvas.offset();
+        var moveOffset = {
+            left: event.pageX - unitOffset.left,
+            top: event.pageY - unitOffset.top
+        };
+        unit.originalOffset = unit.unitCanvas.offset();
+        unit.originalPosition = unit.position;
+        unit.originalOrientation = unit.orientation;
+
+        // TODO: _
+        $scope.layout.removeUnit(unit);
+        var moveSuccess = false;
+
+        var moveMouse = function(event) {
+            var x = event.pageX - moveOffset.left;
+            var y = event.pageY - moveOffset.top;
+            var gridPos  = grid.gridFromMouse(canvasOffset, x, y);
+            if (gridPos === undefined) {
+                // Mouse is off the grid.
+                unit.unitCanvas.css({
+                    left: x,
+                    top: y,
+                });
+            } else {
+                unit.unitCanvas.css({
+                    left: gridPos[0]*Anno2205Layouts.gridSize + canvasOffset.left + grid.gridOffsetX,
+                    top: gridPos[1]*Anno2205Layouts.gridSize + canvasOffset.top + grid.gridOffsetY,
+                });
+            }
+        };
+
+        var moveClick = function(event) {
+            if (event.which == 1) { // Left mouse.
+                var x = event.pageX - moveOffset.left;
+                var y = event.pageY - moveOffset.top;
+                var gridPos  = grid.gridFromMouse(canvasOffset, x, y);
+                if (gridPos) {
+                    unit.position = gridPos;
+                    if ($scope.layout.checkValid(unit)) {
+                        // TODO: _
+                        $scope.layout.addUnit(building, unit);
+                        moveSuccess = true;
+                    }
+                }
+
+                moveCleanup();
+                $scope.enterMoveMode();
+            } else if (event.which == 2) { // Middle mouse.
+                unit.rotateClockwise();
+                unit.draw();
+            }
+        };
+
+        var moveUnitKey = function(event) {
+            $scope.$apply(function() {
+                if (event.which == 188) { // ,
+                    unit.rotateCounterClockwise();
+                    unit.draw();
+                } else if (event.which == 190) { // .
+                    unit.rotateClockwise();
+                    unit.draw();
+                } else if (event.which == 27) { // Esc
+                    moveCleanup();
+                }
+            });
+        };
+        $(document).on('keydown', moveUnitKey);
+
+        var moveCleanup = function() {
+            if (!moveSuccess) {
+                unit.orientation = unit.originalOrientation;
+                unit.position = unit.originalPosition;
+                unit.unitCanvas.offset(unit.originalOffset);
+                unit.draw();
+                $scope.layout.addUnit(building, unit);
+            }
+            $(document).off('keydown', moveUnitKey);
+            $('html').off('mousemove', moveMouse);
+            $(document).off('contextmenu', moveCleanup);
+            enterNormalMode();
+            return false;  // For context menu, prevent it.
+        };
+
+        $('html').mousemove(moveMouse);
+        constAreaClickHandler = moveClick;
+        $(document).on('contextmenu', moveCleanup);
+        $('#construction-area').css('cursor', 'crosshair');
+    };
+
+    $scope.enterMoveMode = function() {
+        constAreaClickHandler = areaFindBuildingHandler;
+        buildingClickHandler = moveUnitHandler;
+        prodModuleClickHandler = moveUnitHandler;
+        maintModuleClickHandler = moveUnitHandler;
+        $(document).on('contextmenu', exitModeHandler);
+        $('#construction-area').css('cursor',
+         'url("images/cursors/cursor-move.png") 13 5,crosshair');
+    };
+
+    /************************************************************************/
+    /* Export                                                               */
+    /************************************************************************/
 
     $scope.exportImage = function() {
         var layoutBBox = $scope.layout.bbox();
@@ -399,6 +523,10 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
         link[0].click();
         link.remove();
     };
+
+    /************************************************************************/
+    /* Startup Initialization                                               */
+    /************************************************************************/
 
     // Ensure icons are available before drawing on the canvas.
     ensureImgs('#construction-icons', function() {

@@ -84,6 +84,20 @@ var Anno2205Layouts = Anno2205Layouts || {};
         // TODO: Move canvas?
     };
 
+    EditorUnit.prototype.rotateClockwise = function() {
+        this.orientation += 1;
+        if (this.orientation > 3) {
+            this.orientation = 0;
+        }
+    };
+
+    EditorUnit.prototype.rotateCounterClockwise = function() {
+        this.orientation -= 1;
+        if (this.orientation < 0) {
+            this.orientation = 3;
+        }
+    };
+
     /** Determine the bounding box of the unit.  */
     EditorUnit.prototype.bbox = function() {
         var normal = this.orientation === 0 || this.orientation === 2;

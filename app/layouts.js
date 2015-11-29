@@ -312,7 +312,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
         return valid;
     };
 
-    Layout.prototype._addUnit = function(building, unit) {
+    Layout.prototype.addUnit = function(building, unit) {
         var layout = this;
         unit.eachUnitGrid(function (x, y) {
             layout.buildingMap[x][y].building = building;
@@ -321,7 +321,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
         this.setCoverage();
     };
 
-    Layout.prototype._removeUnit = function(unit) {
+    Layout.prototype.removeUnit = function(unit) {
         var layout = this;
         unit.eachUnitGrid(function (x, y) {
             layout.buildingMap[x][y].building = undefined;
@@ -334,35 +334,34 @@ var Anno2205Layouts = Anno2205Layouts || {};
         this.buildings.push(building);
         var layout = this;
         building.eachUnit(function (unit) {
-            layout._addUnit(building, unit);
+            layout.addUnit(building, unit);
         });
     };
 
     Layout.prototype.addProdMod = function(building, unit) {
         building.addProdMod(unit);
-        this._addUnit(building, unit);
+        this.addUnit(building, unit);
     };
 
     Layout.prototype.addMaintMod = function(building, unit) {
         building.addMaintMod(unit);
-        this._addUnit(building, unit);
+        this.addUnit(building, unit);
     };
 
     Layout.prototype.removeBuilding = function(building) {
         var i = this.buildings.indexOf(building);
         this.buildings.splice(i, 1);
-        building.demolish();
-        building.eachUnit(this._removeUnit.bind(this));
+        building.eachUnit(this.removeUnit.bind(this));
     };
 
     Layout.prototype.removeProdMod = function(building, unit) {
         building.removeProdMod(unit);
-        this._removeUnit(unit);
+        this.removeUnit(unit);
     };
 
     Layout.prototype.removeMaintMod = function(building, unit) {
         building.removeMaintMod(unit);
-        this._removeUnit(unit);
+        this.removeUnit(unit);
     };
 
     Layout.prototype.moveAllBuildings = function(x, y) {
