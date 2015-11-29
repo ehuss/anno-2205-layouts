@@ -139,13 +139,12 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
         var exitCreate = function() {
             creating = false;
             positionCleanup();
-            return false;  // Prevent context menu.
         };
 
         constAreaClickHandler = undefined;
         $("#construction-area").on('mousedown', positionDown);
         $("#construction-area").on('mouseup', positionUp);
-        $(document).on('contextmenu', exitCreate);
+        exitModeHandler = exitCreate;
 
         var positionUnitKey = function(event) {
             $scope.$apply(function() {
@@ -155,8 +154,6 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
                 } else if (event.which == 190) { // .
                     unit.rotateClockwise();
                     unit.draw();
-                } else if (event.which == 27) { // Esc
-                    positionCleanup();
                 }
             });
         };
@@ -169,7 +166,6 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
             $("#construction-area")
                 .off('mousedown', positionDown)
                 .off('mousedown', positionUp);
-            $(document).off('contextmenu', exitCreate);
             enterNormalMode();
         };
     };
@@ -303,10 +299,15 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
     /* Global Handlers                                                      */
     /************************************************************************/
     var globalKeyboardShortcuts = function(event) {
-        if (event.which == 68) { //d
+        if (event.which == 68) { // D
             $scope.enterDemoMode();
-        } else if (event.which == 77) { //m
+        } else if (event.which == 77) { // M
             $scope.enterMoveMode();
+        } else if (event.which == 27) { // Esc
+            if (exitModeHandler) {
+                exitModeHandler();
+            }
+            enterNormalMode();
         }
     };
 
@@ -323,20 +324,27 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
         buildingClickHandler = buildingSelectClickHandler;
         prodModuleClickHandler = undefined;
         maintModuleClickHandler = undefined;
-        $(document).off('contextmenu', exitModeHandler);
+        exitModeHandler = undefined;
         $('#construction-area').css('cursor', 'auto');
     };
-    var exitModeHandler = function(event) {
-        // TODO: Remove this??
+    var exitModeHandler;
+    var contextHandler = function(event) {
+        // TODO: Is this check necessary?
         if (event.which == 3) { // Right click.
+            if (exitModeHandler) {
+                exitModeHandler();
+            }
             enterNormalMode();
             return false;
         }
     };
+    $(document).on('contextmenu', contextHandler);
+
     var disableMode = function() {
         buildingClickHandler =
             prodModuleClickHandler =
-            maintModuleClickHandler = undefined;
+            maintModuleClickHandler =
+            exitModeHandler = undefined;
     };
 
     /************************************************************************/
@@ -357,7 +365,6 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
         buildingClickHandler = demolitionClickHandler;
         prodModuleClickHandler = demoProdClickHandler;
         maintModuleClickHandler = demoMaintClickHandler;
-        $(document).on('contextmenu', exitModeHandler);
 
         $('#construction-area').css('cursor',
          'url("images/cursors/cursor-demolish.png") 5 35,crosshair');
@@ -432,8 +439,6 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
                 } else if (event.which == 190) { // .
                     unit.rotateClockwise();
                     unit.draw();
-                } else if (event.which == 27) { // Esc
-                    moveCleanup();
                 }
             });
         };
@@ -449,14 +454,13 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
             }
             $(document).off('keydown', moveUnitKey);
             $('html').off('mousemove', moveMouse);
-            $(document).off('contextmenu', moveCleanup);
             enterNormalMode();
             return false;  // For context menu, prevent it.
         };
 
         $('html').mousemove(moveMouse);
         constAreaClickHandler = moveClick;
-        $(document).on('contextmenu', moveCleanup);
+        exitModeHandler = moveCleanup;
         $('#construction-area').css('cursor', 'crosshair');
     };
 
@@ -465,7 +469,6 @@ angular.module('anno2205Layouts.editor', ['ngRoute', 'ngStorage', 'colorpicker.m
         buildingClickHandler = moveUnitHandler;
         prodModuleClickHandler = moveUnitHandler;
         maintModuleClickHandler = moveUnitHandler;
-        $(document).on('contextmenu', exitModeHandler);
         $('#construction-area').css('cursor',
          'url("images/cursors/cursor-move.png") 13 5,crosshair');
     };
