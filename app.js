@@ -353,9 +353,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
         earth: [
             {
                 id: 'workers',
-                style: {
-                    background: 'url("images/buttons/button-construction-levels-sheet.png") 0 0'
-                },
+                levelButtonX: 0,
                 buildings: [
                     {
                         id: 'sunflower-farm',
@@ -529,9 +527,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
             },
             {
                 id: 'operators',
-                style: {
-                    background: 'url("images/buttons/button-construction-levels-sheet.png") -417px 0'
-                },
+                levelButtonX: 417,
                 buildings: [
                     {
                         id: 'feldspar-quarry',
@@ -872,9 +868,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
             },
             {
                 id: 'executives',
-                style: {
-                    background: 'url("images/buttons/button-construction-levels-sheet.png") -834px 0'
-                },
+                levelButtonX: 834,
                 buildings: [
                     {
                         id: 'soy-farm',
@@ -1230,9 +1224,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
             },
             {
                 id: 'investors',
-                style: {
-                    background: 'url("images/buttons/button-construction-levels-sheet.png") -1251px 0'
-                },
+                levelButtonX: 1251,
                 buildings: [
                     {
                         id: 'diamond-mine',
@@ -1473,9 +1465,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
             },
             {
                 id: 'ornaments',
-                style: {
-                    background: 'url("images/buttons/button-construction-levels-sheet.png") -1668px 0'
-                },
+                levelButtonX: 1668,
                 buildings: [
                     {
                         id: 'small-park',
@@ -1579,15 +1569,64 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         maintenance: {
                         },
                     },
+                    {
+                        id: 'regular-firework-fountain',
+                        name: 'Regular Firework Fountain',
+                        icon: 'single_firework_fountain',
+                        color: '#724e9c',
+                        placementType: 'ground',
+                        unitSize: [3, 2],
+                        constructionCost: {
+                            credits: 500,
+                        },
+                        production: {
+                        },
+                        consumption: {
+                        },
+                        maintenance: {
+                        },
+                    },
+                    {
+                        id: 'helix-firework-fountain',
+                        name: 'Helix Firework Fountain',
+                        icon: 'coupled_firework_fountain',
+                        color: '#eacba7',
+                        placementType: 'ground',
+                        unitSize: [3, 2],
+                        constructionCost: {
+                            credits: 1000,
+                        },
+                        production: {
+                        },
+                        consumption: {
+                        },
+                        maintenance: {
+                        },
+                    },
+                    {
+                        id: 'shape-firework-fountain',
+                        name: 'Shape Firework Fountain',
+                        icon: 'shaped_firework_fountain',
+                        color: '#323b72',
+                        placementType: 'ground',
+                        unitSize: [3, 2],
+                        constructionCost: {
+                            credits: 1500,
+                        },
+                        production: {
+                        },
+                        consumption: {
+                        },
+                        maintenance: {
+                        },
+                    },
                 ]
             }
         ],
         arctic: [
             {
                 id: 'protectors',
-                style: {
-                    background: 'url("images/buttons/button-construction-levels-sheet.png") -2085px 0'
-                },
+                levelButtonX: 2085,
                 buildings: [
                     {
                         id: 'aluminum-mine',
@@ -1831,9 +1870,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
             },
             {
                 id: 'scientists',
-                style: {
-                    background: 'url("images/buttons/button-construction-levels-sheet.png") -2502px 0'
-                },
+                levelButtonX: 2502,
                 buildings: [
                     {
                         id: 'plasma-smelter',
@@ -2167,9 +2204,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
         moon: [
             {
                 id: 'miners',
-                style: {
-                    background: 'url("images/buttons/button-construction-levels-sheet.png") -2919px 0'
-                },
+                levelButtonX: 2919,
                 buildings: [
                     {
                         id: 'titanium-mine',
@@ -2425,9 +2460,7 @@ var Anno2205Layouts = Anno2205Layouts || {};
             },
             {
                 id: 'officers',
-                style: {
-                    background: 'url("images/buttons/button-construction-levels-sheet.png") -3336px 0'
-                },
+                levelButtonX: 3336,
                 buildings: [
                     {
                         id: 'aeroponic-farm',
@@ -2642,6 +2675,63 @@ var Anno2205Layouts = Anno2205Layouts || {};
                         requirements: {
                             officers: 3000
                         }
+                    },
+                ]
+            },
+            {
+                id: 'ornaments',
+                levelButtonX: 1668,
+                buildings: [
+                    {
+                        id: 'observation-deck',
+                        name: 'Observation Deck',
+                        icon: 'moon_attraction_donut',
+                        color: '#a4531a',
+                        placementType: 'ground',
+                        unitSize: [4, 4],
+                        constructionCost: {
+                            credits: 500,
+                        },
+                        production: {
+                        },
+                        consumption: {
+                        },
+                        maintenance: {
+                        },
+                    },
+                    {
+                        id: 'combot-arena',
+                        name: 'Combot Arena',
+                        icon: 'moon_attraction_robot_fight',
+                        color: '#76d8dd',
+                        placementType: 'ground',
+                        unitSize: [4, 4],
+                        constructionCost: {
+                            credits: 500,
+                        },
+                        production: {
+                        },
+                        consumption: {
+                        },
+                        maintenance: {
+                        },
+                    },
+                    {
+                        id: 'bungie-launcher',
+                        name: 'Bungie Launcher',
+                        icon: 'moon_attraction_astronaut',
+                        color: '#467291',
+                        placementType: 'ground',
+                        unitSize: [4, 4],
+                        constructionCost: {
+                            credits: 500,
+                        },
+                        production: {
+                        },
+                        consumption: {
+                        },
+                        maintenance: {
+                        },
                     },
                 ]
             },
@@ -3175,9 +3265,9 @@ var Anno2205Layouts = Anno2205Layouts || {};
         var width = 139;
         _.each(Anno2205Layouts.regions, function(region) {
             _.each(Anno2205Layouts.buildingLevels[region], function(level) {
-                level.backgroundBase = 'url("images/buttons/button-construction-levels-sheet.png") -'+(width*3*index)+'px 0';
-                level.backgroundHover = 'url("images/buttons/button-construction-levels-sheet.png") -'+(width + width*3*index)+'px 0';
-                level.backgroundActive = 'url("images/buttons/button-construction-levels-sheet.png") -'+(width*2 + width*3*index)+'px 0';
+                level.backgroundBase = 'url("images/buttons/button-construction-levels-sheet.png") -'+level.levelButtonX+'px 0';
+                level.backgroundHover = 'url("images/buttons/button-construction-levels-sheet.png") -'+level.levelButtonX+width+'px 0';
+                level.backgroundActive = 'url("images/buttons/button-construction-levels-sheet.png") -'+level.levelButtonX+width*2+'px 0';
                 level.background = level.backgroundBase;
                 index += 1;
             });
@@ -4849,7 +4939,7 @@ Anno2205Layouts.iconSpriteMap = {
     properties: {"width":550,"height":500,"path":"images/buttons/construction_icons.png"},
     coordinates: {
     "algae": {"x":50,"y":0,"width":50,"height":50},
-    "aluminium": {"x":350,"y":100,"width":50,"height":50},
+    "aluminium": {"x":350,"y":250,"width":50,"height":50},
     "androids": {"x":0,"y":50,"width":50,"height":50},
     "arctic_road": {"x":50,"y":50,"width":50,"height":50},
     "beef": {"x":100,"y":0,"width":50,"height":50},
@@ -4861,96 +4951,102 @@ Anno2205Layouts.iconSpriteMap = {
     "cobalt": {"x":150,"y":50,"width":50,"height":50},
     "colony_safety": {"x":150,"y":100,"width":50,"height":50},
     "community_center": {"x":0,"y":150,"width":50,"height":50},
-    "credits_module": {"x":50,"y":150,"width":50,"height":50},
-    "credits": {"x":100,"y":150,"width":50,"height":50},
-    "deep_water_corals": {"x":150,"y":150,"width":50,"height":50},
-    "deuterium": {"x":200,"y":0,"width":50,"height":50},
-    "diamant": {"x":200,"y":50,"width":50,"height":50},
-    "earth_road": {"x":200,"y":100,"width":50,"height":50},
-    "energy_module": {"x":200,"y":150,"width":50,"height":50},
-    "energy_shielding_big_2": {"x":0,"y":200,"width":50,"height":50},
-    "energy_shielding_small_2": {"x":50,"y":200,"width":50,"height":50},
-    "energy": {"x":100,"y":200,"width":50,"height":50},
-    "fish": {"x":150,"y":200,"width":50,"height":50},
-    "forbidden_science": {"x":200,"y":200,"width":50,"height":50},
-    "fruit_drink": {"x":250,"y":0,"width":50,"height":50},
-    "fruit": {"x":250,"y":50,"width":50,"height":50},
-    "fusion_accumulators": {"x":250,"y":100,"width":50,"height":50},
-    "fusion_power_plant": {"x":250,"y":150,"width":50,"height":50},
-    "gas_power_plant": {"x":250,"y":200,"width":50,"height":50},
-    "geothermal_turbinnes": {"x":0,"y":250,"width":50,"height":50},
-    "graphene_module": {"x":50,"y":250,"width":50,"height":50},
-    "graphene": {"x":100,"y":250,"width":50,"height":50},
-    "gravity_generators": {"x":150,"y":250,"width":50,"height":50},
-    "headquarter_base": {"x":200,"y":250,"width":50,"height":50},
-    "headquarter_module_1": {"x":250,"y":250,"width":50,"height":50},
-    "headquarter_module_2": {"x":300,"y":0,"width":50,"height":50},
-    "headquarter_module_3": {"x":300,"y":50,"width":50,"height":50},
-    "headquarter_module_4": {"x":300,"y":100,"width":50,"height":50},
-    "headquarter_module_5": {"x":300,"y":150,"width":50,"height":50},
-    "health_care": {"x":300,"y":200,"width":50,"height":50},
-    "helium_3": {"x":300,"y":250,"width":50,"height":50},
-    "information": {"x":0,"y":300,"width":50,"height":50},
-    "intelli_clothes": {"x":50,"y":300,"width":50,"height":50},
-    "iridium": {"x":100,"y":300,"width":50,"height":50},
-    "logistics_module": {"x":150,"y":300,"width":50,"height":50},
-    "logistics": {"x":200,"y":300,"width":50,"height":50},
-    "luxury_food": {"x":250,"y":300,"width":50,"height":50},
-    "magnatite": {"x":300,"y":300,"width":50,"height":50},
-    "maintenance": {"x":350,"y":0,"width":50,"height":50},
-    "metal_foam": {"x":350,"y":50,"width":50,"height":50},
-    "methan_clathrate": {"x":0,"y":0,"width":50,"height":50},
-    "microchips": {"x":350,"y":150,"width":50,"height":50},
-    "mobility": {"x":350,"y":200,"width":50,"height":50},
-    "molybdenum": {"x":350,"y":250,"width":50,"height":50},
-    "moon_crops": {"x":350,"y":300,"width":50,"height":50},
-    "moon_ice": {"x":0,"y":350,"width":50,"height":50},
-    "moon_road": {"x":50,"y":350,"width":50,"height":50},
-    "multispectral_prisms": {"x":100,"y":350,"width":50,"height":50},
-    "natural_space_food": {"x":150,"y":350,"width":50,"height":50},
-    "neuro_implants_2": {"x":200,"y":350,"width":50,"height":50},
-    "ornamental_car_park_large": {"x":250,"y":350,"width":50,"height":50},
-    "ornamental_car_park_medium": {"x":300,"y":350,"width":50,"height":50},
-    "ornamental_car_park_small": {"x":350,"y":350,"width":50,"height":50},
-    "ornamental_park_large": {"x":400,"y":0,"width":50,"height":50},
-    "ornamental_park_medium": {"x":400,"y":50,"width":50,"height":50},
-    "ornamental_park_small": {"x":400,"y":100,"width":50,"height":50},
-    "oxygen": {"x":400,"y":150,"width":50,"height":50},
-    "petrochemicals": {"x":400,"y":200,"width":50,"height":50},
-    "plant_fibres": {"x":400,"y":250,"width":50,"height":50},
-    "quantum_computers": {"x":400,"y":300,"width":50,"height":50},
-    "qubit_processors": {"x":400,"y":350,"width":50,"height":50},
-    "rare_earth_elements": {"x":0,"y":400,"width":50,"height":50},
-    "recreation": {"x":50,"y":400,"width":50,"height":50},
-    "rejuvenators": {"x":100,"y":400,"width":50,"height":50},
-    "replicators": {"x":150,"y":400,"width":50,"height":50},
-    "residence_arctic": {"x":200,"y":400,"width":50,"height":50},
-    "residence_earth": {"x":250,"y":400,"width":50,"height":50},
-    "residence_estate": {"x":300,"y":400,"width":50,"height":50},
-    "residence_moon": {"x":350,"y":400,"width":50,"height":50},
-    "rice_dish": {"x":400,"y":400,"width":50,"height":50},
-    "robots": {"x":450,"y":0,"width":50,"height":50},
-    "security": {"x":450,"y":50,"width":50,"height":50},
-    "silica": {"x":450,"y":100,"width":50,"height":50},
-    "solar_array": {"x":450,"y":150,"width":50,"height":50},
-    "soy_beans": {"x":450,"y":200,"width":50,"height":50},
-    "stimulants": {"x":450,"y":250,"width":50,"height":50},
-    "super_alloys": {"x":450,"y":300,"width":50,"height":50},
-    "super_coolants": {"x":450,"y":350,"width":50,"height":50},
-    "synaptic_circuits": {"x":450,"y":400,"width":50,"height":50},
-    "synth_cells": {"x":0,"y":450,"width":50,"height":50},
-    "temp_module": {"x":50,"y":450,"width":50,"height":50},
-    "tidal_power_station": {"x":100,"y":450,"width":50,"height":50},
-    "titan_plating": {"x":150,"y":450,"width":50,"height":50},
-    "titanium": {"x":200,"y":450,"width":50,"height":50},
-    "transportation_center_arctic": {"x":250,"y":450,"width":50,"height":50},
-    "transportation_center_earth": {"x":300,"y":450,"width":50,"height":50},
-    "transportation_center_moon": {"x":350,"y":450,"width":50,"height":50},
-    "water": {"x":400,"y":450,"width":50,"height":50},
-    "windpark": {"x":450,"y":450,"width":50,"height":50},
-    "wine": {"x":500,"y":0,"width":50,"height":50},
-    "workforce_module": {"x":500,"y":50,"width":50,"height":50},
-    "workforce": {"x":500,"y":100,"width":50,"height":50},
+    "coupled_firework_fountain": {"x":50,"y":150,"width":50,"height":50},
+    "credits_module": {"x":100,"y":150,"width":50,"height":50},
+    "credits": {"x":150,"y":150,"width":50,"height":50},
+    "deep_water_corals": {"x":200,"y":0,"width":50,"height":50},
+    "deuterium": {"x":200,"y":50,"width":50,"height":50},
+    "diamant": {"x":200,"y":100,"width":50,"height":50},
+    "earth_road": {"x":200,"y":150,"width":50,"height":50},
+    "energy_module": {"x":0,"y":200,"width":50,"height":50},
+    "energy_shielding_big_2": {"x":50,"y":200,"width":50,"height":50},
+    "energy_shielding_small_2": {"x":100,"y":200,"width":50,"height":50},
+    "energy": {"x":150,"y":200,"width":50,"height":50},
+    "fish": {"x":200,"y":200,"width":50,"height":50},
+    "forbidden_science": {"x":250,"y":0,"width":50,"height":50},
+    "fruit_drink": {"x":250,"y":50,"width":50,"height":50},
+    "fruit": {"x":250,"y":100,"width":50,"height":50},
+    "fusion_accumulators": {"x":250,"y":150,"width":50,"height":50},
+    "fusion_power_plant": {"x":250,"y":200,"width":50,"height":50},
+    "gas_power_plant": {"x":0,"y":250,"width":50,"height":50},
+    "geothermal_turbinnes": {"x":50,"y":250,"width":50,"height":50},
+    "graphene_module": {"x":100,"y":250,"width":50,"height":50},
+    "graphene": {"x":150,"y":250,"width":50,"height":50},
+    "gravity_generators": {"x":200,"y":250,"width":50,"height":50},
+    "headquarter_base": {"x":250,"y":250,"width":50,"height":50},
+    "headquarter_module_1": {"x":300,"y":0,"width":50,"height":50},
+    "headquarter_module_2": {"x":300,"y":50,"width":50,"height":50},
+    "headquarter_module_3": {"x":300,"y":100,"width":50,"height":50},
+    "headquarter_module_4": {"x":300,"y":150,"width":50,"height":50},
+    "headquarter_module_5": {"x":300,"y":200,"width":50,"height":50},
+    "health_care": {"x":300,"y":250,"width":50,"height":50},
+    "helium_3": {"x":0,"y":300,"width":50,"height":50},
+    "information": {"x":50,"y":300,"width":50,"height":50},
+    "intelli_clothes": {"x":100,"y":300,"width":50,"height":50},
+    "iridium": {"x":150,"y":300,"width":50,"height":50},
+    "logistics_module": {"x":200,"y":300,"width":50,"height":50},
+    "logistics": {"x":250,"y":300,"width":50,"height":50},
+    "luxury_food": {"x":300,"y":300,"width":50,"height":50},
+    "magnatite": {"x":350,"y":0,"width":50,"height":50},
+    "maintenance": {"x":350,"y":50,"width":50,"height":50},
+    "metal_foam": {"x":350,"y":100,"width":50,"height":50},
+    "methan_clathrate": {"x":350,"y":150,"width":50,"height":50},
+    "microchips": {"x":350,"y":200,"width":50,"height":50},
+    "mobility": {"x":0,"y":0,"width":50,"height":50},
+    "molybdenum": {"x":350,"y":300,"width":50,"height":50},
+    "moon_attraction_astronaut": {"x":0,"y":350,"width":50,"height":50},
+    "moon_attraction_donut": {"x":50,"y":350,"width":50,"height":50},
+    "moon_attraction_robot_fight": {"x":100,"y":350,"width":50,"height":50},
+    "moon_crops": {"x":150,"y":350,"width":50,"height":50},
+    "moon_ice": {"x":200,"y":350,"width":50,"height":50},
+    "moon_road": {"x":250,"y":350,"width":50,"height":50},
+    "multispectral_prisms": {"x":300,"y":350,"width":50,"height":50},
+    "natural_space_food": {"x":350,"y":350,"width":50,"height":50},
+    "neuro_implants_2": {"x":400,"y":0,"width":50,"height":50},
+    "ornamental_car_park_large": {"x":400,"y":50,"width":50,"height":50},
+    "ornamental_car_park_medium": {"x":400,"y":100,"width":50,"height":50},
+    "ornamental_car_park_small": {"x":400,"y":150,"width":50,"height":50},
+    "ornamental_park_large": {"x":400,"y":200,"width":50,"height":50},
+    "ornamental_park_medium": {"x":400,"y":250,"width":50,"height":50},
+    "ornamental_park_small": {"x":400,"y":300,"width":50,"height":50},
+    "oxygen": {"x":400,"y":350,"width":50,"height":50},
+    "petrochemicals": {"x":0,"y":400,"width":50,"height":50},
+    "plant_fibres": {"x":50,"y":400,"width":50,"height":50},
+    "quantum_computers": {"x":100,"y":400,"width":50,"height":50},
+    "qubit_processors": {"x":150,"y":400,"width":50,"height":50},
+    "rare_earth_elements": {"x":200,"y":400,"width":50,"height":50},
+    "recreation": {"x":250,"y":400,"width":50,"height":50},
+    "rejuvenators": {"x":300,"y":400,"width":50,"height":50},
+    "replicators": {"x":350,"y":400,"width":50,"height":50},
+    "residence_arctic": {"x":400,"y":400,"width":50,"height":50},
+    "residence_earth": {"x":450,"y":0,"width":50,"height":50},
+    "residence_estate": {"x":450,"y":50,"width":50,"height":50},
+    "residence_moon": {"x":450,"y":100,"width":50,"height":50},
+    "rice_dish": {"x":450,"y":150,"width":50,"height":50},
+    "robots": {"x":450,"y":200,"width":50,"height":50},
+    "security": {"x":450,"y":250,"width":50,"height":50},
+    "shaped_firework_fountain": {"x":450,"y":300,"width":50,"height":50},
+    "silica": {"x":450,"y":350,"width":50,"height":50},
+    "single_firework_fountain": {"x":450,"y":400,"width":50,"height":50},
+    "solar_array": {"x":0,"y":450,"width":50,"height":50},
+    "soy_beans": {"x":50,"y":450,"width":50,"height":50},
+    "stimulants": {"x":100,"y":450,"width":50,"height":50},
+    "super_alloys": {"x":150,"y":450,"width":50,"height":50},
+    "super_coolants": {"x":200,"y":450,"width":50,"height":50},
+    "synaptic_circuits": {"x":250,"y":450,"width":50,"height":50},
+    "synth_cells": {"x":300,"y":450,"width":50,"height":50},
+    "temp_module": {"x":350,"y":450,"width":50,"height":50},
+    "tidal_power_station": {"x":400,"y":450,"width":50,"height":50},
+    "titan_plating": {"x":450,"y":450,"width":50,"height":50},
+    "titanium": {"x":500,"y":0,"width":50,"height":50},
+    "transportation_center_arctic": {"x":500,"y":50,"width":50,"height":50},
+    "transportation_center_earth": {"x":500,"y":100,"width":50,"height":50},
+    "transportation_center_moon": {"x":500,"y":150,"width":50,"height":50},
+    "water": {"x":500,"y":200,"width":50,"height":50},
+    "windpark": {"x":500,"y":250,"width":50,"height":50},
+    "wine": {"x":500,"y":300,"width":50,"height":50},
+    "workforce_module": {"x":500,"y":350,"width":50,"height":50},
+    "workforce": {"x":500,"y":400,"width":50,"height":50},
 }};
 Anno2205Layouts.gridSpriteMap = {
     properties: {"width":56,"height":47,"path":"images/grid/grid-sheet.png"},
